@@ -1,0 +1,167 @@
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
+
+const isScrolled = ref(false);
+const isMenuActive = ref(false);
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 50;
+};
+
+const toggleMenu = () => {
+  isMenuActive.value = !isMenuActive.value;
+};
+
+const closeMenu = () => {
+  isMenuActive.value = false;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+</script>
+
+<template>
+  <nav class="nav" :class="{ 'scrolled': isScrolled }">
+    <div class="nav-container container">
+      <a href="/" class="nav-logo">
+        <span class="logo-text">Gabriel</span>
+        <span class="logo-accent">Armindo</span>
+      </a>
+
+      <div class="nav-menu" :class="{ 'active': isMenuActive }" id="nav-menu">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="#home" class="nav-link" @click="closeMenu">Início</a></li>
+          <li class="nav-item"><a href="#about" class="nav-link" @click="closeMenu">Sobre</a></li>
+          <li class="nav-item"><a href="#experience" class="nav-link" @click="closeMenu">Experiência</a></li>
+          <li class="nav-item"><a href="#skills" class="nav-link" @click="closeMenu">Habilidades</a></li>
+          <li class="nav-item"><a href="#blog" class="nav-link" @click="closeMenu">Blog</a></li>
+          <li class="nav-item"><a href="#contacto" class="nav-link" @click="closeMenu">Contacto</a></li>
+        </ul>
+      </div>
+
+      <div class="nav-toggle" id="nav-toggle" @click="toggleMenu">
+        <i class="fas" :class="isMenuActive ? 'fa-times' : 'fa-bars'"></i>
+      </div>
+    </div>
+  </nav>
+</template>
+
+<style scoped>
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: var(--transition-normal);
+}
+
+.nav.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem var(--spacing-md);
+}
+
+.nav-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: var(--font-accent);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-list {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: var(--transition-fast);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-1);
+    transition: var(--transition-fast);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--text-primary);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-toggle {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.98);
+        padding: var(--spacing-md);
+        gap: 0;
+        transition: var(--transition-normal);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-list {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-item {
+        width: 100%;
+        padding: var(--spacing-sm) 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+}
+</style>
