@@ -29,8 +29,11 @@ onUnmounted(() => {
   <nav class="nav" :class="{ 'scrolled': isScrolled }">
     <div class="nav-container container">
       <a href="/" class="nav-logo">
-        <span class="logo-text">Gabriel</span>
-        <span class="logo-accent">Armindo</span>
+        <div class="logo-icon">G</div>
+        <div class="logo-text-group">
+          <span class="logo-text">Gabriel</span>
+          <span class="logo-accent">Armindo</span>
+        </div>
       </a>
 
       <div class="nav-menu" :class="{ 'active': isMenuActive }" id="nav-menu">
@@ -77,11 +80,49 @@ onUnmounted(() => {
 }
 
 .nav-logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-family: var(--font-accent);
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-accent);
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--gradient-1);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    box-shadow: 0 4px 10px rgba(255, 123, 26, 0.3);
+    transition: var(--transition-normal);
+}
+
+.nav-logo:hover .logo-icon {
+    transform: rotate(-10deg) scale(1.1);
+}
+
+.logo-text-group {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.logo-accent {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .nav-menu {
