@@ -11,7 +11,7 @@
           Olá, Eu sou <br />
           <span class="gradient-text hero-name">Gabriel Armindo</span>
         </h1>
-        <p class="hero-subtitle">M&E Specialist | MEAL & Data Analysis Expert</p>
+        <p class="hero-subtitle">M&E Specialist | Data Analysis Expert</p>
         <p class="hero-description">
           Com mais de 5 anos de experiência em gestão de projetos, monitoria e avaliação orientada para resultados nas áreas de desenvolvimento, assistência humanitária e resiliência.
         </p>
