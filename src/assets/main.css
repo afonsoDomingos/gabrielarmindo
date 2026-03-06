@@ -144,6 +144,11 @@ ul {
     cursor: default;
 }
 
+.text-center .section-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .section-title:hover {
     transform: scale(1.03) skewX(-2deg);
     background: var(--gradient-1);
@@ -179,6 +184,17 @@ ul {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+
+    .section-tag,
+    .section-title {
+        display: block;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 .btn {

@@ -32,7 +32,7 @@ onMounted(fetchPosts);
 <template>
   <section class="blog section" id="blog">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header text-center reveal">
         <span class="section-tag">Insights & Artigos</span>
         <h2 class="section-title">Meu Blog</h2>
       </div>

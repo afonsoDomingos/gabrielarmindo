@@ -26,7 +26,7 @@ const certifications = ref([
 <template>
   <section class="certifications section" id="certifications">
     <div class="container">
-      <div class="section-header reveal">
+      <div class="section-header text-center reveal">
         <span class="section-tag">Qualificações</span>
         <h2 class="section-title">Certificações & Treinamentos</h2>
       </div>

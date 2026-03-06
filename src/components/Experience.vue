@@ -1,7 +1,7 @@
 <template>
   <section class="experience section" id="experience">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header text-center reveal">
         <span class="section-tag">Trajetória</span>
         <h2 class="section-title">Experiência Profissional</h2>
       </div>

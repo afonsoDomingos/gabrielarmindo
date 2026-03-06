@@ -1,7 +1,17 @@
+<script setup>
+import { ref } from 'vue';
+
+const isExpanded = ref(false);
+
+const toggleExpand = () => {
+  isExpanded.value = !isExpanded.value;
+};
+</script>
+
 <template>
   <section class="about section" id="about">
     <div class="container">
-      <div class="section-header reveal">
+      <div class="section-header text-center reveal">
         <span class="section-tag">Minha Jornada</span>
         <h2 class="section-title">Sobre Mim</h2>
       </div>
@@ -11,18 +21,26 @@
           <p class="about-intro">
             Sou Especialista em Monitoria, Avaliação, Prestação de Contas e Aprendizagem (MEAL), Analista de Dados e Psicólogo, com mais de 5 anos de experiência no sector de desenvolvimento, educação e resposta humanitária, actuando em organizações nacionais e internacionais.
           </p>
-          <p>
-            Possuo sólida experiência no desenho, implementação e fortalecimento de sistemas de M&A orientados para resultados, assegurando qualidade de dados, tomada de decisão baseada em evidências e alinhamento estratégico com requisitos de doadores e parceiros institucionais.
-          </p>
-          <p>
-            Sou Licenciado em Psicologia Social e Comunitária pela Universidade Eduardo Mondlane e possuo Extensão Universitária em Gênero, Diversidade e Inclusão Social em Direitos Humanos pela Universidade de São Paulo. Essa formação fortalece minha capacidade de integrar abordagens sensíveis ao género, inclusão e proteção em contextos complexos e humanitários.
-          </p>
-          <p>
-            Ao longo da minha trajetória, tenho liderado e apoiado avaliações de projectos, estudos de linha de base e finais, desenvolvimento de matrizes de indicadores, realização de estudos Sociais, Desenho de Formulários no Excel para o Kobotoolbox, Excel Avançado, Power BI, SPSS e criação de dashboards estratégicos e relatórios analíticos para diferentes stakeholders.
-          </p>
-          <p>
-            Actuei em posições de liderança como Diretor de Auditoria Interna, Coordenador de Projetos, Especialista em M&A e Consultor Sénior de Pesquisa, sempre com foco na melhoria contínua, aprendizagem organizacional e fortalecimento institucional. Tambem actuo como consultor e mentor, capacitando equipas técnicas e desenvolvendo cursos avançados em análise de dados.
-          </p>
+          
+          <div class="expandable-content" :class="{ 'expanded': isExpanded }">
+            <p>
+              Possuo sólida experiência no desenho, implementação e fortalecimento de sistemas de M&A orientados para resultados, assegurando qualidade de dados, tomada de decisão baseada em evidências e alinhamento estratégico com requisitos de doadores e parceiros institucionais.
+            </p>
+            <p>
+              Sou Licenciado em Psicologia Social e Comunitária pela Universidade Eduardo Mondlane e possuo Extensão Universitária em Gênero, Diversidade e Inclusão Social em Direitos Humanos pela Universidade de São Paulo. Essa formação fortalece minha capacidade de integrar abordagens sensíveis ao género, inclusão e proteção em contextos complexos e humanitários.
+            </p>
+            <p>
+              Ao longo da minha trajetória, tenho liderado e apoiado avaliações de projectos, estudos de linha de base e finais, desenvolvimento de matrizes de indicadores, realização de estudos Sociais, Desenho de Formulários no Excel para o Kobotoolbox, Excel Avançado, Power BI, SPSS e criação de dashboards estratégicos e relatórios analíticos para diferentes stakeholders.
+            </p>
+            <p>
+              Actuei em posições de liderança como Diretor de Auditoria Interna, Coordenador de Projetos, Especialista em M&A e Consultor Sénior de Pesquisa, sempre com foco na melhoria contínua, aprendizagem organizacional e fortalecimento institucional. Tambem actuo como consultor e mentor, capacitando equipas técnicas e desenvolvendo cursos avançados em análise de dados.
+            </p>
+          </div>
+
+          <button @click="toggleExpand" class="read-more-btn">
+            <span>{{ isExpanded ? 'Ler menos' : 'Ler mais' }}</span>
+            <i class="fas" :class="isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+          </button>
 
           <div class="about-education">
             <h3><i class="fas fa-graduation-cap"></i> Formação Académica</h3>
