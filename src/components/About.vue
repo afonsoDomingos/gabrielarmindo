@@ -113,6 +113,55 @@ const toggleExpand = () => {
     margin-bottom: var(--spacing-md);
 }
 
+/* Expandable Content functionality */
+.expandable-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.expandable-content.expanded {
+    max-height: 1500px; /* Valor alto o suficiente */
+    opacity: 1;
+    transform: translateY(0);
+    margin-bottom: var(--spacing-md);
+}
+
+.read-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1.8rem;
+    background: white;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    margin: var(--spacing-sm) 0 var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.read-more-btn i {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.read-more-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 123, 26, 0.25);
+}
+
+.read-more-btn:active {
+    transform: translateY(-1px);
+}
+
 .about-education {
     margin: var(--spacing-md) 0;
     padding: var(--spacing-md);
