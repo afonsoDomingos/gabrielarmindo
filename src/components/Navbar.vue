@@ -43,7 +43,7 @@ onUnmounted(() => {
           <li class="nav-item"><a href="#resume" class="nav-link" @click="closeMenu">Portfólio</a></li>
           <li class="nav-item"><a href="#testimonials" class="nav-link" @click="closeMenu">Testemunhos</a></li>
           <li class="nav-item"><a href="#services" class="nav-link" @click="closeMenu">Investimento</a></li>
-          <li class="nav-item"><a href="#contacto" class="nav-link" @click="closeMenu">Contato</a></li>
+          <li class="nav-item"><a href="#contacto" class="nav-link" @click="closeMenu">Contacto</a></li>
         </ul>
       </div>
 
