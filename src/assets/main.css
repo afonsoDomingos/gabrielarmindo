@@ -2,25 +2,25 @@
    CSS Variables & Root Styles
    ======================================== */
 :root {
-    /* Colors - Premium Palette */
-    --primary-hue: 25;
-    --primary-sat: 95%;
+    /* Colors - Premium Blue Palette */
+    --primary-hue: 215;
+    --primary-sat: 90%;
     --primary-light: 50%;
 
     --primary-color: hsl(var(--primary-hue), var(--primary-sat), var(--primary-light));
-    --primary-dark: hsl(var(--primary-hue), var(--primary-sat), 45%);
+    --primary-dark: hsl(var(--primary-hue), var(--primary-sat), 40%);
     --primary-light-color: hsl(var(--primary-hue), var(--primary-sat), 65%);
 
-    --secondary-color: hsl(35, 95%, 60%);
-    --accent-color: hsl(15, 90%, 55%);
+    --secondary-color: hsl(200, 85%, 55%);
+    --accent-color: hsl(185, 80%, 45%);
 
-    --text-primary: hsl(220, 20%, 15%);
-    --text-secondary: hsl(220, 10%, 40%);
-    --text-muted: hsl(220, 10%, 60%);
+    --text-primary: hsl(220, 25%, 15%);
+    --text-secondary: hsl(220, 15%, 35%);
+    --text-muted: hsl(220, 10%, 55%);
 
     --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --bg-tertiary: #f1f3f5;
+    --bg-secondary: #f4f7fa;
+    --bg-tertiary: #edf2f7;
 
     --gradient-1: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     --gradient-2: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
