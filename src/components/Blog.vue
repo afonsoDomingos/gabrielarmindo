@@ -37,8 +37,8 @@ onMounted(fetchPosts);
         <h2 class="section-title">Meu Blog</h2>
       </div>
 
-      <div class="blog-grid">
-        <div v-for="post in posts" :key="post.id" class="blog-card" @click="openPost(post)">
+      <div class="blog-grid reveal-container">
+        <div v-for="post in posts" :key="post.id" class="blog-card glass-card reveal-item" @click="openPost(post)">
           <div class="blog-image">
             <img v-if="post.image" :src="post.image" :alt="post.title" style="width: 100%; height: 100%; object-fit: cover;" />
             <i v-else class="fas fa-image"></i>
@@ -92,18 +92,13 @@ onMounted(fetchPosts);
 }
 
 .blog-card {
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: var(--radius-lg);
     overflow: hidden;
     cursor: pointer;
     transition: all var(--transition-normal);
 }
 
 .blog-card:hover {
-    border-color: var(--primary-color);
     transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
 }
 
 .blog-image {

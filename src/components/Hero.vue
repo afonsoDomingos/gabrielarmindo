@@ -339,9 +339,9 @@
     .hero { padding-top: 60px; }
     .hero-container { grid-template-columns: 1fr; text-align: center; gap: var(--spacing-md); }
     .hero-image { order: -1; margin-bottom: var(--spacing-md); }
-    .hero-stats { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-sm); }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0; width: 100%; }
     .hero-buttons, .hero-social { justify-content: center; }
-    .hero-description { margin-left: auto; margin-right: auto; }
+    .hero-description { margin-left: auto; margin-right: auto; max-width: 90%; text-align: center; }
     
     .profile-frame {
         width: 280px;

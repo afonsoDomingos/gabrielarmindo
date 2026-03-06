@@ -57,22 +57,22 @@ const toggleExpand = () => {
           </div>
         </div>
 
-        <div class="about-highlights reveal-right">
-          <div class="highlight-card">
+        <div class="about-highlights reveal-right reveal-container">
+          <div class="highlight-card glass-card reveal-item">
             <div class="highlight-icon">
               <i class="fas fa-shield-alt"></i>
             </div>
             <h4>Direitos Humanos</h4>
             <p>Especialista em integrar inclusão e proteção em projetos humanitários.</p>
           </div>
-          <div class="highlight-card">
+          <div class="highlight-card glass-card reveal-item">
             <div class="highlight-icon">
               <i class="fas fa-chess-knight"></i>
             </div>
             <h4>Liderança Estratégica</h4>
             <p>Experiência como Diretor de Auditoria e Coordenador de Projetos.</p>
           </div>
-          <div class="highlight-card">
+          <div class="highlight-card glass-card reveal-item">
             <div class="highlight-icon">
               <i class="fas fa-chalkboard-teacher"></i>
             </div>
@@ -186,6 +186,7 @@ const toggleExpand = () => {
     display: block;
     color: var(--text-primary);
     margin-bottom: 0.25rem;
+    font-size: 1rem;
 }
 
 .about-highlights {
@@ -194,17 +195,13 @@ const toggleExpand = () => {
 }
 
 .highlight-card {
-    padding: var(--spacing-md);
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: var(--radius-lg);
     transition: all var(--transition-normal);
 }
 
 .highlight-card:hover {
     border-color: var(--primary-color);
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
 }
 
 .highlight-icon {
@@ -227,11 +224,16 @@ const toggleExpand = () => {
     }
     
     .about-text {
+        text-align: left;
+    }
+    
+    .about-intro {
         text-align: center;
+        margin-bottom: var(--spacing-md);
     }
     
     .about-education h3 {
-        justify-content: center;
+        justify-content: flex-start;
     }
     
     .about-education ul {

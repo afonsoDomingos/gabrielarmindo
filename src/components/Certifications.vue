@@ -38,7 +38,7 @@ const certifications = ref([
             {{ cat.category }}
           </h3>
           <div class="cert-list">
-            <div v-for="(cert, i) in cat.items" :key="i" class="cert-item">
+            <div v-for="(cert, i) in cat.items" :key="i" class="cert-item glass-card reveal-item">
               <div class="cert-thumb">
                 <i class="fas fa-certificate"></i>
               </div>
@@ -89,18 +89,11 @@ const certifications = ref([
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 1.5rem;
-  background: white;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
 }
 
 .cert-item:hover {
   transform: translateX(10px);
-  border-color: var(--primary-color);
-  box-shadow: var(--shadow-md);
 }
 
 .cert-thumb {

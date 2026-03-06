@@ -53,6 +53,14 @@
     --radius-md: 12px;
     --radius-lg: 16px;
     --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Card Standard */
+    --card-bg: white;
+    --card-border: 1px solid rgba(0, 0, 0, 0.05);
+    --card-radius: var(--radius-lg);
+    --card-shadow: var(--shadow-sm);
+    --card-shadow-hover: var(--shadow-xl);
 }
 
 @media (max-width: 768px) {
@@ -360,6 +368,22 @@ ul {
     background: var(--gradient-1);
     z-index: 2001;
     transition: width 0.1s ease;
+}
+
+/* Glass Card Utility */
+.glass-card {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    padding: var(--spacing-md);
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-normal);
+}
+
+.glass-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--primary-color);
 }
 
 /* --- Scroll to Top Button --- */

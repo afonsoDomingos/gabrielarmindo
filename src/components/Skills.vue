@@ -11,10 +11,10 @@
         <div class="skill-category">
           <h3><i class="fas fa-tools"></i> Ferramentas</h3>
           <div class="tech-grid">
-            <div class="tech-item reveal-item"><i class="fas fa-database"></i><span>Power BI</span></div>
-            <div class="tech-item reveal-item"><i class="fas fa-chart-bar"></i><span>SPSS</span></div>
-            <div class="tech-item reveal-item"><i class="fas fa-file-excel"></i><span>Excel Avançado</span></div>
-            <div class="tech-item reveal-item"><i class="fas fa-project-diagram"></i><span>KoboToolbox</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-database"></i><span>Power BI</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-chart-bar"></i><span>SPSS</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-file-excel"></i><span>Excel Avançado</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-project-diagram"></i><span>KoboToolbox</span></div>
           </div>
         </div>
       </div>
@@ -53,9 +53,6 @@
 }
 
 .tech-item {
-    padding: 1.5rem;
-    background: white;
-    border-radius: 12px;
     display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
     transition: 0.3s;
 }

@@ -7,12 +7,12 @@
       </div>
 
       <div class="experience-grid">
-        <div class="experience-card">
+        <div class="experience-card glass-card reveal-left">
           <div class="exp-icon"><i class="fas fa-briefcase"></i></div>
           <h3>MEAL Officer</h3>
           <p>Liderança em sistemas de monitoria e avaliação para projetos de impacto social e desenvolvimento comunitário.</p>
         </div>
-        <div class="experience-card">
+        <div class="experience-card glass-card reveal-right">
           <div class="exp-icon"><i class="fas fa-chart-line"></i></div>
           <h3>Analista de Dados</h3>
           <p>Transformação de dados complexos em insights acionáveis para tomada de decisão estratégica.</p>
@@ -30,15 +30,10 @@
 }
 
 .experience-card {
-    padding: var(--spacing-md);
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: var(--radius-lg);
     transition: 0.3s;
 }
 
 .experience-card:hover {
-    border-color: var(--primary-color);
     transform: translateY(-5px);
 }
 

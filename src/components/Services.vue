@@ -26,7 +26,7 @@ onMounted(fetchPackages);
       </div>
 
       <div class="services-grid reveal-container">
-        <div v-for="(pkg, index) in packages.slice(0, 3)" :key="pkg.id" class="service-card reveal-item">
+        <div v-for="(pkg, index) in packages.slice(0, 3)" :key="pkg.id" class="service-card glass-card reveal-item">
           <div class="service-icon">
             <i :class="pkg.icon || 'fas fa-box'"></i>
           </div>
@@ -67,20 +67,12 @@ onMounted(fetchPackages);
 }
 
 .service-card {
-  background: white;
-  padding: 2.5rem;
-  border-radius: var(--radius-xl);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-normal);
   display: flex;
   flex-direction: column;
 }
 
 .service-card:hover {
   transform: translateY(-10px);
-  border-color: var(--primary-color);
-  box-shadow: var(--shadow-lg);
 }
 
 .service-icon {
