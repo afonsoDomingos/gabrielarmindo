@@ -12,7 +12,6 @@ const toggleExpand = () => {
   <section class="about section" id="about">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">Minha Jornada</span>
         <h2 class="section-title">Sobre Mim</h2>
       </div>
 
