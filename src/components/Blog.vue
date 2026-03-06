@@ -190,4 +190,38 @@ onMounted(fetchPosts);
     line-height: 1.8;
     color: var(--text-secondary);
 }
+
+@media (max-width: 768px) {
+    .blog-grid {
+        grid-template-columns: 1fr;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .modal-image {
+        height: 250px;
+        border-radius: 0;
+    }
+
+    .modal-body {
+        padding: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-content {
+        padding: 1.5rem;
+    }
+    
+    .modal-image {
+        height: 200px;
+    }
+}
 </style>

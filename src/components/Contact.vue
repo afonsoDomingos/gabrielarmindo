@@ -12,7 +12,7 @@ const isSubmitting = ref(false);
 const statusMessage = ref('');
 
 const handleSubmit = async () => {
-  isSubmitting.ref = true;
+  isSubmitting.value = true;
   try {
     const res = await axios.post('/api/contact', form.value);
     statusMessage.value = 'Mensagem enviada com sucesso!';
@@ -28,14 +28,14 @@ const handleSubmit = async () => {
 
 <template>
   <section class="contact section" id="contacto">
-    <div class="container text-center">
-      <div class="section-header reveal">
+    <div class="container">
+      <div class="section-header text-center reveal">
         <span class="section-tag">Vamos conversar?</span>
         <h2 class="section-title">Entre em Contacto</h2>
       </div>
 
       <div class="contact-container">
-        <div class="contact-info">
+        <div class="contact-info reveal-left">
           <h3>Sinta-se à vontade para me escrever!</h3>
           <p>
             Estou sempre aberto a novas oportunidades, colaborações em projectos de monitoria e avaliação ou apenas uma boa conversa sobre análise de dados.
@@ -59,7 +59,7 @@ const handleSubmit = async () => {
           </div>
         </div>
 
-        <div class="contact-form">
+        <div class="contact-form reveal-right">
           <form @submit.prevent="handleSubmit">
             <div class="form-group">
               <label>Seu Nome</label>
@@ -76,7 +76,7 @@ const handleSubmit = async () => {
             <button type="submit" class="btn btn-primary" :disabled="isSubmitting" style="width: 100%;">
               <span v-if="!isSubmitting">Enviar Mensagem</span>
               <span v-else>Enviando...</span>
-              <i class="fas fa-paper-plane" v-if="!isSubmitting"></i>
+              <i class="fas fa-paper-plane" v-if="!isSubmitting" style="margin-left: 0.5rem"></i>
             </button>
             <p v-if="statusMessage" class="status-msg">{{ statusMessage }}</p>
           </form>
@@ -94,24 +94,29 @@ const handleSubmit = async () => {
     text-align: left;
 }
 
-.contact-info h3 { font-size: 2rem; margin-bottom: 1rem; }
+.contact-info h3 { font-size: 2.25rem; margin-bottom: 1.5rem; line-height: 1.2; }
 .contact-details { display: flex; flex-direction: column; gap: 2rem; margin-top: 2rem; }
-.contact-item { display: flex; gap: 1rem; align-items: center; }
+.contact-item { display: flex; gap: 1.25rem; align-items: center; }
 
 .contact-icon {
-    width: 48px; height: 48px;
+    width: 56px; height: 56px;
     background: var(--gradient-1);
     color: white;
     border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    box-shadow: 0 5px 15px rgba(255, 123, 26, 0.2);
 }
+
+.contact-content h4 { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.contact-content a { font-weight: 600; font-size: 1.1rem; }
 
 .contact-form {
     background: white;
-    padding: 2.5rem;
+    padding: 3rem;
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .status-msg {
@@ -120,15 +125,32 @@ const handleSubmit = async () => {
     color: var(--primary-color);
 }
 
-.form-group { margin-bottom: 1.5rem; }
-.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+.form-group { margin-bottom: 2rem; }
+.form-group label { display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-primary); }
 .form-group input, .form-group textarea {
-    width: 100%; padding: 0.75rem 1rem;
-    border: 1px solid #eee; border-radius: 8px;
-    background: #fdfdfd;
+    width: 100%; padding: 1rem 1.25rem;
+    border: 1px solid #edf2f7; border-radius: 12px;
+    background: #f8fafc;
+    font-family: inherit;
+    transition: all 0.3s ease;
 }
 
-@media (max-width: 768px) {
-    .contact-container { grid-template-columns: 1fr; }
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(255, 123, 26, 0.1);
+}
+
+@media (max-width: 968px) {
+    .contact-container { grid-template-columns: 1fr; gap: var(--spacing-lg); }
+    .contact-info { text-align: center; }
+    .contact-item { justify-content: center; }
+    .contact-form { padding: 2.5rem; }
+}
+
+@media (max-width: 480px) {
+    .contact-info h3 { font-size: 1.75rem; }
+    .contact-form { padding: 2rem 1.5rem; }
 }
 </style>

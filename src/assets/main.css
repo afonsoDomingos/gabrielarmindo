@@ -26,7 +26,7 @@
     --gradient-2: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
     --gradient-3: linear-gradient(135deg, var(--primary-color), var(--accent-color));
 
-    /* Spacing */
+    /* Spacing - Responsive */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 2rem;
@@ -55,6 +55,22 @@
     --radius-xl: 24px;
 }
 
+@media (max-width: 768px) {
+    :root {
+        --spacing-md: 1.5rem;
+        --spacing-lg: 3rem;
+        --spacing-xl: 4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+    }
+}
+
 /* ========================================
    Reset & Base Styles
    ======================================== */
@@ -67,6 +83,12 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 15px;
+    }
 }
 
 body {
@@ -309,4 +331,14 @@ ul {
 .scroll-top-btn:hover {
     transform: translateY(-5px) scale(1.1);
     box-shadow: 0 10px 25px rgba(255, 123, 26, 0.5);
+}
+
+@media (max-width: 480px) {
+    .scroll-top-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
 }

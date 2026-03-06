@@ -76,4 +76,15 @@
     width: 24px; height: 24px; border-radius: 50%;
     border: 1px solid var(--primary-color);
 }
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .footer {
+        padding: 3rem 0 1.5rem;
+    }
+}
 </style>

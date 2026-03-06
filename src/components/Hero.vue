@@ -336,9 +336,36 @@
 }
 
 @media (max-width: 968px) {
-    .hero-container { grid-template-columns: 1fr; text-align: center; }
-    .hero-image { order: -1; }
-    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .hero { padding-top: 60px; }
+    .hero-container { grid-template-columns: 1fr; text-align: center; gap: var(--spacing-md); }
+    .hero-image { order: -1; margin-bottom: var(--spacing-md); }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-sm); }
     .hero-buttons, .hero-social { justify-content: center; }
+    .hero-description { margin-left: auto; margin-right: auto; }
+    
+    .profile-frame {
+        width: 280px;
+        height: 280px;
+    }
+    .image-wrapper {
+        height: 350px;
+    }
+    .image-glow {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title { font-size: 2.5rem; }
+    .stat-number { font-size: 2rem; }
+    .floating-card { display: none; }
+    .profile-frame {
+        width: 220px;
+        height: 220px;
+    }
+    .image-wrapper {
+        height: 280px;
+    }
 }
 </style>

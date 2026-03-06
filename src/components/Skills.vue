@@ -44,6 +44,27 @@
 </template>
 
 <style scoped>
+.experience-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.experience-card {
+    padding: var(--spacing-md);
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.exp-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
 .skills { background: var(--bg-secondary); }
 .tech-grid {
     display: grid;
@@ -62,4 +83,16 @@
 
 .tech-item:hover { color: var(--primary-color); transform: translateY(-3px); }
 .tech-item i { font-size: 2rem; }
+
+@media (max-width: 768px) {
+    .experience-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .experience-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
 </style>

@@ -156,6 +156,21 @@
 @media (max-width: 968px) {
     .about-content {
         grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .about-text {
+        text-align: center;
+    }
+    
+    .about-education h3 {
+        justify-content: center;
+    }
+    
+    .about-education ul {
+        text-align: left;
+        max-width: 500px;
+        margin: 0 auto;
     }
 }
 </style>
