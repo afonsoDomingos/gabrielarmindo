@@ -6,6 +6,7 @@ import Experience from '../components/Experience.vue';
 import Skills from '../components/Skills.vue';
 import Services from '../components/Services.vue';
 import Certifications from '../components/Certifications.vue';
+import ServicesOverview from '../components/ServicesOverview.vue';
 import Blog from '../components/Blog.vue';
 import Contact from '../components/Contact.vue';
 import Footer from '../components/Footer.vue';
@@ -21,6 +22,7 @@ import Footer from '../components/Footer.vue';
       <Skills />
       <Services />
       <Certifications />
+      <ServicesOverview />
       <Blog />
       <Contact />
     </main>

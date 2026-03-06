@@ -16,7 +16,7 @@ const toggleExpand = () => {
       </div>
 
       <div class="about-content">
-        <div class="about-text reveal-left">
+        <div class="about-text reveal">
           <p class="about-intro">
             Sou Especialista em Monitoria, Avaliação, Prestação de Contas e Aprendizagem (MEAL), Analista de Dados e Psicólogo, com mais de 5 anos de experiência no sector de desenvolvimento, educação e resposta humanitária, actuando em organizações nacionais e internacionais.
           </p>
@@ -55,30 +55,6 @@ const toggleExpand = () => {
             </ul>
           </div>
         </div>
-
-        <div class="about-highlights reveal-right reveal-container">
-          <div class="highlight-card glass-card reveal-item">
-            <div class="highlight-icon">
-              <i class="fas fa-shield-alt"></i>
-            </div>
-            <h4>Direitos Humanos</h4>
-            <p>Especialista em integrar inclusão e proteção em projetos humanitários.</p>
-          </div>
-          <div class="highlight-card glass-card reveal-item">
-            <div class="highlight-icon">
-              <i class="fas fa-chess-knight"></i>
-            </div>
-            <h4>Liderança Estratégica</h4>
-            <p>Experiência como Diretor de Auditoria e Coordenador de Projetos.</p>
-          </div>
-          <div class="highlight-card glass-card reveal-item">
-            <div class="highlight-icon">
-              <i class="fas fa-chalkboard-teacher"></i>
-            </div>
-            <h4>Mentoria & Consultoria</h4>
-            <p>Capacitação de equipas técnicas e desenho de sistemas sob medida.</p>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -90,9 +66,9 @@ const toggleExpand = () => {
 }
 
 .about-content {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: var(--spacing-lg);
+    display: block;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .about-text {
