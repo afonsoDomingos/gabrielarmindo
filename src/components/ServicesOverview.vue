@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <section class="services-overview section" id="conheca-servicos">
+  <section class="services-overview section" id="services-overview">
     <div class="container">
       <div class="section-header text-center reveal">
         <span class="section-tag">O que ofereço</span>

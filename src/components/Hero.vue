@@ -107,8 +107,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 20% 20%, rgba(255, 123, 26, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 165, 0, 0.1) 0%, transparent 50%);
+    background: radial-gradient(circle at 20% 20%, rgba(44, 82, 130, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(66, 153, 225, 0.1) 0%, transparent 50%);
     z-index: -1;
 }
 
@@ -128,8 +128,8 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: rgba(255, 123, 26, 0.1);
-    border: 1px solid rgba(255, 123, 26, 0.2);
+    background: rgba(44, 82, 130, 0.08);
+    border: 1px solid rgba(44, 82, 130, 0.2);
     border-radius: 50px;
     color: var(--primary-color);
     font-size: 0.875rem;
@@ -212,7 +212,7 @@
     background: var(--gradient-1);
     color: white;
     transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(255, 123, 26, 0.3);
+    box-shadow: 0 8px 16px rgba(44, 82, 130, 0.3);
 }
 
 .hero-name {
@@ -223,8 +223,8 @@
 
 .hero-name:hover {
     transform: scale(1.05) translateY(-5px);
-    text-shadow: 0 10px 20px rgba(255, 123, 26, 0.2);
-    filter: drop-shadow(0 0 8px rgba(255, 123, 26, 0.4));
+    text-shadow: 0 10px 20px rgba(44, 82, 130, 0.2);
+    filter: drop-shadow(0 0 8px rgba(44, 120, 130, 0.4));
 }
 
 .image-wrapper {
@@ -243,7 +243,7 @@
     border-radius: 50%;
     padding: 10px;
     background: var(--gradient-1);
-    box-shadow: 0 0 50px rgba(255, 123, 26, 0.4);
+    box-shadow: 0 0 50px rgba(44, 82, 130, 0.4);
     z-index: 2;
     transition: all 0.6s ease;
     display: flex;

@@ -38,12 +38,12 @@ onUnmounted(() => {
 
       <div class="nav-menu" :class="{ 'active': isMenuActive }" id="nav-menu">
         <ul class="nav-list">
-          <li class="nav-item"><a href="#home" class="nav-link" @click="closeMenu">Início</a></li>
           <li class="nav-item"><a href="#about" class="nav-link" @click="closeMenu">Sobre</a></li>
-          <li class="nav-item"><a href="#experience" class="nav-link" @click="closeMenu">Experiência</a></li>
-          <li class="nav-item"><a href="#skills" class="nav-link" @click="closeMenu">Habilidades</a></li>
-          <li class="nav-item"><a href="#blog" class="nav-link" @click="closeMenu">Blog</a></li>
-          <li class="nav-item"><a href="#contacto" class="nav-link" @click="closeMenu">Contacto</a></li>
+          <li class="nav-item"><a href="#services-overview" class="nav-link" @click="closeMenu">Serviços</a></li>
+          <li class="nav-item"><a href="#resume" class="nav-link" @click="closeMenu">Portfólio</a></li>
+          <li class="nav-item"><a href="#testimonials" class="nav-link" @click="closeMenu">Testemunhos</a></li>
+          <li class="nav-item"><a href="#services" class="nav-link" @click="closeMenu">Investimento</a></li>
+          <li class="nav-item"><a href="#contacto" class="nav-link" @click="closeMenu">Contato</a></li>
         </ul>
       </div>
 
@@ -97,7 +97,7 @@ onUnmounted(() => {
     justify-content: center;
     font-size: 1.5rem;
     font-weight: 800;
-    box-shadow: 0 4px 10px rgba(255, 123, 26, 0.3);
+    box-shadow: 0 4px 10px rgba(44, 82, 130, 0.3);
     transition: var(--transition-normal);
 }
 

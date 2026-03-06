@@ -222,12 +222,12 @@ ul {
 .btn-primary {
     background: var(--gradient-1);
     color: white;
-    box-shadow: 0 4px 16px rgba(255, 123, 26, 0.3);
+    box-shadow: 0 0 70px rgba(44, 82, 130, 0.6);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 123, 26, 0.4);
+    box-shadow: 0 8px 24px rgba(44, 82, 130, 0.4);
 }
 
 /* Animations */
@@ -407,7 +407,7 @@ ul {
     transform: translateY(20px);
     transition: all 0.4s ease;
     box-shadow: var(--shadow-lg);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(44, 82, 130, 0.1);
 }
 
 .scroll-top-btn.visible {
@@ -418,7 +418,7 @@ ul {
 
 .scroll-top-btn:hover {
     transform: translateY(-5px) scale(1.1);
-    box-shadow: 0 10px 25px rgba(255, 123, 26, 0.5);
+    box-shadow: 0 10px 25px rgba(44, 82, 130, 0.5);
 }
 
 @media (max-width: 480px) {

@@ -2,11 +2,9 @@
 import Navbar from '../components/Navbar.vue';
 import Hero from '../components/Hero.vue';
 import About from '../components/About.vue';
-import Experience from '../components/Experience.vue';
-import Skills from '../components/Skills.vue';
-import Services from '../components/Services.vue';
-import Certifications from '../components/Certifications.vue';
+import ResumeTabs from '../components/ResumeTabs.vue';
 import ServicesOverview from '../components/ServicesOverview.vue';
+import Testimonials from '../components/Testimonials.vue';
 import Blog from '../components/Blog.vue';
 import Contact from '../components/Contact.vue';
 import Footer from '../components/Footer.vue';
@@ -18,11 +16,10 @@ import Footer from '../components/Footer.vue';
     <main>
       <Hero />
       <About />
-      <Experience />
-      <Skills />
+      <ResumeTabs />
       <Services />
-      <Certifications />
       <ServicesOverview />
+      <Testimonials />
       <Blog />
       <Contact />
     </main>
