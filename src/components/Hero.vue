@@ -336,12 +336,14 @@
 }
 
 @media (max-width: 968px) {
-    .hero { padding-top: 60px; }
+    .hero { padding-top: 80px; padding-bottom: 100px; min-height: 100vh; }
     .hero-container { grid-template-columns: 1fr; text-align: center; gap: var(--spacing-md); }
     .hero-image { order: -1; margin-bottom: var(--spacing-md); }
     .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0; width: 100%; }
-    .hero-buttons, .hero-social { justify-content: center; }
+    .hero-buttons { justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+    .hero-social { justify-content: center; margin-top: 1.5rem; }
     .hero-description { margin-left: auto; margin-right: auto; max-width: 90%; text-align: center; }
+    .scroll-indicator { bottom: 1rem; }
     
     .profile-frame {
         width: 280px;
@@ -357,9 +359,12 @@
 }
 
 @media (max-width: 480px) {
-    .hero-title { font-size: 2.5rem; }
-    .stat-number { font-size: 2rem; }
+    .hero-title { font-size: 2.25rem; }
+    .hero-subtitle { font-size: 1.1rem; }
+    .stat-number { font-size: 1.875rem; }
     .floating-card { display: none; }
+    .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; margin-left: auto; margin-right: auto; }
+    .hero-buttons .btn { width: 100%; justify-content: center; }
     .profile-frame {
         width: 220px;
         height: 220px;
