@@ -7,7 +7,7 @@
         <h2 class="section-title">Habilidades Técnicas</h2>
       </div>
 
-      <div class="skills-grid reveal">
+      <div class="skills-grid reveal-container">
         <div class="skill-category">
           <h3><i class="fas fa-tools"></i> Ferramentas</h3>
           <div class="tech-grid">

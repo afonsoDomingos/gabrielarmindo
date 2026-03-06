@@ -314,6 +314,54 @@ ul {
     transform: translateX(0);
 }
 
+.reveal-zoom {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.8s cubic-bezier(0.17, 0.85, 0.438, 0.99);
+}
+
+.reveal-zoom.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.reveal-blur {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px);
+    transition: all 1s ease;
+}
+
+.reveal-blur.active {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+/* Staggered items reveal */
+.reveal-container .reveal-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.17, 0.85, 0.438, 0.99);
+}
+
+.reveal-container.active .reveal-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Scroll Progress Bar */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--gradient-1);
+    z-index: 2001;
+    transition: width 0.1s ease;
+}
+
 /* --- Scroll to Top Button --- */
 .scroll-top-btn {
     position: fixed;

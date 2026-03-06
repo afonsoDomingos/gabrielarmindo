@@ -25,8 +25,8 @@ onMounted(fetchPackages);
         <p class="section-subtitle">Escolha o plano ideal para as necessidades do seu projeto ou organização.</p>
       </div>
 
-      <div class="services-grid">
-        <div v-for="(pkg, index) in packages.slice(0, 3)" :key="pkg.id" class="service-card reveal" :style="{ transitionDelay: (index * 0.1) + 's' }">
+      <div class="services-grid reveal-container">
+        <div v-for="(pkg, index) in packages.slice(0, 3)" :key="pkg.id" class="service-card reveal-item">
           <div class="service-icon">
             <i :class="pkg.icon || 'fas fa-box'"></i>
           </div>

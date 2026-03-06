@@ -9,11 +9,36 @@ app.mount('#app');
 
 // --- Global Interactivity ---
 
-// 1. Scroll Reveal Observer
+// --- Global Interactivity ---
+
+// 1. Scroll Progress Bar
+const createScrollProgress = () => {
+    const bar = document.createElement('div');
+    bar.className = 'scroll-progress';
+    document.body.appendChild(bar);
+
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        bar.style.width = scrolled + "%";
+    });
+};
+
+// 2. Scroll Reveal Observer
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('active');
+
+            // Handle staggered children if it's a reveal-container
+            if (entry.target.classList.contains('reveal-container')) {
+                const items = entry.target.querySelectorAll('.reveal-item');
+                items.forEach((item, index) => {
+                    item.style.transitionDelay = `${(index + 1) * 0.1}s`;
+                    item.classList.add('active');
+                });
+            }
         }
     });
 }, {
@@ -22,13 +47,13 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 // Watch for DOM changes to observe new elements
 const domObserver = new MutationObserver(() => {
-    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom, .reveal-blur, .reveal-container');
     reveals.forEach(el => revealObserver.observe(el));
 });
 
 domObserver.observe(document.body, { childList: true, subtree: true });
 
-// 2. Scroll to Top Logic
+// 3. Scroll to Top Logic
 const createScrollTopButton = () => {
     const btn = document.createElement('button');
     btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
@@ -51,8 +76,10 @@ const createScrollTopButton = () => {
 
 // Initial check & setup
 document.addEventListener('DOMContentLoaded', () => {
+    createScrollProgress();
+
     // Reveal initial elements
-    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom, .reveal-blur, .reveal-container');
     reveals.forEach(el => revealObserver.observe(el));
 
     // Create Scroll button
@@ -61,10 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Smooth scroll for anchors
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
+            const href = this.getAttribute('href');
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
             }
         });
     });
