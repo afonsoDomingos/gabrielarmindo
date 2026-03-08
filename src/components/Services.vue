@@ -4,8 +4,19 @@ import { useLanguage } from '../store/language';
 
 const { t } = useLanguage();
 
-const isMZN = ref(false);
-const EXCHANGE_RATE = 64;
+const selectedCurrency = ref('USD'); // 'USD', 'MZN', 'EUR'
+
+const RATES = {
+  USD: 1,
+  MZN: 64,
+  EUR: 0.95
+};
+
+const SYMBOLS = {
+  USD: '$',
+  MZN: 'MT',
+  EUR: '€'
+};
 
 const investmentPlans = computed(() => [
   {
@@ -99,8 +110,15 @@ const investmentPlans = computed(() => [
 
 const formatValue = (val) => {
   if (!val) return '';
-  const converted = isMZN.value ? val * EXCHANGE_RATE : val;
-  return new Intl.NumberFormat('pt-MZ').format(converted);
+  const converted = val * RATES[selectedCurrency.value];
+  
+  const locale = selectedCurrency.value === 'MZN' ? 'pt-MZ' : 
+                 selectedCurrency.value === 'EUR' ? 'de-DE' : 'en-US';
+                 
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(converted);
 };
 
 const getDisplayPrice = (plan) => {
@@ -119,8 +137,9 @@ const getDisplayPrice = (plan) => {
         <p class="section-subtitle">{{ t('Escolha o plano ideal para transformar seus dados em decisões inteligentes.', 'Choose the ideal plan to transform your data into smart decisions.') }}</p>
         
         <div class="currency-toggle">
-          <button @click="isMZN = false" :class="{ 'active': !isMZN }">USD ($)</button>
-          <button @click="isMZN = true" :class="{ 'active': isMZN }">MZN (MT)</button>
+          <button @click="selectedCurrency = 'USD'" :class="{ 'active': selectedCurrency === 'USD' }">USD ($)</button>
+          <button @click="selectedCurrency = 'MZN'" :class="{ 'active': selectedCurrency === 'MZN' }">MZN (MT)</button>
+          <button @click="selectedCurrency = 'EUR'" :class="{ 'active': selectedCurrency === 'EUR' }">EUR (€)</button>
         </div>
       </div>
 
@@ -136,7 +155,7 @@ const getDisplayPrice = (plan) => {
           <div class="card-head">
             <h3 class="service-title">{{ plan.title }}</h3>
             <div class="price-container">
-              <span class="currency">{{ isMZN ? 'MT' : '$' }}</span>
+              <span class="currency">{{ SYMBOLS[selectedCurrency] }}</span>
               <span class="price-value" :class="{ 'range': plan.priceMax }">{{ getDisplayPrice(plan) }}</span>
             </div>
             <p class="frequency">{{ plan.frequency }}</p>
