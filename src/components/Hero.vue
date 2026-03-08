@@ -8,8 +8,8 @@
           <span>Especialista em M&A e MEAL</span>
         </div>
         <h1 class="hero-title">
-          Olá, Eu sou <br />
-          <span class="gradient-text hero-name">Gabriel Armindo</span>
+          <span class="hero-greeting reveal-text">Olá, Eu sou</span> <br />
+          <span class="gradient-text hero-name animated-name">Gabriel Armindo</span>
         </h1>
         <p class="hero-subtitle">M&E Specialist | Data Analysis Expert</p>
         <p class="hero-description">
@@ -147,6 +147,44 @@
     font-weight: 800;
     line-height: 1.2;
     margin-bottom: var(--spacing-sm);
+    perspective: 1000px;
+}
+
+.hero-greeting {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards 0.2s;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.animated-name {
+    display: inline-block;
+    background: linear-gradient(90deg, 
+        var(--primary-color) 0%, 
+        var(--secondary-color) 25%, 
+        var(--accent-color) 50%, 
+        var(--secondary-color) 75%, 
+        var(--primary-color) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 4s linear infinite, fadeInUp 0.8s ease forwards 0.4s;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.animated-name:hover {
+    transform: scale(1.08) translateY(-5px) rotateX(5deg);
+    filter: drop-shadow(0 0 12px rgba(44, 82, 130, 0.4));
+    cursor: pointer;
+}
+
+@keyframes shimmer {
+    to { background-position: 200% center; }
 }
 
 .hero-subtitle {
