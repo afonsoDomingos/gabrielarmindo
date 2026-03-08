@@ -38,6 +38,7 @@ onUnmounted(() => {
 
       <div class="nav-menu" :class="{ 'active': isMenuActive }" id="nav-menu">
         <ul class="nav-list">
+          <li class="nav-item"><a href="#home" class="nav-link" @click="closeMenu">Início</a></li>
           <li class="nav-item"><a href="#about" class="nav-link" @click="closeMenu">Sobre</a></li>
           <li class="nav-item"><a href="#services-overview" class="nav-link" @click="closeMenu">Serviços</a></li>
           <li class="nav-item"><a href="#resume" class="nav-link" @click="closeMenu">Portfólio</a></li>
