@@ -13,7 +13,7 @@
         </h1>
         <p class="hero-subtitle">M&E Specialist | Data Analysis Expert</p>
         <p class="hero-description">
-          Especialista em Monitoria e Avaliação e Gestão de Projectos com mais de 5 anos de experiência orientada para resultados nas áreas de desenvolvimento, assistência humanitária e resiliência.
+          Especialista em Monitoria e Avaliação e Gestão de Projectos com mais de 5 anos de experiência. Licenciado em Psicologia Social e Comunitária e com Extensão Universitária em Gênero, Diversidade e Inclusão Social em Direitos Humanos.
         </p>
 
         <div class="hero-stats">
