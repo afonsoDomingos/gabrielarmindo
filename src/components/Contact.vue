@@ -56,6 +56,16 @@ const handleSubmit = async () => {
                 <a href="https://www.linkedin.com/in/gabriel-armindo/" target="_blank">linkedin.com/in/gabriel-armindo</a>
               </div>
             </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+              <div class="contact-content">
+                <h4>Telefone / WhatsApp</h4>
+                <div class="phone-numbers">
+                  <a href="tel:+258865179513">+258 865 179 513</a> / 
+                  <a href="tel:+258833722159">833 722 159</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

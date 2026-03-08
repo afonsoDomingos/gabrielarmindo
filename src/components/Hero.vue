@@ -33,6 +33,10 @@
             <div class="stat-number">300</div>
             <div class="stat-label">Estudantes</div>
           </div>
+          <div class="stat-item reveal" style="transition-delay: 0.4s">
+            <div class="stat-number">20</div>
+            <div class="stat-label">Mentorias</div>
+          </div>
         </div>
 
         <div class="hero-buttons">
@@ -161,7 +165,7 @@
 
 .hero-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: var(--spacing-md);
     margin: var(--spacing-md) 0;
     padding: var(--spacing-md) 0;
@@ -339,7 +343,7 @@
     .hero { padding-top: 80px; padding-bottom: 100px; min-height: 100vh; }
     .hero-container { grid-template-columns: 1fr; text-align: center; gap: var(--spacing-md); }
     .hero-image { order: -1; margin-bottom: var(--spacing-md); }
-    .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0; width: 100%; }
+    .hero-stats { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin: 1rem 0; width: 100%; }
     .hero-buttons { justify-content: center; gap: 1rem; margin-bottom: 2rem; }
     .hero-social { justify-content: center; margin-top: 1.5rem; }
     .hero-description { margin-left: auto; margin-right: auto; max-width: 90%; text-align: center; }

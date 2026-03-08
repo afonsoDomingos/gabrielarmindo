@@ -17,6 +17,14 @@
             <div class="tech-item glass-card reveal-item"><i class="fas fa-project-diagram"></i><span>KoboToolbox</span></div>
           </div>
         </div>
+
+        <div class="skill-category reveal" style="margin-top: 2rem;">
+          <h3><i class="fas fa-users"></i> Liderança & Mentoria</h3>
+          <div class="tech-grid">
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-chalkboard-teacher"></i><span>+20 Mentorias</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-user-graduate"></i><span>+300 Estudantes</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>

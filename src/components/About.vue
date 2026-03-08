@@ -11,7 +11,7 @@ const toggleExpand = () => {
 <template>
   <section class="about section" id="about">
     <div class="container">
-      <div class="section-header text-center reveal">
+      <div class="section-header reveal">
         <h2 class="section-title">Sobre Mim</h2>
       </div>
 
