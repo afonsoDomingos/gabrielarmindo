@@ -41,7 +41,46 @@ const investmentPlans = ref([
       'Templates M&E e ferramentas',
       'Revisão de documentos'
     ],
-    cta: 'Inscrever-se',
+    cta: 'Começar Mentoria',
+    popular: false
+  },
+  {
+    title: 'Esclarecimentos M&E',
+    price: '$8',
+    frequency: 'Por hora / Sessão',
+    features: [
+      'Dúvidas sobre metodologias M&E',
+      'Orientação em projetos',
+      'Suporte técnico pontual',
+      'Consulta via chamada/video'
+    ],
+    cta: 'Agendar Sessão',
+    popular: false
+  },
+  {
+    title: 'Revisão de CVs',
+    price: '$8',
+    frequency: 'Por CV / Entrega em 72h',
+    features: [
+      'Revisão completa do CV',
+      'Otimização para área M&E',
+      'Sugestões de melhorias',
+      'Formatação profissional'
+    ],
+    cta: 'Enviar CV',
+    popular: false
+  },
+  {
+    title: 'Criação de Dashboards com efeito UAU',
+    price: '$100-1000',
+    frequency: 'Por projeto / escopo sob medida',
+    features: [
+      'Design profissional em Power BI e Excel',
+      'Integração de fontes de dados',
+      'KPIs claros e interatividade',
+      'Suporte opcional de ajustes'
+    ],
+    cta: 'Começar Projeto',
     popular: false
   }
 ]);
