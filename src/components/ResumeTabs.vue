@@ -8,7 +8,7 @@ const tabs = [
   { id: 'education', label: 'Formação e Certificação' },
   { id: 'skills', label: 'Competências' },
   { id: 'experience', label: 'Experiência' },
-  { id: 'studies', label: 'Estudos e Pesquisas' }
+  { id: 'studies', label: 'Estudos' }
 ];
 
 const certifications = [
@@ -79,72 +79,54 @@ const experiences = ref([
             <!-- Formação e Certificação -->
             <div v-else-if="activeTab === 'education'" class="tab-pane" key="edu">
               <div class="education-section">
-                <h3 class="pane-title">Certificações & Recomendações</h3>
-                <p class="pane-subtitle">Certificados de trabalho, cartas de recomendação e distinções profissionais.</p>
+                <h3 class="pane-title">Certificações & Formações</h3>
+                <p class="pane-subtitle">Minha trajetória acadêmica e técnica em M&E e Análise de Dados.</p>
                 
-                <div class="cert-work-grid">
-                  <!-- Certificações -->
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Certificação</span>
-                    <h5>Power BI - Business Intelligence</h5>
-                    <p class="issuer">Treinamento Simplificado</p>
+                <div class="cert-category-grid">
+                  <!-- Gestao de projectos & M&A -->
+                  <div class="cert-category">
+                    <h4 class="category-title"><i class="fas fa-tasks"></i> Gestão de Projectos & M&A</h4>
+                    <div class="cert-list">
+                      <div class="cert-item glass-card">
+                        <h5>MEAL para Desenvolvimento</h5>
+                        <p class="issuer">Humanitarian Leadership Academy</p>
+                      </div>
+                      <div class="cert-item glass-card">
+                        <h5>Monitoria e Avaliação de projectos</h5>
+                        <p class="issuer">SentiPensar</p>
+                      </div>
+                      <div class="cert-item glass-card">
+                        <h5>Teoria de Mudança</h5>
+                        <p class="issuer">SentiPensar</p>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Certificação</span>
-                    <h5>Excel: Do Zero ao Avançado</h5>
-                    <p class="issuer">Microsoft MVP</p>
-                  </div>
-
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Certificação</span>
-                    <h5>MEAL para Desenvolvimento</h5>
-                    <p class="issuer">Humanitarian Leadership Academy</p>
-                  </div>
-
-                  <!-- Certificados de Trabalho -->
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Certificado de Trabalho</span>
-                    <h5>NCBA CLUSA — Oficial Sénior de Monitoria e Avaliação</h5>
-                    <p class="details">Período: 02 Out 2023 – 26 Jul 2024 (10 meses) · + Consultor de M&A: 21 Ago – 20 Set 2024 · Emitido em Chimoio (23 Out 2024)</p>
-                  </div>
-
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Certificado de Trabalho</span>
-                    <h5>World Vision Moçambique — Assistente de Monitoria, Avaliação e Responsabilização</h5>
-                    <p class="details">Programa: EFS P (Emergency Food Security Program) · Período: 01 Set 2016 – 31 Mai 2017 · Emitido em 01 Jun 2017 (Tete)</p>
-                  </div>
-
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Certificado de Trabalho</span>
-                    <h5>Save the Children — Oficial Provincial de MEAL (Projecto ECCD)</h5>
-                    <p class="details">Período: 17 Jul 2017 – 31 Dez 2017 · Emitido em Maputo (03 Jan 2018)</p>
-                  </div>
-
-                  <!-- Cartas de Recomendação Profissional -->
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Carta de Recomendação Profissional</span>
-                    <h5>INOVA Consultoria e Serviços — Especialista Sénior em Monitoria e Avaliação</h5>
-                    <p class="details">Destaque: análises e dashboards (Excel, KoboToolbox, ODK, Power BI, SPSS) · Quelimane, Zambézia</p>
-                  </div>
-
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Carta de Recomendação Profissional</span>
-                    <h5>Diversity and Inclusion — Consultor de Monitoria e Avaliação</h5>
-                    <p class="details">Âmbito: Avaliação de Impacto (Desenvolvimento e Inclusão Social) · Recomendação assinada pelo Director Executivo (Edgar Bernardo)</p>
-                  </div>
-
-                  <!-- Outros Títulos e Distinções -->
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Certificado de Honra</span>
-                    <h5>CCA — Orador no Programa “Diálogos de Impacto em M&A” (2ª Edição)</h5>
-                    <p class="details">Data: 26 Set 2025 · Tema: “Da Informação à Ação: Como Transformar Dados em Decisões e Não Apenas em Relatórios”</p>
-                  </div>
-
-                  <div class="cert-work-card glass-card">
-                    <span class="card-type">Carta de Recomendação Profissional</span>
-                    <h5>Innovation and Solutions (SULDA) — Director de Programas</h5>
-                    <p class="details">Destaque: coordenação de projectos complexos, liderança de equipas e visão estratégica · Carta assinada pelo Director Executivo</p>
+                  <!-- Analise de dados & BI -->
+                  <div class="cert-category">
+                    <h4 class="category-title"><i class="fas fa-chart-line"></i> Análise de Dados & BI</h4>
+                    <div class="cert-list">
+                      <div class="cert-item glass-card">
+                        <h5>Data Analytics Essentials Course</h5>
+                        <p class="issuer">CISCO Networking Academy</p>
+                      </div>
+                      <div class="cert-item glass-card">
+                        <h5>Extensão Universitária em Gestão e Análise de Dados com Kobotoolbox, Excel, Power Bi, SPSS e R</h5>
+                        <p class="issuer">CBS</p>
+                      </div>
+                      <div class="cert-item glass-card">
+                        <h5>Power BI - Business Intelligence</h5>
+                        <p class="issuer">Expert Cursos</p>
+                      </div>
+                      <div class="cert-item glass-card">
+                        <h5>Excel: Do Zero ao Avançado</h5>
+                        <p class="issuer">EvolutionTech Training</p>
+                      </div>
+                      <div class="cert-item glass-card">
+                        <h5>Análise de dados com Excel</h5>
+                        <p class="issuer">Excel BlackBelt</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -274,19 +256,49 @@ const experiences = ref([
 
             <!-- Estudos -->
             <div v-else-if="activeTab === 'studies'" class="tab-pane" key="studies">
-              <div class="studies-list">
-                <div class="study-card">
-                  <i class="fas fa-book-reader"></i>
-                  <div>
-                    <h5>Análise de Impacto Socioeconómico</h5>
-                    <p>Pesquisa focada no fortalecimento de sistemas comunitários em áreas resilientes.</p>
+              <div class="studies-grid">
+                <!-- Card 1 -->
+                <div class="study-item glass-card">
+                  <div class="study-icon"><i class="fas fa-search"></i></div>
+                  <h5>Concepção e Realização de Avaliações</h5>
+                  <p>Especialista na concepção e realização de avaliações completas incluindo baseline, endline, outcome e avaliações de impacto para organizações.</p>
+                  <div class="study-tags">
+                    <span class="tag tag-blue">Baseline</span>
+                    <span class="tag tag-green">Endline</span>
+                    <span class="tag tag-indigo">PDM</span>
                   </div>
                 </div>
-                <div class="study-card">
-                  <i class="fas fa-microscope"></i>
-                  <div>
-                    <h5>Estudos de Linha de Base (Baseline)</h5>
-                    <p>Desenvolvimento de metodologias para medição de indicadores em projectos humanitários.</p>
+
+                <!-- Card 2 -->
+                <div class="study-item glass-card">
+                  <div class="study-icon"><i class="fas fa-users-cog"></i></div>
+                  <h5>Pesquisas Antropológicas</h5>
+                  <p>Pesquisas sociais e antropológicas incluindo estudos sobre prostituição, governação local, migração e integração social em Maputo.</p>
+                  <div class="study-tags">
+                    <span class="tag tag-darkblue">Antropologia</span>
+                    <span class="tag tag-emerald">Qualitativo</span>
+                  </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="study-item glass-card">
+                  <div class="study-icon"><i class="fas fa-clipboard-check"></i></div>
+                  <h5>Avaliações de Necessidades</h5>
+                  <p>Avaliações de necessidades para resposta humanitária e desenvolvimento comunitário em contextos de emergência e pós-conflito.</p>
+                  <div class="study-tags">
+                    <span class="tag tag-red">Emergência</span>
+                    <span class="tag tag-yellow">Humanitário</span>
+                  </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="study-item glass-card">
+                  <div class="study-icon"><i class="fas fa-poll"></i></div>
+                  <h5>Estudos de Mercado & DQA</h5>
+                  <p>Análises de mercado e auditorias de qualidade de dados (DQA) para garantir integridade e precisão dos sistemas M&E.</p>
+                  <div class="study-tags">
+                    <span class="tag tag-emerald">Análise de Mercado</span>
+                    <span class="tag tag-darkblue">DQA</span>
                   </div>
                 </div>
               </div>
@@ -725,4 +737,115 @@ const experiences = ref([
     grid-template-columns: 1fr;
   }
 }
+
+/* Certificações Categorizadas */
+.cert-category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.category-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--bg-tertiary);
+}
+
+.cert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cert-item {
+  padding: 1.25rem 1.5rem;
+  border-left: 4px solid var(--primary-color);
+}
+
+.cert-item h5 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  color: #1a202c;
+  line-height: 1.3;
+}
+
+.cert-item .issuer {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+@media (max-width: 850px) {
+  .cert-category-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Estudos Section Styles */
+.studies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.study-item {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.study-icon {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(43, 108, 176, 0.05);
+  border-radius: 50%;
+  color: var(--primary-dark);
+  font-size: 1.5rem;
+}
+
+.study-item h5 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.study-item p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.study-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.study-tags .tag {
+  padding: 0.35rem 0.85rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+}
+
+.tag-blue { background-color: #2b6cb0; }
+.tag-green { background-color: #38a169; }
+.tag-indigo { background-color: #667eea; }
+.tag-darkblue { background-color: #2c5282; }
+.tag-emerald { background-color: #48bb78; }
+.tag-red { background-color: #e53e3e; }
+.tag-yellow { background-color: #d69e2e; }
 </style>
