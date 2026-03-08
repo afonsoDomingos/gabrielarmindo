@@ -1,10 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 
+const isMZN = ref(false);
+const EXCHANGE_RATE = 64;
+
 const investmentPlans = ref([
   {
     title: 'Consultoria M&E',
-    price: '$200-300',
+    priceMin: 200,
+    priceMax: 300,
     frequency: 'Por dia / Consultoria',
     features: [
       'Desenho e condução de avaliações',
@@ -18,7 +22,8 @@ const investmentPlans = ref([
   },
   {
     title: 'Sistema M&E Completo',
-    price: '$94',
+    priceMin: 94,
+    priceMax: null,
     frequency: 'Por projeto / 2-3 meses',
     features: [
       'Sistema M&E personalizado',
@@ -32,7 +37,8 @@ const investmentPlans = ref([
   },
   {
     title: 'M&E Mentorship',
-    price: '$31',
+    priceMin: 31,
+    priceMax: null,
     frequency: 'Por mês / Mínimo 4 sessões',
     features: [
       '4+ sessões mensais',
@@ -46,7 +52,8 @@ const investmentPlans = ref([
   },
   {
     title: 'Esclarecimentos M&E',
-    price: '$8',
+    priceMin: 8,
+    priceMax: null,
     frequency: 'Por hora / Sessão',
     features: [
       'Dúvidas sobre metodologias M&E',
@@ -59,7 +66,8 @@ const investmentPlans = ref([
   },
   {
     title: 'Revisão de CVs',
-    price: '$8',
+    priceMin: 8,
+    priceMax: null,
     frequency: 'Por CV / Entrega em 72h',
     features: [
       'Revisão completa do CV',
@@ -72,7 +80,8 @@ const investmentPlans = ref([
   },
   {
     title: 'Criação de Dashboards com efeito UAU',
-    price: '$100-1000',
+    priceMin: 100,
+    priceMax: 1000,
     frequency: 'Por projeto / escopo sob medida',
     features: [
       'Design profissional em Power BI e Excel',
@@ -84,6 +93,18 @@ const investmentPlans = ref([
     popular: false
   }
 ]);
+
+const formatValue = (val) => {
+  if (!val) return '';
+  const converted = isMZN.value ? val * EXCHANGE_RATE : val;
+  return new Intl.NumberFormat('pt-MZ').format(converted);
+};
+
+const getDisplayPrice = (plan) => {
+  const min = formatValue(plan.priceMin);
+  const max = plan.priceMax ? formatValue(plan.priceMax) : null;
+  return max ? `${min}-${max}` : min;
+};
 </script>
 
 <template>
@@ -93,6 +114,11 @@ const investmentPlans = ref([
         <span class="section-tag">Investimento</span>
         <h2 class="section-title">Pacotes personalizados para suas necessidades</h2>
         <p class="section-subtitle">Escolha o plano ideal para transformar seus dados em decisões inteligentes.</p>
+        
+        <div class="currency-toggle">
+          <button @click="isMZN = false" :class="{ 'active': !isMZN }">USD ($)</button>
+          <button @click="isMZN = true" :class="{ 'active': isMZN }">MZN (MT)</button>
+        </div>
       </div>
 
       <div class="services-grid reveal-container">
@@ -107,8 +133,8 @@ const investmentPlans = ref([
           <div class="card-head">
             <h3 class="service-title">{{ plan.title }}</h3>
             <div class="price-container">
-              <span class="currency">$</span>
-              <span class="price-value">{{ plan.price.replace('$', '') }}</span>
+              <span class="currency">{{ isMZN ? 'MT' : '$' }}</span>
+              <span class="price-value" :class="{ 'range': plan.priceMax }">{{ getDisplayPrice(plan) }}</span>
             </div>
             <p class="frequency">{{ plan.frequency }}</p>
           </div>
@@ -269,10 +295,42 @@ const investmentPlans = ref([
 
 @media (max-width: 480px) {
   .price-value {
-    font-size: 2.5rem;
+    font-size: 2.22rem;
   }
   .service-card {
     padding: 2rem 1.5rem;
   }
+}
+
+/* Currency Toggle Styles */
+.currency-toggle {
+  display: inline-flex;
+  background: var(--bg-tertiary);
+  padding: 4px;
+  border-radius: 50px;
+  margin-top: 1rem;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.currency-toggle button {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  background: transparent;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-secondary);
+}
+
+.currency-toggle button.active {
+  background: white;
+  color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.price-value.range {
+  font-size: 2.2rem;
 }
 </style>
