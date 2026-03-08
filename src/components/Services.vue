@@ -198,7 +198,7 @@ const getDisplayPrice = (plan) => {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 3rem 2rem;
+  padding: 2rem 1.75rem;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   background: white;
   border: 1px solid rgba(0,0,0,0.05);
@@ -229,15 +229,15 @@ const getDisplayPrice = (plan) => {
 
 .card-head {
   text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid #edf2f7;
 }
 
 .service-title {
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: #2d3748;
 }
 
@@ -257,7 +257,7 @@ const getDisplayPrice = (plan) => {
 }
 
 .price-value {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -269,7 +269,7 @@ const getDisplayPrice = (plan) => {
 }
 
 .service-features {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   flex: 1;
   list-style: none;
   padding: 0;
@@ -279,8 +279,8 @@ const getDisplayPrice = (plan) => {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1rem;
-  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
   color: #4a5568;
 }
 
