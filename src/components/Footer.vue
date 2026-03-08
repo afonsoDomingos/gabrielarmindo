@@ -1,3 +1,8 @@
+<script setup>
+import { useLanguage } from '../store/language';
+const { t } = useLanguage();
+</script>
+
 <template>
   <footer class="footer">
     <div class="container">
@@ -7,7 +12,7 @@
             <span class="logo-text">Gabriel</span>
             <span class="logo-accent">Armindo</span>
           </a>
-          <p>Especialista Sénior em Monitoria, Avaliação e Análise de Dados.</p>
+          <p>{{ t('Especialista Sénior em Monitoria, Avaliação e Análise de Dados.', 'Senior Specialist in Monitoring, Evaluation and Data Analysis.') }}</p>
         </div>
 
         <div class="footer-social">
@@ -19,7 +24,7 @@
 
       <div class="footer-bottom">
         <p>
-          &copy; 2026 Gabriel Armindo. Todos os direitos reservados.
+          &copy; 2026 Gabriel Armindo. {{ t('Todos os direitos reservados.', 'All rights reserved.') }}
           <router-link to="/login" class="admin-link">Admin</router-link>
         </p>
         

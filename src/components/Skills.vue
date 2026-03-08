@@ -1,28 +1,32 @@
-<template>
+<script setup>
+import { useLanguage } from '../store/language';
+const { t } = useLanguage();
+</script>
 
+<template>
   <section class="skills section" id="skills">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">Competências</span>
-        <h2 class="section-title">Habilidades Técnicas</h2>
+        <span class="section-tag">{{ t('Competências', 'Skills') }}</span>
+        <h2 class="section-title">{{ t('Habilidades Técnicas', 'Technical Skills') }}</h2>
       </div>
 
       <div class="skills-grid reveal-container">
         <div class="skill-category">
-          <h3><i class="fas fa-tools"></i> Ferramentas</h3>
+          <h3><i class="fas fa-tools"></i> {{ t('Ferramentas', 'Tools') }}</h3>
           <div class="tech-grid">
             <div class="tech-item glass-card reveal-item"><i class="fas fa-database"></i><span>Power BI</span></div>
             <div class="tech-item glass-card reveal-item"><i class="fas fa-chart-bar"></i><span>SPSS</span></div>
-            <div class="tech-item glass-card reveal-item"><i class="fas fa-file-excel"></i><span>Excel Avançado</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-file-excel"></i><span>{{ t('Excel Avançado', 'Advanced Excel') }}</span></div>
             <div class="tech-item glass-card reveal-item"><i class="fas fa-project-diagram"></i><span>KoboToolbox</span></div>
           </div>
         </div>
 
         <div class="skill-category reveal" style="margin-top: 2rem;">
-          <h3><i class="fas fa-users"></i> Liderança & Mentoria</h3>
+          <h3><i class="fas fa-users"></i> {{ t('Liderança & Mentoria', 'Leadership & Mentorship') }}</h3>
           <div class="tech-grid">
-            <div class="tech-item glass-card reveal-item"><i class="fas fa-chalkboard-teacher"></i><span>+20 Mentorias</span></div>
-            <div class="tech-item glass-card reveal-item"><i class="fas fa-user-graduate"></i><span>+300 Estudantes</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-chalkboard-teacher"></i><span>{{ t('+20 Mentorias', '+20 Mentorships') }}</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-user-graduate"></i><span>{{ t('+300 Estudantes', '+300 Students') }}</span></div>
           </div>
         </div>
       </div>

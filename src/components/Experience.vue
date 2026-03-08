@@ -1,21 +1,26 @@
+<script setup>
+import { useLanguage } from '../store/language';
+const { t } = useLanguage();
+</script>
+
 <template>
   <section class="experience section" id="experience">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">Trajetória</span>
-        <h2 class="section-title">Experiência Profissional</h2>
+        <span class="section-tag">{{ t('Trajetória', 'Trajectory') }}</span>
+        <h2 class="section-title">{{ t('Experiência Profissional', 'Professional Experience') }}</h2>
       </div>
 
       <div class="experience-grid">
         <div class="experience-card glass-card reveal-left">
           <div class="exp-icon"><i class="fas fa-briefcase"></i></div>
           <h3>MEAL Officer</h3>
-          <p>Liderança em sistemas de monitoria e avaliação para projetos de impacto social e desenvolvimento comunitário.</p>
+          <p>{{ t('Liderança em sistemas de monitoria e avaliação para projetos de impacto social e desenvolvimento comunitário.', 'Leadership in monitoring and evaluation systems for social impact and community development projects.') }}</p>
         </div>
         <div class="experience-card glass-card reveal-right">
           <div class="exp-icon"><i class="fas fa-chart-line"></i></div>
-          <h3>Analista de Dados</h3>
-          <p>Transformação de dados complexos em insights acionáveis para tomada de decisão estratégica.</p>
+          <h3>{{ t('Analista de Dados', 'Data Analyst') }}</h3>
+          <p>{{ t('Transformação de dados complexos em insights acionáveis para tomada de decisão estratégica.', 'Transforming complex data into actionable insights for strategic decision-making.') }}</p>
         </div>
       </div>
     </div>

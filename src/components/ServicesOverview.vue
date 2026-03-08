@@ -1,14 +1,16 @@
 <script setup>
+import { useLanguage } from '../store/language';
+const { t } = useLanguage();
 </script>
 
 <template>
   <section class="services-overview section" id="services-overview">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">O que ofereço</span>
-        <h2 class="section-title">Conheça os Meus Serviços</h2>
+        <span class="section-tag">{{ t('O que ofereço', 'What I offer') }}</span>
+        <h2 class="section-title">{{ t('Conheça os Meus Serviços', 'Meet My Services') }}</h2>
         <p class="section-subtitle">
-          Soluções estratégicas em monitoria, avaliação e análise de dados para transformar o impacto da sua organização.
+          {{ t('Soluções estratégicas em monitoria, avaliação e análise de dados para transformar o impacto da sua organização.', 'Strategic solutions in monitoring, evaluation and data analysis to transform your organization\'s impact.') }}
         </p>
       </div>
 
@@ -17,9 +19,9 @@
           <div class="overview-icon">
             <i class="fas fa-search-location"></i>
           </div>
-          <h3>Monitoria e Avaliação (M&E)</h3>
+          <h3>{{ t('Monitoria e Avaliação (M&E)', 'Monitoring and Evaluation (M&E)') }}</h3>
           <p>
-            Desenho e implementação de sistemas de M&E, matrizes de indicadores e planos de prestação de contas (MEAL).
+            {{ t('Desenho e implementação de sistemas de M&E, matrizes de indicadores e planos de prestação de contas (MEAL).', 'Design and implementation of M&E systems, indicator matrices and accountability plans (MEAL).') }}
           </p>
         </div>
 
@@ -27,9 +29,9 @@
           <div class="overview-icon">
             <i class="fas fa-chart-pie"></i>
           </div>
-          <h3>Análise de Dados e BI</h3>
+          <h3>{{ t('Análise de Dados e BI', 'Data Analysis and BI') }}</h3>
           <p>
-            Criação de dashboards dinâmicos no Power BI, análises estatísticas no SPSS e Excel para suporte à tomada de decisão.
+            {{ t('Criação de dashboards dinâmicos no Power BI, análises estatísticas no SPSS e Excel para suporte à tomada de decisão.', 'Creation of dynamic dashboards in Power BI, statistical analysis in SPSS and Excel for decision support.') }}
           </p>
         </div>
 
@@ -37,9 +39,9 @@
           <div class="overview-icon">
             <i class="fas fa-tasks"></i>
           </div>
-          <h3>Gestão de Projectos</h3>
+          <h3>{{ t('Gestão de Projectos', 'Project Management') }}</h3>
           <p>
-            Liderança e apoio estratégico na implementação de projectos de assistência humanitária e desenvolvimento.
+            {{ t('Liderança e apoio estratégico na implementação de projectos de assistência humanitária e desenvolvimento.', 'Leadership and strategic support in the implementation of humanitarian assistance and development projects.') }}
           </p>
         </div>
 
@@ -47,16 +49,16 @@
           <div class="overview-icon">
             <i class="fas fa-file-invoice"></i>
           </div>
-          <h3>Desenho de Formulários</h3>
+          <h3>{{ t('Desenho de Formulários', 'Form Design') }}</h3>
           <p>
-            Desenvolvimento de formulários digitais avançados no KoboToolbox com lógica de salto e validações complexas.
+            {{ t('Desenvolvimento de formulários digitais avançados no KoboToolbox com lógica de salto e validações complexas.', 'Development of advanced digital forms in KoboToolbox with skip logic and complex validations.') }}
           </p>
         </div>
       </div>
 
       <div class="services-action text-center reveal">
         <a href="#services" class="btn btn-primary">
-          <span>Ver Planos e Preços</span>
+          <span>{{ t('Ver Planos e Preços', 'View Plans and Pricing') }}</span>
           <i class="fas fa-arrow-right"></i>
         </a>
       </div>

@@ -1,23 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed } from 'vue';
+import { useLanguage } from '../store/language';
 
-const certifications = ref([
+const { t } = useLanguage();
+
+const certifications = computed(() => [
   {
-    category: 'Gestão de Projectos & M&A',
+    category: t('Gestão de Projectos & M&A', 'Project Management & M&E'),
     items: [
-      { title: 'MEAL para Desenvolvimento', issuer: 'Humanitarian Leadership Academy' },
-      { title: 'Monitoria e Avaliacao de projectos', issuer: 'SentiPensar' },
-      { title: 'Teoria de Mudanca', issuer: 'SentiPensar' }
+      { title: t('MEAL para Desenvolvimento', 'MEAL for Development'), issuer: 'Humanitarian Leadership Academy' },
+      { title: t('Monitoria e Avaliacao de projectos', 'Project Monitoring and Evaluation'), issuer: 'SentiPensar' },
+      { title: t('Teoria de Mudanca', 'Theory of Change'), issuer: 'SentiPensar' }
     ]
   },
   {
-    category: 'Análise de dados & BI',
+    category: t('Análise de dados & BI', 'Data Analysis & BI'),
     items: [
-      { title: 'Data Analytics Essentials Course', issuer: 'CISCO Networking Academy' },
-      { title: 'Gestao e Analise de Dados (Kobotoolbox, Excel, Power Bi, SPSS, R)', issuer: 'CBS (Extensão Univ.)' },
+      { title: t('Data Analytics Essentials Course', 'Data Analytics Essentials Course'), issuer: 'CISCO Networking Academy' },
+      { title: t('Gestao e Analise de Dados (Kobotoolbox, Excel, Power Bi, SPSS, R)', 'Data Management and Analysis (KoboToolbox, Excel, Power BI, SPSS, R)'), issuer: 'CBS (Univ. Extension)' },
       { title: 'Power BI - Business Intelligence', issuer: 'Expert Cursos' },
-      { title: 'Excel: Do Zero ao Avançado', issuer: 'EvolutionTech Training' },
-      { title: 'Análise de dados com Excel', issuer: 'Excel BlackBelt' }
+      { title: t('Excel: Do Zero ao Avançado', 'Excel: Zero to Advanced'), issuer: 'EvolutionTech Training' },
+      { title: t('Análise de dados com Excel', 'Data Analysis with Excel'), issuer: 'Excel BlackBelt' }
     ]
   }
 ]);
@@ -27,8 +30,8 @@ const certifications = ref([
   <section class="certifications section" id="certifications">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">Qualificações</span>
-        <h2 class="section-title">Certificações & Treinamentos</h2>
+        <span class="section-tag">{{ t('Qualificações', 'Qualifications') }}</span>
+        <h2 class="section-title">{{ t('Certificações & Treinamentos', 'Certifications & Training') }}</h2>
       </div>
 
       <div class="cert-grid">

@@ -1,11 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useLanguage } from '../store/language';
 
-const testimonials = ref([
+const { t } = useLanguage();
+
+const testimonials = computed(() => [
   {
-    text: "Participar da mentoria em Monitoria e Avaliação com Gabriel Armindo foi uma experiência transformadora para a minha carreira. Os conteúdos práticos e bem estruturados ajudaram-me a aplicar os conceitos no dia a dia, dando-me confiança para atuar como Consultor e Oficial de MEAL. Sou muito grato pelo profissionalismo e dedicação do mentor e recomendo esta mentoria a todos que desejam crescer na área de Monitoria, Avaliação, Prestação de Contas e Aprendizagem.",
+    text: t("Participar da mentoria em Monitoria e Avaliação com Gabriel Armindo foi uma experiência transformadora para a minha carreira. Os conteúdos práticos e bem estruturados ajudaram-me a aplicar os conceitos no dia a dia, dando-me confiança para atuar como Consultor e Oficial de MEAL. Sou muito grato pelo profissionalismo e dedicação do mentor e recomendo esta mentoria a todos que desejam crescer na área de Monitoria, Avaliação, Prestação de Contas e Aprendizagem.", "Participating in the Monitoring and Evaluation mentorship with Gabriel Armindo was a transformative experience for my career. The practical and well-structured contents helped me apply the concepts in my daily life, giving me confidence to act as a Consultant and MEAL Officer. I am very grateful for the mentor's professionalism and dedication and I recommend this mentorship to everyone who wants to grow in the Monitoring, Evaluation, Accountability and Learning area."),
     name: "Samuel Matola",
-    role: "Consultor de Pesquisa | Oficial de MEAL"
+    role: t("Consultor de Pesquisa | Oficial de MEAL", "Research Consultant | MEAL Officer")
   }
 ]);
 
@@ -24,8 +27,8 @@ const prev = () => {
   <section class="testimonials section" id="testimonials">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">Testemunhos</span>
-        <h2 class="section-title">O que dizem sobre o meu trabalho</h2>
+        <span class="section-tag">{{ t('Testemunhos', 'Testimonials') }}</span>
+        <h2 class="section-title">{{ t('O que dizem sobre o meu trabalho', 'What they say about my work') }}</h2>
       </div>
 
       <div class="testimonials-slider reveal">

@@ -2,7 +2,9 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { useLanguage } from '../store/language';
 
+const { t } = useLanguage();
 const email = ref('info@gabrielarmindo.com');
 const password = ref('');
 const router = useRouter();
@@ -17,7 +19,7 @@ const handleLogin = async () => {
     localStorage.setItem('gabriel_admin_token', res.data.token);
     router.push('/admin');
   } catch (err) {
-    alert('Credenciais inválidas!');
+    alert(t('Credenciais inválidas!', 'Invalid credentials!'));
   }
 };
 </script>
@@ -25,20 +27,20 @@ const handleLogin = async () => {
 <template>
   <div class="login-page">
     <div class="login-container">
-      <h2>Admin Login</h2>
+      <h2>{{ t('Login de Admin', 'Admin Login') }}</h2>
       <form @submit.prevent="handleLogin">
         <div class="form-group">
           <label>Email</label>
           <input type="email" v-model="email" required />
         </div>
         <div class="form-group">
-          <label>Senha</label>
+          <label>{{ t('Senha', 'Password') }}</label>
           <input type="password" v-model="password" required />
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">{{ t('Entrar', 'Login') }}</button>
       </form>
       <div style="margin-top: 1rem; text-align: center;">
-        <router-link to="/" style="font-size: 0.9rem; color: #666;">Voltar ao site</router-link>
+        <router-link to="/" style="font-size: 0.9rem; color: #666;">{{ t('Voltar ao site', 'Back to site') }}</router-link>
       </div>
     </div>
   </div>

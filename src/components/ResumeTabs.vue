@@ -1,15 +1,18 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useLanguage } from '../store/language';
+
+const { t } = useLanguage();
 
 const activeTab = ref('description');
 
-const tabs = [
-  { id: 'description', label: 'Descrição' },
-  { id: 'education', label: 'Formação e Certificação' },
-  { id: 'skills', label: 'Competências' },
-  { id: 'experience', label: 'Experiência' },
-  { id: 'studies', label: 'Estudos' }
-];
+const tabs = computed(() => [
+  { id: 'description', label: t('Descrição', 'Description') },
+  { id: 'education', label: t('Formação e Certificação', 'Education & Certification') },
+  { id: 'skills', label: t('Competências', 'Skills') },
+  { id: 'experience', label: t('Experiência', 'Experience') },
+  { id: 'studies', label: t('Estudos', 'Studies') }
+]);
 
 const certifications = [
   { title: 'MEAL para Desenvolvimento', issuer: 'Humanitarian Leadership Academy' },
@@ -21,25 +24,25 @@ const certifications = [
   { title: 'Excel: Do Zero ao Avançado', issuer: 'EvolutionTech Training' }
 ];
 
-const experiences = ref([
+const experiences = computed(() => [
   {
-    role: 'Director de Programas',
-    company: 'Innovation and Solutions, Moçambique',
-    period: '05/2025 - Presente',
-    desc: 'Gestão estratégica de programas, coordenação de equipas, elaboração de propostas técnicas, garantia de qualidade e supervisão de relatórios, Monitoria e Avaliação.'
+    role: t('Director de Programas', 'Program Director'),
+    company: t('Innovation and Solutions, Moçambique', 'Innovation and Solutions, Mozambique'),
+    period: t('05/2025 - Presente', '05/2025 - Present'),
+    desc: t('Gestão estratégica de programas, coordenação de equipas, elaboração de propostas técnicas, garantia de qualidade e supervisão de relatórios, Monitoria e Avaliação.', 'Strategic program management, team coordination, technical proposals, quality assurance, report oversight, M&E.')
   },
   {
-    role: 'Consultor de M&E',
+    role: t('Consultor de M&E', 'M&E Consultant'),
     company: 'CCA - Consulting and Coaching Agency',
-    period: '09/2025 - Presente',
-    desc: 'Criação de cursos em M&E, Excel, Análise de Dados, KoboToolbox. Desenvolvimento de dashboards profissionais e formações especializadas.'
+    period: t('09/2025 - Presente', '09/2025 - Present'),
+    desc: t('Criação de cursos em M&E, Excel, Análise de Dados, KoboToolbox. Desenvolvimento de dashboards profissionais e formações especializadas.', 'M&E, Excel, Data Analysis, and KoboToolbox course creation. Professional dashboard development and specialized training.')
   },
   {
-    role: 'Docente',
-    company: 'Instituto Superior de Ciências Empresariais e Tecnológicas, Moçambique',
-    period: '11/2025 - Actualmente',
-    tag: 'TEMPO PARCIAL',
-    desc: 'Docente no curso de Monitoria e Avaliação & Análise de Dados.'
+    role: t('Docente', 'Lecturer'),
+    company: t('Instituto Superior de Ciências Empresariais e Tecnológicas, Moçambique', 'Higher Institute of Business and Technological Sciences, Mozambique'),
+    period: t('11/2025 - Actualmente', '11/2025 - Present'),
+    tag: t('TEMPO PARCIAL', 'PART-TIME'),
+    desc: t('Docente no curso de Monitoria e Avaliação & Análise de Dados.', 'Lecturer for M&E and Data Analysis course.')
   }
 ]);
 </script>
@@ -67,10 +70,10 @@ const experiences = ref([
               <div class="description-grid">
                 <div class="desc-text text-left">
                   <p>
-                    Sou um profissional dedicado à área de Pesquisa e Análise de Dados, com sólida experiência em Monitoria e Avaliação (M&E) e Gestão de Projectos. Minha abordagem combina rigor metodológico com inovação tecnológica para impulsionar a eficiência e o impacto organizacional.
+                    {{ t('Sou um profissional dedicado à área de Pesquisa e Análise de Dados, com sólida experiência em Monitoria e Avaliação (M&E) e Gestão de Projectos. Minha abordagem combina rigor metodológico com inovação tecnológica para impulsionar a eficiência e o impacto organizacional.', 'I am a professional dedicated to the Research and Data Analysis area, with solid experience in Monitoring and Evaluation (M&E) and Project Management. My approach combines methodological rigor with technological innovation to drive efficiency and organizational impact.') }}
                   </p>
                   <p>
-                    Especialista em integrar abordagens sensíveis ao género, inclusão e proteção em contextos complexos e humanitários, garantindo que a tomada de decisão seja sempre baseada em evidências robustas.
+                    {{ t('Especialista em integrar abordagens sensíveis ao género, inclusão e proteção em contextos complexos e humanitários, garantindo que a tomada de decisão seja sempre baseada em evidências robustas.', 'Specialist in integrating gender-sensitive, inclusion and protection approaches in complex and humanitarian contexts, ensuring that decision-making is always based on robust evidence.') }}
                   </p>
                 </div>
               </div>
@@ -79,24 +82,24 @@ const experiences = ref([
             <!-- Formação e Certificação -->
             <div v-else-if="activeTab === 'education'" class="tab-pane" key="edu">
               <div class="education-section">
-                <h3 class="pane-title">Certificações & Formações</h3>
-                <p class="pane-subtitle">Minha trajetória acadêmica e técnica em M&E e Análise de Dados.</p>
+                <h3 class="pane-title">{{ t('Certificações & Formações', 'Certifications & Training') }}</h3>
+                <p class="pane-subtitle">{{ t('Minha trajetória acadêmica e técnica em M&E e Análise de Dados.', 'My academic and technical trajectory in M&E and Data Analysis.') }}</p>
                 
                 <div class="cert-category-grid">
                   <!-- Gestao de projectos & M&A -->
                   <div class="cert-category">
-                    <h4 class="category-title"><i class="fas fa-tasks"></i> Gestão de Projectos & M&A</h4>
+                    <h4 class="category-title"><i class="fas fa-tasks"></i> {{ t('Gestão de Projectos & M&A', 'Project Management & M&E') }}</h4>
                     <div class="cert-list">
                       <div class="cert-item glass-card">
-                        <h5>MEAL para Desenvolvimento</h5>
+                        <h5>{{ t('MEAL para Desenvolvimento', 'MEAL for Development') }}</h5>
                         <p class="issuer">Humanitarian Leadership Academy</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>Monitoria e Avaliação de projectos</h5>
+                        <h5>{{ t('Monitoria e Avaliação de projectos', 'Project Monitoring and Evaluation') }}</h5>
                         <p class="issuer">SentiPensar</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>Teoria de Mudança</h5>
+                        <h5>{{ t('Teoria de Mudança', 'Theory of Change') }}</h5>
                         <p class="issuer">SentiPensar</p>
                       </div>
                     </div>
@@ -104,14 +107,14 @@ const experiences = ref([
 
                   <!-- Analise de dados & BI -->
                   <div class="cert-category">
-                    <h4 class="category-title"><i class="fas fa-chart-line"></i> Análise de Dados & BI</h4>
+                    <h4 class="category-title"><i class="fas fa-chart-line"></i> {{ t('Análise de Dados & BI', 'Data Analysis & BI') }}</h4>
                     <div class="cert-list">
                       <div class="cert-item glass-card">
                         <h5>Data Analytics Essentials Course</h5>
                         <p class="issuer">CISCO Networking Academy</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>Extensão Universitária em Gestão e Análise de Dados com Kobotoolbox, Excel, Power Bi, SPSS e R</h5>
+                        <h5>{{ t('Extensão Universitária em Gestão e Análise de Dados com Kobotoolbox, Excel, Power Bi, SPSS e R', 'University Extension in Data Management and Analysis with KoboToolbox, Excel, Power BI, SPSS and R') }}</h5>
                         <p class="issuer">CBS</p>
                       </div>
                       <div class="cert-item glass-card">
@@ -119,11 +122,11 @@ const experiences = ref([
                         <p class="issuer">Expert Cursos</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>Excel: Do Zero ao Avançado</h5>
+                        <h5>{{ t('Excel: Do Zero ao Avançado', 'Excel: Zero to Advanced') }}</h5>
                         <p class="issuer">EvolutionTech Training</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>Análise de dados com Excel</h5>
+                        <h5>{{ t('Análise de dados com Excel', 'Data Analysis with Excel') }}</h5>
                         <p class="issuer">Excel BlackBelt</p>
                       </div>
                     </div>
@@ -137,9 +140,9 @@ const experiences = ref([
               <div class="skills-split-grid">
                 <!-- Coluna Esquerda: Progress Bars -->
                 <div class="skills-progress-col">
-                  <h3>Especialista em M&E,<br>KoboToolbox e Análise de Dados</h3>
+                  <h3>{{ t('Especialista em M&E,', 'Expert in M&E,') }}<br>{{ t('KoboToolbox e Análise de Dados', 'KoboToolbox and Data Analysis') }}</h3>
                   <p class="skills-intro-text">
-                    Mais de 10 anos de experiência em Monitoria e Avaliação, com expertise comprovada em KoboToolbox, Excel Avançado, Power BI e gestão de programas.
+                    {{ t('Mais de 10 anos de experiência em Monitoria e Avaliação, com expertise comprovada em KoboToolbox, Excel Avançado, Power BI e gestão de programas.', 'More than 10 years of experience in Monitoring and Evaluation, with proven expertise in KoboToolbox, Advanced Excel, Power BI and program management.') }}
                   </p>
                   
                   <div class="progress-list">
@@ -154,7 +157,7 @@ const experiences = ref([
                     </div>
                     <div class="progress-item">
                       <div class="progress-info">
-                        <span>Excel Avançado</span>
+                        <span>{{ t('Excel Avançado', 'Advanced Excel') }}</span>
                         <span>90%</span>
                       </div>
                       <div class="progress-bar-bg">
@@ -163,7 +166,7 @@ const experiences = ref([
                     </div>
                     <div class="progress-item">
                       <div class="progress-info">
-                        <span>Sistemas M&E</span>
+                        <span>{{ t('Sistemas M&E', 'M&E Systems') }}</span>
                         <span>95%</span>
                       </div>
                       <div class="progress-bar-bg">
@@ -197,11 +200,11 @@ const experiences = ref([
                     <div class="card-border-left"></div>
                     <div class="card-content">
                       <div class="card-header-mini">
-                        <h4>KoboToolbox Expert</h4>
-                        <span class="years">10+ Anos</span>
+                        <h4>{{ t('KoboToolbox Expert', 'KoboToolbox Expert') }}</h4>
+                        <span class="years">{{ t('10+ Anos', '10+ Years') }}</span>
                       </div>
-                      <p class="subtitle">Design e Implementação</p>
-                      <p class="description">Especialista em desenho de formulários Excel para KoboToolbox, validação, lógica condicional e integração com sistemas M&E.</p>
+                      <p class="subtitle">{{ t('Design e Implementação', 'Design and Implementation') }}</p>
+                      <p class="description">{{ t('Especialista em desenho de formulários Excel para KoboToolbox, validação, lógica condicional e integração com sistemas M&E.', 'Expert in designing Excel forms for KoboToolbox, validation, conditional logic and integration with M&E systems.') }}</p>
                     </div>
                   </div>
 
@@ -209,11 +212,11 @@ const experiences = ref([
                     <div class="card-border-left"></div>
                     <div class="card-content">
                       <div class="card-header-mini">
-                        <h4>M&E Specialist</h4>
-                        <span class="years">10+ Anos</span>
+                        <h4>{{ t('M&E Specialist', 'M&E Specialist') }}</h4>
+                        <span class="years">{{ t('10+ Anos', '10+ Years') }}</span>
                       </div>
-                      <p class="subtitle">Monitoria e Avaliação</p>
-                      <p class="description">Implementação de sistemas M&E completos, desde desenho até relatórios, incluindo baseline, endline e avaliações de impacto.</p>
+                      <p class="subtitle">{{ t('Monitoria e Avaliação', 'Monitoring and Evaluation') }}</p>
+                      <p class="description">{{ t('Implementação de sistemas M&E completos, desde desenho até relatórios, incluindo baseline, endline e avaliações de impacto.', 'Implementation of full M&E systems, from design to reporting, including baseline, endline and impact evaluations.') }}</p>
                     </div>
                   </div>
 
@@ -221,11 +224,11 @@ const experiences = ref([
                     <div class="card-border-left"></div>
                     <div class="card-content">
                       <div class="card-header-mini">
-                        <h4>Data Analysis Expert</h4>
-                        <span class="years">8+ Anos</span>
+                        <h4>{{ t('Data Analysis Expert', 'Data Analysis Expert') }}</h4>
+                        <span class="years">{{ t('8+ Anos', '8+ Years') }}</span>
                       </div>
-                      <p class="subtitle">Excel & Power BI</p>
-                      <p class="description">Criação de dashboards avançados em Excel e Power BI para análise de dados, KPIs e tomada de decisão baseada em evidências.</p>
+                      <p class="subtitle">{{ t('Excel & Power BI', 'Excel & Power BI') }}</p>
+                      <p class="description">{{ t('Criação de dashboards avançados em Excel e Power BI para análise de dados, KPIs e tomada de decisão baseada em evidências.', 'Creation of advanced dashboards in Excel and Power BI for data analysis, KPIs and evidence-based decision making.') }}</p>
                     </div>
                   </div>
                 </div>
@@ -260,8 +263,8 @@ const experiences = ref([
                 <!-- Card 1 -->
                 <div class="study-item glass-card">
                   <div class="study-icon"><i class="fas fa-search"></i></div>
-                  <h5>Concepção e Realização de Avaliações</h5>
-                  <p>Especialista na concepção e realização de avaliações completas incluindo baseline, endline, outcome e avaliações de impacto para organizações.</p>
+                  <h5>{{ t('Concepção e Realização de Avaliações', 'Conception and Realization of Evaluations') }}</h5>
+                  <p>{{ t('Especialista na concepção e realização de avaliações completas incluindo baseline, endline, outcome e avaliações de impacto para organizações.', 'Expert in the design and conduct of full evaluations including baseline, endline, outcome and impact evaluations for organizations.') }}</p>
                   <div class="study-tags">
                     <span class="tag tag-blue">Baseline</span>
                     <span class="tag tag-green">Endline</span>
@@ -272,32 +275,32 @@ const experiences = ref([
                 <!-- Card 2 -->
                 <div class="study-item glass-card">
                   <div class="study-icon"><i class="fas fa-users-cog"></i></div>
-                  <h5>Pesquisas Antropológicas</h5>
-                  <p>Pesquisas sociais e antropológicas incluindo estudos sobre prostituição, governação local, migração e integração social em Maputo.</p>
+                  <h5>{{ t('Pesquisas Antropológicas', 'Anthropological Research') }}</h5>
+                  <p>{{ t('Pesquisas sociais e antropológicas incluindo estudos sobre prostituição, governação local, migração e integração social em Maputo.', 'Social and anthropological research including studies on prostitution, local governance, migration and social integration in Maputo.') }}</p>
                   <div class="study-tags">
-                    <span class="tag tag-darkblue">Antropologia</span>
-                    <span class="tag tag-emerald">Qualitativo</span>
+                    <span class="tag tag-darkblue">{{ t('Antropologia', 'Anthropology') }}</span>
+                    <span class="tag tag-emerald">{{ t('Qualitativo', 'Qualitative') }}</span>
                   </div>
                 </div>
 
                 <!-- Card 3 -->
                 <div class="study-item glass-card">
                   <div class="study-icon"><i class="fas fa-clipboard-check"></i></div>
-                  <h5>Avaliações de Necessidades</h5>
-                  <p>Avaliações de necessidades para resposta humanitária e desenvolvimento comunitário em contextos de emergência e pós-conflito.</p>
+                  <h5>{{ t('Avaliações de Necessidades', 'Needs Assessments') }}</h5>
+                  <p>{{ t('Avaliações de necessidades para resposta humanitária e desenvolvimento comunitário em contextos de emergência e pós-conflito.', 'Needs assessments for humanitarian response and community development in emergency and post-conflict contexts.') }}</p>
                   <div class="study-tags">
-                    <span class="tag tag-red">Emergência</span>
-                    <span class="tag tag-yellow">Humanitário</span>
+                    <span class="tag tag-red">{{ t('Emergência', 'Emergency') }}</span>
+                    <span class="tag tag-yellow">{{ t('Humanitário', 'Humanitarian') }}</span>
                   </div>
                 </div>
 
                 <!-- Card 4 -->
                 <div class="study-item glass-card">
                   <div class="study-icon"><i class="fas fa-poll"></i></div>
-                  <h5>Estudos de Mercado & DQA</h5>
-                  <p>Análises de mercado e auditorias de qualidade de dados (DQA) para garantir integridade e precisão dos sistemas M&E.</p>
+                  <h5>{{ t('Estudos de Mercado & DQA', 'Market Studies & DQA') }}</h5>
+                  <p>{{ t('Análises de mercado e auditorias de qualidade de dados (DQA) para garantir integridade e precisão dos sistemas M&E.', 'Market analysis and Data Quality Audits (DQA) to ensure integrity and accuracy of M&E systems.') }}</p>
                   <div class="study-tags">
-                    <span class="tag tag-emerald">Análise de Mercado</span>
+                    <span class="tag tag-emerald">{{ t('Análise de Mercado', 'Market Analysis') }}</span>
                     <span class="tag tag-darkblue">DQA</span>
                   </div>
                 </div>

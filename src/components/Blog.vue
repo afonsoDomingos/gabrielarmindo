@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useLanguage } from '../store/language';
+
+const { t } = useLanguage();
 
 const posts = ref([]);
 const selectedPost = ref(null);
@@ -33,8 +36,8 @@ onMounted(fetchPosts);
   <section class="blog section" id="blog">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">Insights & Artigos</span>
-        <h2 class="section-title">Meu Blog</h2>
+        <span class="section-tag">{{ t('Insights & Artigos', 'Insights & Articles') }}</span>
+        <h2 class="section-title">{{ t('Meu Blog', 'My Blog') }}</h2>
       </div>
 
       <div class="blog-grid reveal-container">
@@ -56,7 +59,7 @@ onMounted(fetchPosts);
                 <span>{{ post.author }}</span>
               </div>
               <span class="blog-read-more">
-                Ler mais <i class="fas fa-arrow-right"></i>
+                {{ t('Ler mais', 'Read more') }} <i class="fas fa-arrow-right"></i>
               </span>
             </div>
           </div>

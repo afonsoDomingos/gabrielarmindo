@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useLanguage } from '../store/language';
 
+const { lang, toggleLanguage, t } = useLanguage();
 const isScrolled = ref(false);
 const isMenuActive = ref(false);
 
@@ -38,13 +40,19 @@ onUnmounted(() => {
 
       <div class="nav-menu" :class="{ 'active': isMenuActive }" id="nav-menu">
         <ul class="nav-list">
-          <li class="nav-item"><a href="#home" class="nav-link" @click="closeMenu">Início</a></li>
-          <li class="nav-item"><a href="#about" class="nav-link" @click="closeMenu">Sobre</a></li>
-          <li class="nav-item"><a href="#services-overview" class="nav-link" @click="closeMenu">Serviços</a></li>
-          <li class="nav-item"><a href="#resume" class="nav-link" @click="closeMenu">Portfólio</a></li>
-          <li class="nav-item"><a href="#testimonials" class="nav-link" @click="closeMenu">Testemunhos</a></li>
-          <li class="nav-item"><a href="#services" class="nav-link" @click="closeMenu">Investimento</a></li>
-          <li class="nav-item"><a href="#contacto" class="nav-link" @click="closeMenu">Contacto</a></li>
+          <li class="nav-item"><a href="#home" class="nav-link" @click="closeMenu">{{ t('Início', 'Home') }}</a></li>
+          <li class="nav-item"><a href="#about" class="nav-link" @click="closeMenu">{{ t('Sobre', 'About') }}</a></li>
+          <li class="nav-item"><a href="#services-overview" class="nav-link" @click="closeMenu">{{ t('Serviços', 'Services') }}</a></li>
+          <li class="nav-item"><a href="#resume" class="nav-link" @click="closeMenu">{{ t('Portfólio', 'Portfolio') }}</a></li>
+          <li class="nav-item"><a href="#testimonials" class="nav-link" @click="closeMenu">{{ t('Testemunhos', 'Testimonials') }}</a></li>
+          <li class="nav-item"><a href="#services" class="nav-link" @click="closeMenu">{{ t('Investimento', 'Investment') }}</a></li>
+          <li class="nav-item"><a href="#contacto" class="nav-link" @click="closeMenu">{{ t('Contacto', 'Contact') }}</a></li>
+          <li class="nav-item lang-switcher">
+            <button @click="toggleLanguage" class="lang-btn">
+              <span v-if="lang === 'pt'">PT / <b>EN</b></span>
+              <span v-else><b>PT</b> / EN</span>
+            </button>
+          </li>
         </ul>
       </div>
 
@@ -221,5 +229,44 @@ onUnmounted(() => {
         display: block;
         z-index: 1002;
     }
+}
+
+/* Language Switcher Styles */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+}
+
+.lang-btn {
+  background: rgba(44, 82, 130, 0.05);
+  border: 1px solid rgba(44, 82, 130, 0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lang-btn:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: scale(1.05);
+}
+
+.lang-btn b {
+  font-weight: 800;
+  margin-left: 2px;
+}
+
+@media (max-width: 768px) {
+  .lang-switcher {
+    margin-top: 1rem;
+    width: 60px;
+  }
 }
 </style>

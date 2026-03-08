@@ -1,95 +1,98 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useLanguage } from '../store/language';
+
+const { t } = useLanguage();
 
 const isMZN = ref(false);
 const EXCHANGE_RATE = 64;
 
-const investmentPlans = ref([
+const investmentPlans = computed(() => [
   {
-    title: 'Consultoria M&E',
+    title: t('Consultoria M&E', 'M&E Consultancy'),
     priceMin: 200,
     priceMax: 300,
-    frequency: 'Por dia / Consultoria',
+    frequency: t('Por dia / Consultoria', 'Per day / Consultancy'),
     features: [
-      'Desenho e condução de avaliações',
-      'Propostas técnicas e financeiras',
-      'Treinamento de inquiridores',
-      'Análise de dados',
-      'Produção de relatórios'
+      t('Desenho e condução de avaliações', 'Assessment design and conduct'),
+      t('Propostas técnicas e financeiras', 'Technical and financial proposals'),
+      t('Treinamento de inquiridores', 'Enumerator training'),
+      t('Análise de dados', 'Data analysis'),
+      t('Produção de relatórios', 'Report generation')
     ],
-    cta: 'Solicitar Orçamento',
+    cta: t('Solicitar Orçamento', 'Request Quote'),
     popular: false
   },
   {
-    title: 'Sistema M&E Completo',
+    title: t('Sistema M&E Completo', 'Complete M&E System'),
     priceMin: 94,
     priceMax: null,
-    frequency: 'Por projeto / 2-3 meses',
+    frequency: t('Por projeto / 2-3 meses', 'Per project / 2-3 months'),
     features: [
-      'Sistema M&E personalizado',
-      'Formulários KoboToolbox',
-      'Dashboard Power BI/Excel',
-      'Treinamento da equipe',
-      'Suporte por 3 meses'
+      t('Sistema M&E personalizado', 'Custom M&E system'),
+      t('Formulários KoboToolbox', 'KoboToolbox forms'),
+      t('Dashboard Power BI/Excel', 'Power BI/Excel Dashboard'),
+      t('Treinamento da equipe', 'Team training'),
+      t('Suporte por 3 meses', '3-month support')
     ],
-    cta: 'Começar Projeto',
+    cta: t('Começar Projeto', 'Start Project'),
     popular: true
   },
   {
-    title: 'M&E Mentorship',
+    title: t('M&E Mentorship', 'M&E Mentorship'),
     priceMin: 31,
     priceMax: null,
-    frequency: 'Por mês / Mínimo 4 sessões',
+    frequency: t('Por mês / Mínimo 4 sessões', 'Per month / Min. 4 sessions'),
     features: [
-      '4+ sessões mensais',
-      'Desenvolvimento de capacidades',
-      'Suporte via WhatsApp',
-      'Templates M&E e ferramentas',
-      'Revisão de documentos'
+      t('4+ sessões mensais', '4+ monthly sessions'),
+      t('Desenvolvimento de capacidades', 'Capacity building'),
+      t('Suporte via WhatsApp', 'WhatsApp support'),
+      t('Templates M&E e ferramentas', 'M&E templates and tools'),
+      t('Revisão de documentos', 'Document review')
     ],
-    cta: 'Começar Mentoria',
+    cta: t('Começar Mentoria', 'Start Mentorship'),
     popular: false
   },
   {
-    title: 'Esclarecimentos M&E',
+    title: t('Esclarecimentos M&E', 'M&E Clarifications'),
     priceMin: 8,
     priceMax: null,
-    frequency: 'Por hora / Sessão',
+    frequency: t('Por hora / Sessão', 'Per hour / Session'),
     features: [
-      'Dúvidas sobre metodologias M&E',
-      'Orientação em projetos',
-      'Suporte técnico pontual',
-      'Consulta via chamada/video'
+      t('Dúvidas sobre metodologias M&E', 'M&E methodology doubts'),
+      t('Orientação em projetos', 'Project guidance'),
+      t('Suporte técnico pontual', 'Ad-hoc technical support'),
+      t('Consulta via chamada/video', 'Consultation via call/video')
     ],
-    cta: 'Agendar Sessão',
+    cta: t('Agendar Sessão', 'Schedule Session'),
     popular: false
   },
   {
-    title: 'Revisão de CVs',
+    title: t('Revisão de CVs', 'CV Review'),
     priceMin: 8,
     priceMax: null,
-    frequency: 'Por CV / Entrega em 72h',
+    frequency: t('Por CV / Entrega em 72h', 'Per CV / 72h delivery'),
     features: [
-      'Revisão completa do CV',
-      'Otimização para área M&E',
-      'Sugestões de melhorias',
-      'Formatação profissional'
+      t('Revisão completa do CV', 'Complete CV review'),
+      t('Otimização para área M&E', 'M&E optimization'),
+      t('Sugestões de melhorias', 'Improvement suggestions'),
+      t('Formatação profissional', 'Professional formatting')
     ],
-    cta: 'Enviar CV',
+    cta: t('Enviar CV', 'Send CV'),
     popular: false
   },
   {
-    title: 'Criação de Dashboards com efeito UAU',
+    title: t('Criação de Dashboards com efeito UAU', 'Create UAU Effect Dashboards'),
     priceMin: 100,
     priceMax: 1000,
-    frequency: 'Por projeto / escopo sob medida',
+    frequency: t('Por projeto / escopo sob medida', 'Per project / tailor-made scope'),
     features: [
-      'Design profissional em Power BI e Excel',
-      'Integração de fontes de dados',
-      'KPIs claros e interatividade',
-      'Suporte opcional de ajustes'
+      t('Design profissional em Power BI e Excel', 'Professional Power BI and Excel design'),
+      t('Integração de fontes de dados', 'Data source integration'),
+      t('KPIs claros e interatividade', 'Clear KPIs and interactivity'),
+      t('Suporte opcional de ajustes', 'Optional adjustment support')
     ],
-    cta: 'Começar Projeto',
+    cta: t('Começar Projeto', 'Start Project'),
     popular: false
   }
 ]);
@@ -111,9 +114,9 @@ const getDisplayPrice = (plan) => {
   <section class="services section" id="services">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">Investimento</span>
-        <h2 class="section-title">Pacotes personalizados para suas necessidades</h2>
-        <p class="section-subtitle">Escolha o plano ideal para transformar seus dados em decisões inteligentes.</p>
+        <span class="section-tag">{{ t('Investimento', 'Investment') }}</span>
+        <h2 class="section-title">{{ t('Pacotes personalizados para suas necessidades', 'Custom packages for your needs') }}</h2>
+        <p class="section-subtitle">{{ t('Escolha o plano ideal para transformar seus dados em decisões inteligentes.', 'Choose the ideal plan to transform your data into smart decisions.') }}</p>
         
         <div class="currency-toggle">
           <button @click="isMZN = false" :class="{ 'active': !isMZN }">USD ($)</button>
@@ -128,7 +131,7 @@ const getDisplayPrice = (plan) => {
           class="service-card glass-card reveal-item"
           :class="{ 'popular-card': plan.popular }"
         >
-          <div v-if="plan.popular" class="popular-badge">Mais Popular</div>
+          <div v-if="plan.popular" class="popular-badge">{{ t('Mais Popular', 'Most Popular') }}</div>
           
           <div class="card-head">
             <h3 class="service-title">{{ plan.title }}</h3>

@@ -1,3 +1,8 @@
+<script setup>
+import { useLanguage } from '../store/language';
+const { t } = useLanguage();
+</script>
+
 <template>
   <section class="hero" id="home">
     <div class="hero-bg"></div>
@@ -5,47 +10,47 @@
       <div class="hero-content">
         <div class="hero-badge">
           <i class="fas fa-chart-line"></i>
-          <span>Especialista em M&A e MEAL</span>
+          <span>{{ t('Especialista em M&A e MEAL', 'M&E and MEAL Specialist') }}</span>
         </div>
         <h1 class="hero-title">
-          <span class="hero-greeting reveal-text">Olá, Eu sou</span> <br />
+          <span class="hero-greeting reveal-text">{{ t('Olá, Eu sou', "Hello, I'm") }}</span> <br />
           <span class="gradient-text hero-name animated-name">Gabriel Armindo</span>
         </h1>
-        <p class="hero-subtitle">M&E Specialist | Data Analysis Expert</p>
+        <p class="hero-subtitle">{{ t('Especialista em M&E | Especialista em Análise de Dados', 'M&E Specialist | Data Analysis Expert') }}</p>
         <p class="hero-description">
-          Especialista em Monitoria e Avaliação e Gestão de Projectos com mais de 5 anos de experiência. Licenciado em Psicologia Social e Comunitária e com Extensão Universitária em Gênero, Diversidade e Inclusão Social em Direitos Humanos.
+          {{ t('Especialista em Monitoria e Avaliação e Gestão de Projectos com mais de 5 anos de experiência. Licenciado em Psicologia Social e Comunitária e com Extensão Universitária em Gênero, Diversidade e Inclusão Social em Direitos Humanos.', 'M&E and Project Management Specialist with over 5 years of experience. Degree in Social and Community Psychology and University Extension in Gender, Diversity and Social Inclusion in Human Rights.') }}
         </p>
 
         <div class="hero-stats">
           <div class="stat-item reveal">
             <div class="stat-number">5</div>
-            <div class="stat-label">Anos Exp</div>
+            <div class="stat-label">{{ t('Anos Exp', 'Years Exp') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.1s">
             <div class="stat-number">5</div>
-            <div class="stat-label">Projectos</div>
+            <div class="stat-label">{{ t('Projectos', 'Projects') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.2s">
             <div class="stat-number">10</div>
-            <div class="stat-label">Organizações</div>
+            <div class="stat-label">{{ t('Organizações', 'Organizations') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.3s">
             <div class="stat-number">300</div>
-            <div class="stat-label">Estudantes</div>
+            <div class="stat-label">{{ t('Estudantes', 'Students') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.4s">
             <div class="stat-number">20</div>
-            <div class="stat-label">Mentorias</div>
+            <div class="stat-label">{{ t('Mentorias', 'Mentorships') }}</div>
           </div>
         </div>
 
         <div class="hero-buttons">
           <a href="#contacto" class="btn btn-primary">
-            <span>Contacto</span>
+            <span>{{ t('Contacto', 'Contact') }}</span>
             <i class="fas fa-paper-plane"></i>
           </a>
           <a href="#blog" class="btn btn-outline">
-            <span>Ver Blog</span>
+            <span>{{ t('Ver Blog', 'View Blog') }}</span>
             <i class="fas fa-blog"></i>
           </a>
         </div>
@@ -89,7 +94,7 @@
     </div>
 
     <div class="scroll-indicator">
-      <span>Role para explorar</span>
+      <span>{{ t('Role para explorar', 'Scroll to explore') }}</span>
       <div class="mouse"></div>
     </div>
   </section>

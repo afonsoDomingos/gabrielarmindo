@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import { useLanguage } from '../store/language';
+
+const { t } = useLanguage();
 
 const form = ref({
   name: '',
@@ -15,10 +18,10 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
   try {
     const res = await axios.post('/api/contact', form.value);
-    statusMessage.value = 'Mensagem enviada com sucesso!';
+    statusMessage.value = t('Mensagem enviada com sucesso!', 'Message sent successfully!');
     form.value = { name: '', email: '', message: '' };
   } catch (err) {
-    statusMessage.value = 'Erro ao enviar mensagem. Tente novamente.';
+    statusMessage.value = t('Erro ao enviar mensagem. Tente novamente.', 'Error sending message. Please try again.');
   } finally {
     isSubmitting.value = false;
     setTimeout(() => { statusMessage.value = ''; }, 5000);
@@ -30,15 +33,15 @@ const handleSubmit = async () => {
   <section class="contact section" id="contacto">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">Vamos conversar?</span>
-        <h2 class="section-title">Entre em Contacto</h2>
+        <span class="section-tag">{{ t('Vamos conversar?', 'Let’s talk?') }}</span>
+        <h2 class="section-title">{{ t('Entre em Contacto', 'Get in Touch') }}</h2>
       </div>
 
       <div class="contact-container">
         <div class="contact-info reveal-left">
-          <h3>Sinta-se à vontade para me escrever!</h3>
+          <h3>{{ t('Sinta-se à vontade para me escrever!', 'Feel free to write to me!') }}</h3>
           <p>
-            Estou sempre aberto a novas oportunidades, colaborações em projectos de monitoria e avaliação ou apenas uma boa conversa sobre análise de dados.
+            {{ t('Estou sempre aberto a novas oportunidades, colaborações em projectos de monitoria e avaliação ou apenas uma boa conversa sobre análise de dados.', 'I am always open to new opportunities, collaborations on monitoring and evaluation projects or just a good conversation about data analysis.') }}
           </p>
 
           <div class="contact-details">
@@ -59,7 +62,7 @@ const handleSubmit = async () => {
             <div class="contact-item">
               <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
               <div class="contact-content">
-                <h4>Telefone / WhatsApp</h4>
+                <h4>{{ t('Telefone / WhatsApp', 'Phone / WhatsApp') }}</h4>
                 <div class="phone-numbers">
                   <a href="tel:+258865179513">+258 865 179 513</a> / 
                   <a href="tel:+258833722159">833 722 159</a>
@@ -72,20 +75,20 @@ const handleSubmit = async () => {
         <div class="contact-form reveal-right">
           <form @submit.prevent="handleSubmit">
             <div class="form-group">
-              <label>Seu Nome</label>
-              <input type="text" v-model="form.name" required placeholder="Como devo te chamar?" />
+              <label>{{ t('Seu Nome', 'Your Name') }}</label>
+              <input type="text" v-model="form.name" required :placeholder="t('Como devo te chamar?', 'How should I call you?')" />
             </div>
             <div class="form-group">
-              <label>Seu Email</label>
+              <label>{{ t('Seu Email', 'Your Email') }}</label>
               <input type="email" v-model="form.email" required placeholder="exemplo@email.com" />
             </div>
             <div class="form-group">
-              <label>Mensagem</label>
-              <textarea v-model="form.message" required rows="5" placeholder="Em que posso te ajudar?"></textarea>
+              <label>{{ t('Mensagem', 'Message') }}</label>
+              <textarea v-model="form.message" required rows="5" :placeholder="t('Em que posso te ajudar?', 'How can I help you?')"></textarea>
             </div>
             <button type="submit" class="btn btn-primary" :disabled="isSubmitting" style="width: 100%;">
-              <span v-if="!isSubmitting">Enviar Mensagem</span>
-              <span v-else>Enviando...</span>
+              <span v-if="!isSubmitting">{{ t('Enviar Mensagem', 'Send Message') }}</span>
+              <span v-else>{{ t('Enviando...', 'Sending...') }}</span>
               <i class="fas fa-paper-plane" v-if="!isSubmitting" style="margin-left: 0.5rem"></i>
             </button>
             <p v-if="statusMessage" class="status-msg">{{ statusMessage }}</p>
