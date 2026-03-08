@@ -3,9 +3,9 @@ import { ref } from 'vue';
 
 const testimonials = ref([
   {
-    text: "Participar da mentoria em Monitoria e Avaliação com José Tinta foi uma experiência transformadora para a minha carreira. Os conteúdos práticos e bem estruturados ajudaram-me a aplicar os conceitos no dia a dia, dando-me confiança para atuar como Consultor e Oficial de MEAL. Sou muito grato pelo profissionalismo e dedicação do mentor e recomendo esta mentoria a todos que desejam crescer na área de Monitoria, Avaliação, Prestação de Contas e Aprendizagem.",
-    name: "Gabriel Armindo",
-    role: "Consultor de Pesquisa | Oficial M&A"
+    text: "Participar da mentoria em Monitoria e Avaliação com Gabriel Armindo foi uma experiência transformadora para a minha carreira. Os conteúdos práticos e bem estruturados ajudaram-me a aplicar os conceitos no dia a dia, dando-me confiança para atuar como Consultor e Oficial de MEAL. Sou muito grato pelo profissionalismo e dedicação do mentor e recomendo esta mentoria a todos que desejam crescer na área de Monitoria, Avaliação, Prestação de Contas e Aprendizagem.",
+    name: "Samuel Matola",
+    role: "Consultor de Pesquisa | Oficial de MEAL"
   }
 ]);
 

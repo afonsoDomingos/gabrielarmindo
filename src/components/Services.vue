@@ -41,7 +41,7 @@ const investmentPlans = ref([
       'Templates M&E e ferramentas',
       'Revisão de documentos'
     ],
-    cta: 'Começar Mentoria',
+    cta: 'Inscrever-se',
     popular: false
   }
 ]);
