@@ -325,11 +325,6 @@ const experiences = computed(() => [
                 
                 <div class="partners-grid">
                   <div class="partner-card glass-card">
-                    <div class="partner-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                    <h5>Helen Keller International</h5>
-                    <p>{{ t('Desenvolvimento e implementação de intervenções psicossociais inclusivas e fortalecimento comunitário.', 'Development and implementation of inclusive psychosocial interventions and community strengthening.') }}</p>
-                  </div>
-                  <div class="partner-card glass-card">
                     <div class="partner-icon"><i class="fas fa-university"></i></div>
                     <h5>ODEI</h5>
                     <p>{{ t('Coordenação técnica de sistemas de MEAL, DQA e gestão de qualidade de dados em projectos humanitários.', 'Technical coordination of MEAL systems, DQA, and data quality management in humanitarian projects.') }}</p>
@@ -338,21 +333,6 @@ const experiences = computed(() => [
                     <div class="partner-icon"><i class="fas fa-brain"></i></div>
                     <h5>Consulting And Coaching Agency</h5>
                     <p>{{ t('Consultoria especializada em capacitação de equipas, dashboards estratégicos e recolha digital (KoboToolbox).', 'Specialized consulting in team training, strategic dashboards, and digital data collection (KoboToolbox).') }}</p>
-                  </div>
-                  <div class="partner-card glass-card">
-                    <div class="partner-icon"><i class="fas fa-graduation-cap"></i></div>
-                    <h5>Escola de Desenho, Monitoria e Avaliação</h5>
-                    <p>{{ t('Docência avançada em módulos de Monitoria & Avaliação, Teoria da Mudança e Análise de Dados.', 'Advanced teaching in Monitoring & Evaluation modules, Theory of Change, and Data Analysis.') }}</p>
-                  </div>
-                  <div class="partner-card glass-card">
-                    <div class="partner-icon"><i class="fas fa-chart-line"></i></div>
-                    <h5>Prátiq Consultoria</h5>
-                    <p>{{ t('Apoio técnico na elaboração de propostas, protocolos de pesquisa aplicada e gestão de integridade de dados.', 'Technical support in proposal design, applied research protocols, and data integrity management.') }}</p>
-                  </div>
-                  <div class="partner-card glass-card">
-                    <div class="partner-icon"><i class="fas fa-globe"></i></div>
-                    <h5>Humanitarian Leadership Academy</h5>
-                    <p>{{ t('Parceria em qualificações profissionais de MEAL voltadas ao desenvolvimento comunitário sustentável.', 'Partnership in professional MEAL qualifications focused on sustainable community development.') }}</p>
                   </div>
                 </div>
               </div>
