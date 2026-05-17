@@ -8,19 +8,19 @@ const certifications = computed(() => [
   {
     category: t('Gestão de Projectos & M&A', 'Project Management & M&E'),
     items: [
-      { title: t('MEAL para Desenvolvimento', 'MEAL for Development'), issuer: 'Humanitarian Leadership Academy' },
-      { title: t('Monitoria e Avaliacao de projectos', 'Project Monitoring and Evaluation'), issuer: 'SentiPensar' },
-      { title: t('Teoria de Mudanca', 'Theory of Change'), issuer: 'SentiPensar' }
+      { title: t('Certificação em MEAL para Desenvolvimento', 'Certification in MEAL for Development'), issuer: 'Humanitarian Leadership Academy' },
+      { title: t('Certificação em Monitoria e Avaliação de Projectos', 'Certification in Project Monitoring and Evaluation'), issuer: 'SentiPensar' },
+      { title: t('Certificação em Teoria da Mudança', 'Certification in Theory of Change'), issuer: 'SentiPensar' }
     ]
   },
   {
     category: t('Análise de dados & BI', 'Data Analysis & BI'),
     items: [
-      { title: t('Data Analytics Essentials Course', 'Data Analytics Essentials Course'), issuer: 'CISCO Networking Academy' },
-      { title: t('Gestao e Analise de Dados (Kobotoolbox, Excel, Power Bi, SPSS, R)', 'Data Management and Analysis (KoboToolbox, Excel, Power BI, SPSS, R)'), issuer: 'CBS (Univ. Extension)' },
-      { title: 'Power BI - Business Intelligence', issuer: 'Expert Cursos' },
-      { title: t('Excel: Do Zero ao Avançado', 'Excel: Zero to Advanced'), issuer: 'EvolutionTech Training' },
-      { title: t('Análise de dados com Excel', 'Data Analysis with Excel'), issuer: 'Excel BlackBelt' }
+      { title: t('Certificação em Data Analytics Essentials', 'Certification in Data Analytics Essentials'), issuer: 'Cisco Networking Academy' },
+      { title: t('Extensão Universitária em Gestão e Análise de Dados com KoboToolbox, Excel, Power BI, SPSS e R', 'University Extension in Data Management and Analysis with KoboToolbox, Excel, Power BI, SPSS and R'), issuer: 'Corporate Business School' },
+      { title: t('Certificação em Power BI – Business Intelligence', 'Certification in Power BI – Business Intelligence'), issuer: 'Expert Cursos' },
+      { title: t('Certificação em Excel: Do Zero ao Avançado', 'Certification in Excel: Zero to Advanced'), issuer: 'EvolutionTech Training' },
+      { title: t('Certificação em Análise de Dados com Excel', 'Certification in Data Analysis with Excel'), issuer: 'EvolutionTech Training' }
     ]
   }
 ]);

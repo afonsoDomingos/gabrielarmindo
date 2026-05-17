@@ -9,16 +9,16 @@ const { t } = useLanguage();
     <div class="container hero-container">
       <div class="hero-content">
         <div class="hero-badge">
-          <i class="fas fa-chart-line"></i>
-          <span>{{ t('Especialista em M&A e MEAL', 'M&E and MEAL Specialist') }}</span>
+          <i class="fas fa-map-marker-alt"></i>
+          <span>{{ t('Consultor Independente – Maputo, Moçambique', 'Independent Consultant – Maputo, Mozambique') }}</span>
         </div>
         <h1 class="hero-title">
           <span class="hero-greeting reveal-text">{{ t('Olá, Eu sou', "Hello, I'm") }}</span> <br />
           <span class="gradient-text hero-name animated-name">Gabriel Armindo</span>
         </h1>
-        <p class="hero-subtitle">{{ t('Especialista em M&E | Especialista em Análise de Dados', 'M&E Specialist | Data Analysis Expert') }}</p>
+        <p class="hero-subtitle">{{ t('Fortalecimento Institucional · MEAL · Investigação · Comunicação Estratégica', 'Institutional Strengthening · MEAL · Research · Strategic Communication') }}</p>
         <p class="hero-description">
-          {{ t('Especialista em Monitoria e Avaliação e Gestão de Projectos com mais de 5 anos de experiência. Licenciado em Psicologia Social e Comunitária e com Extensão Universitária em Gênero, Diversidade e Inclusão Social em Direitos Humanos.', 'M&E and Project Management Specialist with over 5 years of experience. Degree in Social and Community Psychology and University Extension in Gender, Diversity and Social Inclusion in Human Rights.') }}
+          {{ t('Da evidência à decisão: ajudamos organizações a medir impacto, estruturar sistemas e comunicar valor.', 'From evidence to decision: we help organizations measure impact, structure systems and communicate value.') }}
         </p>
 
         <div class="hero-stats">
@@ -27,20 +27,16 @@ const { t } = useLanguage();
             <div class="stat-label">{{ t('Anos Exp', 'Years Exp') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.1s">
-            <div class="stat-number">5</div>
+            <div class="stat-number">6</div>
             <div class="stat-label">{{ t('Projectos', 'Projects') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.2s">
-            <div class="stat-number">10</div>
+            <div class="stat-number">5</div>
             <div class="stat-label">{{ t('Organizações', 'Organizations') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.3s">
-            <div class="stat-number">300</div>
-            <div class="stat-label">{{ t('Estudantes', 'Students') }}</div>
-          </div>
-          <div class="stat-item reveal" style="transition-delay: 0.4s">
-            <div class="stat-number">20</div>
-            <div class="stat-label">{{ t('Mentorias', 'Mentorships') }}</div>
+            <div class="stat-number">100</div>
+            <div class="stat-label">{{ t('Pessoas Mentoradas', 'People Mentored') }}</div>
           </div>
         </div>
 
@@ -208,7 +204,7 @@ const { t } = useLanguage();
 
 .hero-stats {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--spacing-md);
     margin: var(--spacing-md) 0;
     padding: var(--spacing-md) 0;

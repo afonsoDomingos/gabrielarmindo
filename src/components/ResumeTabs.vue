@@ -32,17 +32,47 @@ const experiences = computed(() => [
     desc: t('Gestão estratégica de programas, coordenação de equipas, elaboração de propostas técnicas, garantia de qualidade e supervisão de relatórios, Monitoria e Avaliação.', 'Strategic program management, team coordination, technical proposals, quality assurance, report oversight, M&E.')
   },
   {
-    role: t('Consultor de M&E', 'M&E Consultant'),
-    company: 'CCA - Consulting and Coaching Agency',
+    role: t('Consultor de Monitoria, Avaliação e Pesquisa', 'Monitoring, Evaluation and Research Consultant'),
+    company: 'Consulting And Coaching Agency',
     period: t('09/2025 - Presente', '09/2025 - Present'),
-    desc: t('Criação de cursos em M&E, Excel, Análise de Dados, KoboToolbox. Desenvolvimento de dashboards profissionais e formações especializadas.', 'M&E, Excel, Data Analysis, and KoboToolbox course creation. Professional dashboard development and specialized training.')
+    desc: t(
+      '• Desenvolvimento de cursos em Monitoria & Avaliação, Excel, Análise de Dados e KoboToolbox\n• Capacitação de equipas e parceiros através de formações técnicas e mentorias\n• Desenho de formulários em XLSForm/KoboToolbox, integração com ODK e Power BI\n• Desenvolvimento de planos de M&A, estudos de base, avaliações de impacto e relatórios técnicos\n• Garantia da qualidade de dados (DQA) e apoio à tomada de decisão baseada em evidências',
+      '• Development of courses in Monitoring & Evaluation, Excel, Data Analysis and KoboToolbox\n• Training of teams and partners through technical courses and mentorships\n• Form design in XLSForm/KoboToolbox, integration with ODK and Power BI\n• Development of M&E plans, baseline studies, impact evaluations and technical reports\n• Data quality assurance (DQA) and support for evidence-based decision making'
+    )
+  },
+  {
+    role: t('Especialista em Monitoria e Avaliação', 'Monitoring and Evaluation Specialist'),
+    company: 'ODEI',
+    period: t('2023 - 2025', '2023 - 2025'),
+    desc: t(
+      '• Coordenação e implementação de sistemas de MEAL\n• Monitoria de projectos e avaliações (baseline, PDM e outcome monitoring)\n• Gestão da qualidade de dados e mecanismos de accountability comunitária\n• Desenvolvimento de ferramentas digitais de recolha de dados\n• Formação e supervisão de inquiridores\n• Produção de relatórios técnicos e acompanhamento de campo com foco em qualidade e conformidade humanitária',
+      '• Coordination and implementation of MEAL systems\n• Project monitoring and evaluations (baseline, PDM and outcome monitoring)\n• Data quality management and community accountability mechanisms\n• Development of digital data collection tools\n• Training and supervision of surveyors\n• Production of technical reports and field monitoring focusing on quality and humanitarian compliance'
+    )
   },
   {
     role: t('Docente', 'Lecturer'),
-    company: t('Instituto Superior de Ciências Empresariais e Tecnológicas, Moçambique', 'Higher Institute of Business and Technological Sciences, Mozambique'),
+    company: t('Escola de Desenho, Monitoria e Avaliação', 'School of Design, Monitoring and Evaluation'),
     period: t('11/2025 - Actualmente', '11/2025 - Present'),
     tag: t('TEMPO PARCIAL', 'PART-TIME'),
-    desc: t('Docente no curso de Monitoria e Avaliação & Análise de Dados.', 'Lecturer for M&E and Data Analysis course.')
+    desc: t('Docente dos módulos de Monitoria & Avaliação e Análise de Dados.', 'Lecturer for the Monitoring & Evaluation and Data Analysis modules.')
+  },
+  {
+    role: t('Consultor de Pesquisa', 'Research Consultant'),
+    company: 'Prátiq Consultoria',
+    period: t('2021 - 2023', '2021 - 2023'),
+    desc: t(
+      '• Desenvolvimento de propostas técnicas e financeiras\n• Elaboração de protocolos de pesquisa\n• Gestão da qualidade e integridade de dados\n• Análise de evidências e produção de relatórios analíticos para apoio à tomada de decisão',
+      '• Development of technical and financial proposals\n• Preparation of research protocols\n• Data quality and integrity management\n• Evidence analysis and production of analytical reports for decision-making support'
+    )
+  },
+  {
+    role: t('Técnico de Apoio Psicossocial', 'Psychosocial Support Technician'),
+    company: 'Helen Keller International',
+    period: t('2019 - 2021', '2019 - 2021'),
+    desc: t(
+      '• Implementação de intervenções psicossociais inclusivas para jovens com deficiência visual\n• Apoio em direitos humanos, protecção, inclusão social e fortalecimento comunitário\n• Gestão de casos de VBG e apoio psicossocial individual e familiar\n• Mobilização comunitária e articulação multissectorial com autoridades locais e unidades sanitárias',
+      '• Implementation of inclusive psychosocial interventions for visually impaired youth\n• Support for human rights, protection, social inclusion and community strengthening\n• GBV case management and individual and family psychosocial support\n• Community mobilization and multi-sectoral coordination with local authorities and health facilities'
+    )
   }
 ]);
 </script>
@@ -83,7 +113,7 @@ const experiences = computed(() => [
             <div v-else-if="activeTab === 'education'" class="tab-pane" key="edu">
               <div class="education-section">
                 <h3 class="pane-title">{{ t('Certificações & Formações', 'Certifications & Training') }}</h3>
-                <p class="pane-subtitle">{{ t('Minha trajetória acadêmica e técnica em M&E e Análise de Dados.', 'My academic and technical trajectory in M&E and Data Analysis.') }}</p>
+                <p class="pane-subtitle">{{ t('Certificados profissionais, cartas de recomendação e distinções obtidas ao longo da trajectória profissional.', 'Professional certificates, recommendation letters and distinctions obtained throughout my professional career.') }}</p>
                 
                 <div class="cert-category-grid">
                   <!-- Gestao de projectos & M&A -->
@@ -91,15 +121,15 @@ const experiences = computed(() => [
                     <h4 class="category-title"><i class="fas fa-tasks"></i> {{ t('Gestão de Projectos & M&A', 'Project Management & M&E') }}</h4>
                     <div class="cert-list">
                       <div class="cert-item glass-card">
-                        <h5>{{ t('MEAL para Desenvolvimento', 'MEAL for Development') }}</h5>
+                        <h5>{{ t('Certificação em MEAL para Desenvolvimento', 'Certification in MEAL for Development') }}</h5>
                         <p class="issuer">Humanitarian Leadership Academy</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>{{ t('Monitoria e Avaliação de projectos', 'Project Monitoring and Evaluation') }}</h5>
+                        <h5>{{ t('Certificação em Monitoria e Avaliação de Projectos', 'Certification in Project Monitoring and Evaluation') }}</h5>
                         <p class="issuer">SentiPensar</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>{{ t('Teoria de Mudança', 'Theory of Change') }}</h5>
+                        <h5>{{ t('Certificação em Teoria da Mudança', 'Certification in Theory of Change') }}</h5>
                         <p class="issuer">SentiPensar</p>
                       </div>
                     </div>
@@ -110,24 +140,24 @@ const experiences = computed(() => [
                     <h4 class="category-title"><i class="fas fa-chart-line"></i> {{ t('Análise de Dados & BI', 'Data Analysis & BI') }}</h4>
                     <div class="cert-list">
                       <div class="cert-item glass-card">
-                        <h5>Data Analytics Essentials Course</h5>
-                        <p class="issuer">CISCO Networking Academy</p>
+                        <h5>{{ t('Certificação em Data Analytics Essentials', 'Certification in Data Analytics Essentials') }}</h5>
+                        <p class="issuer">Cisco Networking Academy</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>{{ t('Extensão Universitária em Gestão e Análise de Dados com Kobotoolbox, Excel, Power Bi, SPSS e R', 'University Extension in Data Management and Analysis with KoboToolbox, Excel, Power BI, SPSS and R') }}</h5>
-                        <p class="issuer">CBS</p>
+                        <h5>{{ t('Extensão Universitária em Gestão e Análise de Dados com KoboToolbox, Excel, Power BI, SPSS e R', 'University Extension in Data Management and Analysis with KoboToolbox, Excel, Power BI, SPSS and R') }}</h5>
+                        <p class="issuer">Corporate Business School</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>Power BI - Business Intelligence</h5>
+                        <h5>{{ t('Certificação em Power BI – Business Intelligence', 'Certification in Power BI – Business Intelligence') }}</h5>
                         <p class="issuer">Expert Cursos</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>{{ t('Excel: Do Zero ao Avançado', 'Excel: Zero to Advanced') }}</h5>
+                        <h5>{{ t('Certificação em Excel: Do Zero ao Avançado', 'Certification in Excel: Zero to Advanced') }}</h5>
                         <p class="issuer">EvolutionTech Training</p>
                       </div>
                       <div class="cert-item glass-card">
-                        <h5>{{ t('Análise de dados com Excel', 'Data Analysis with Excel') }}</h5>
-                        <p class="issuer">Excel BlackBelt</p>
+                        <h5>{{ t('Certificação em Análise de Dados com Excel', 'Certification in Data Analysis with Excel') }}</h5>
+                        <p class="issuer">EvolutionTech Training</p>
                       </div>
                     </div>
                   </div>
@@ -521,6 +551,7 @@ const experiences = computed(() => [
   color: var(--text-secondary);
   font-size: 1rem;
   line-height: 1.6;
+  white-space: pre-line;
 }
 
 /* Tabs Header Specifics */

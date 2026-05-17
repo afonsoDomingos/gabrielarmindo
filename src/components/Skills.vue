@@ -25,8 +25,8 @@ const { t } = useLanguage();
         <div class="skill-category reveal" style="margin-top: 2rem;">
           <h3><i class="fas fa-users"></i> {{ t('Liderança & Mentoria', 'Leadership & Mentorship') }}</h3>
           <div class="tech-grid">
-            <div class="tech-item glass-card reveal-item"><i class="fas fa-chalkboard-teacher"></i><span>{{ t('+20 Mentorias', '+20 Mentorships') }}</span></div>
-            <div class="tech-item glass-card reveal-item"><i class="fas fa-user-graduate"></i><span>{{ t('+300 Estudantes', '+300 Students') }}</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-chalkboard-teacher"></i><span>{{ t('100+ Mentorias', '100+ Mentorships') }}</span></div>
+            <div class="tech-item glass-card reveal-item"><i class="fas fa-user-graduate"></i><span>{{ t('100+ Pessoas Mentoradas', '100+ People Mentored') }}</span></div>
           </div>
         </div>
       </div>
