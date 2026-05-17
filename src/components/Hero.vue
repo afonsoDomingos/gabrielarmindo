@@ -45,6 +45,14 @@ const { t } = useLanguage();
             <span>{{ t('Contacto', 'Contact') }}</span>
             <i class="fas fa-paper-plane"></i>
           </a>
+          <a href="#services" class="btn btn-primary">
+            <span>{{ t('Veja os Meus Serviços', 'See My Services') }}</span>
+            <i class="fas fa-concierge-bell"></i>
+          </a>
+          <a href="#resume" class="btn btn-outline">
+            <span>{{ t('Ver Portfólio', 'View Portfolio') }}</span>
+            <i class="fas fa-file-alt"></i>
+          </a>
           <a href="#blog" class="btn btn-outline">
             <span>{{ t('Ver Blog', 'View Blog') }}</span>
             <i class="fas fa-blog"></i>
