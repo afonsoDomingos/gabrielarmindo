@@ -4,14 +4,14 @@ import { useLanguage } from '../store/language';
 
 const { t } = useLanguage();
 
-const activeTab = ref('description');
+const activeTab = ref('education');
 
 const tabs = computed(() => [
-  { id: 'description', label: t('Descrição', 'Description') },
   { id: 'education', label: t('Formação e Certificação', 'Education & Certification') },
   { id: 'skills', label: t('Competências', 'Skills') },
   { id: 'experience', label: t('Experiência', 'Experience') },
-  { id: 'studies', label: t('Estudos', 'Studies') }
+  { id: 'studies', label: t('Estudos', 'Studies') },
+  { id: 'partners', label: t('Parceiros', 'Partners') }
 ]);
 
 const certifications = [
@@ -88,23 +88,9 @@ const experiences = computed(() => [
         </div>
 
         <div class="tabs-content">
-          <!-- Descrição -->
           <transition name="fade-slide" mode="out-in">
-            <div v-if="activeTab === 'description'" class="tab-pane" key="desc">
-              <div class="description-grid">
-                <div class="desc-text text-left">
-                  <p>
-                    {{ t('Sou um profissional dedicado à área de Pesquisa e Análise de Dados, com sólida experiência em Monitoria e Avaliação (M&E) e Gestão de Projectos. Minha abordagem combina rigor metodológico com inovação tecnológica para impulsionar a eficiência e o impacto organizacional.', 'I am a professional dedicated to the Research and Data Analysis area, with solid experience in Monitoring and Evaluation (M&E) and Project Management. My approach combines methodological rigor with technological innovation to drive efficiency and organizational impact.') }}
-                  </p>
-                  <p>
-                    {{ t('Especialista em integrar abordagens sensíveis ao género, inclusão e proteção em contextos complexos e humanitários, garantindo que a tomada de decisão seja sempre baseada em evidências robustas.', 'Specialist in integrating gender-sensitive, inclusion and protection approaches in complex and humanitarian contexts, ensuring that decision-making is always based on robust evidence.') }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
             <!-- Formação e Certificação -->
-            <div v-else-if="activeTab === 'education'" class="tab-pane" key="edu">
+            <div v-if="activeTab === 'education'" class="tab-pane" key="edu">
               <div class="education-section">
                 <h3 class="pane-title">{{ t('Certificações & Recomendações', 'Certifications & Recommendations') }}</h3>
                 <p class="pane-subtitle">{{ t('Certificados profissionais, cartas de recomendação e distinções obtidas ao longo da trajectória profissional.', 'Professional certificates, recommendation letters and distinctions obtained throughout my professional career.') }}</p>
@@ -299,10 +285,10 @@ const experiences = computed(() => [
                 <!-- Card 2 -->
                 <div class="study-item glass-card">
                   <div class="study-icon"><i class="fas fa-users-cog"></i></div>
-                  <h5>{{ t('Pesquisas Antropológicas', 'Anthropological Research') }}</h5>
-                  <p>{{ t('Pesquisas sociais e antropológicas incluindo estudos sobre prostituição, governação local, migração e integração social em Maputo.', 'Social and anthropological research including studies on prostitution, local governance, migration and social integration in Maputo.') }}</p>
+                  <h5>{{ t('Pesquisas Sociais & Psicológicas', 'Social & Psychological Research') }}</h5>
+                  <p>{{ t('Pesquisas sociais e antropológicas incluindo estudos sobre intervenção psicológica em situações de crise.', 'Social and anthropological research including studies on psychological intervention in crisis situations.') }}</p>
                   <div class="study-tags">
-                    <span class="tag tag-darkblue">{{ t('Antropologia', 'Anthropology') }}</span>
+                    <span class="tag tag-darkblue">{{ t('Psicologia', 'Psychology') }}</span>
                     <span class="tag tag-emerald">{{ t('Qualitativo', 'Qualitative') }}</span>
                   </div>
                 </div>
@@ -326,6 +312,47 @@ const experiences = computed(() => [
                   <div class="study-tags">
                     <span class="tag tag-emerald">{{ t('Análise de Mercado', 'Market Analysis') }}</span>
                     <span class="tag tag-darkblue">DQA</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parceiros -->
+            <div v-else-if="activeTab === 'partners'" class="tab-pane" key="partners">
+              <div class="partners-section">
+                <h3 class="pane-title">{{ t('Parceiros & Colaborações', 'Partners & Collaborations') }}</h3>
+                <p class="pane-subtitle">{{ t('Organizações, ONGs e parceiros com os quais colaborei para a implementação de projectos de desenvolvimento e acção humanitária.', 'Organizations, NGOs, and partners with whom I collaborated to implement development and humanitarian action projects.') }}</p>
+                
+                <div class="partners-grid">
+                  <div class="partner-card glass-card">
+                    <div class="partner-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <h5>Helen Keller International</h5>
+                    <p>{{ t('Desenvolvimento e implementação de intervenções psicossociais inclusivas e fortalecimento comunitário.', 'Development and implementation of inclusive psychosocial interventions and community strengthening.') }}</p>
+                  </div>
+                  <div class="partner-card glass-card">
+                    <div class="partner-icon"><i class="fas fa-university"></i></div>
+                    <h5>ODEI</h5>
+                    <p>{{ t('Coordenação técnica de sistemas de MEAL, DQA e gestão de qualidade de dados em projectos humanitários.', 'Technical coordination of MEAL systems, DQA, and data quality management in humanitarian projects.') }}</p>
+                  </div>
+                  <div class="partner-card glass-card">
+                    <div class="partner-icon"><i class="fas fa-brain"></i></div>
+                    <h5>Consulting And Coaching Agency</h5>
+                    <p>{{ t('Consultoria especializada em capacitação de equipas, dashboards estratégicos e recolha digital (KoboToolbox).', 'Specialized consulting in team training, strategic dashboards, and digital data collection (KoboToolbox).') }}</p>
+                  </div>
+                  <div class="partner-card glass-card">
+                    <div class="partner-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h5>Escola de Desenho, Monitoria e Avaliação</h5>
+                    <p>{{ t('Docência avançada em módulos de Monitoria & Avaliação, Teoria da Mudança e Análise de Dados.', 'Advanced teaching in Monitoring & Evaluation modules, Theory of Change, and Data Analysis.') }}</p>
+                  </div>
+                  <div class="partner-card glass-card">
+                    <div class="partner-icon"><i class="fas fa-chart-line"></i></div>
+                    <h5>Prátiq Consultoria</h5>
+                    <p>{{ t('Apoio técnico na elaboração de propostas, protocolos de pesquisa aplicada e gestão de integridade de dados.', 'Technical support in proposal design, applied research protocols, and data integrity management.') }}</p>
+                  </div>
+                  <div class="partner-card glass-card">
+                    <div class="partner-icon"><i class="fas fa-globe"></i></div>
+                    <h5>Humanitarian Leadership Academy</h5>
+                    <p>{{ t('Parceria em qualificações profissionais de MEAL voltadas ao desenvolvimento comunitário sustentável.', 'Partnership in professional MEAL qualifications focused on sustainable community development.') }}</p>
                   </div>
                 </div>
               </div>
@@ -876,4 +903,49 @@ const experiences = computed(() => [
 .tag-emerald { background-color: #48bb78; }
 .tag-red { background-color: #e53e3e; }
 .tag-yellow { background-color: #d69e2e; }
+
+/* Partners Section Styles */
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.partner-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.partner-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(43, 108, 176, 0.2);
+}
+
+.partner-icon {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(43, 108, 176, 0.05);
+  border-radius: 50%;
+  color: var(--primary-dark);
+  font-size: 1.5rem;
+}
+
+.partner-card h5 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.partner-card p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
 </style>
