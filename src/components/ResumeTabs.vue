@@ -307,7 +307,7 @@ const experiences = computed(() => [
                 <!-- Card 4 -->
                 <div class="study-item glass-card">
                   <div class="study-icon"><i class="fas fa-poll"></i></div>
-                  <h5>{{ t('Estudos de Mercado & DQA', 'Market Studies & DQA') }}</h5>
+                  <h5>{{ t('Pesquisa de Mercado', 'Market Research') }}</h5>
                   <p>{{ t('Análises de mercado e auditorias de qualidade de dados (DQA) para garantir integridade e precisão dos sistemas M&E.', 'Market analysis and Data Quality Audits (DQA) to ensure integrity and accuracy of M&E systems.') }}</p>
                   <div class="study-tags">
                     <span class="tag tag-emerald">{{ t('Análise de Mercado', 'Market Analysis') }}</span>
