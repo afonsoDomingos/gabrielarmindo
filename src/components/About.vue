@@ -1,14 +1,7 @@
 <script setup>
-import { ref } from 'vue';
 import { useLanguage } from '../store/language';
 
 const { t } = useLanguage();
-
-const isExpanded = ref(false);
-
-const toggleExpand = () => {
-  isExpanded.value = !isExpanded.value;
-};
 </script>
 
 <template>
@@ -20,40 +13,13 @@ const toggleExpand = () => {
 
       <div class="about-content">
         <div class="about-text reveal">
-          <p class="about-intro">
-            {{ t('Sou consultor independente especializado em Fortalecimento Institucional, Monitoria, Avaliação, Accountability e Aprendizagem (MEAL), Investigação Aplicada e Comunicação Estratégica, com experiência no apoio a organizações de desenvolvimento e resposta humanitária.', 'I am an independent consultant specializing in Institutional Strengthening, Monitoring, Evaluation, Accountability, and Learning (MEAL), Applied Research, and Strategic Communication, with experience in supporting development and humanitarian response organizations.') }}
+          <p class="about-paragraph" style="margin-bottom: 1.5rem;">
+            {{ t('Sou consultor independente especializado em Fortalecimento Institucional, Monitoria, Avaliação, Accountability e Aprendizagem (MEAL), Investigação Aplicada e Comunicação Estratégica, com experiência no apoio a organizações de desenvolvimento e resposta humanitária. Apoio organizações a transformar dados, evidências e experiências em sistemas de aprendizagem institucional, tomada de decisão e posicionamento estratégico, fortalecendo a capacidade de demonstrar impacto, responder às exigências de accountability e aumentar a credibilidade junto de parceiros e financiadores.', 'I am an independent consultant specializing in Institutional Strengthening, Monitoring, Evaluation, Accountability, and Learning (MEAL), Applied Research, and Strategic Communication, with experience in supporting development and humanitarian response organizations. I support organizations to transform data, evidence, and experiences into institutional learning, decision-making, and strategic positioning systems, strengthening the capacity to demonstrate impact, respond to accountability requirements, and increase credibility with partners and donors.') }}
           </p>
-          
-          <div class="expandable-content" :class="{ 'expanded': isExpanded }">
-            <p>
-              {{ t('Apoio organizações a transformar dados, evidências e experiências em sistemas de aprendizagem institucional, tomada de decisão e posicionamento estratégico, fortalecendo a capacidade de demonstrar impacto, responder às exigências de accountability e aumentar a credibilidade junto de parceiros e financiadores.', 'I support organizations to transform data, evidence, and experiences into institutional learning, decision-making, and strategic positioning systems, strengthening the capacity to demonstrate impact, respond to accountability requirements, and increase credibility with partners and donors.') }}
-            </p>
-            <p>
-              {{ t('Tenho experiência no desenho e implementação de sistemas de MEAL, incluindo processos de recolha, gestão, validação e análise de dados, desenvolvimento de avaliações, dashboards estratégicos e mecanismos de aprendizagem orientados por evidências.', 'I have experience in the design and implementation of MEAL systems, including data collection, management, validation, and analysis processes, development of evaluations, strategic dashboards, and evidence-oriented learning mechanisms.') }}
-            </p>
-            <p>
-              {{ t('A minha abordagem combina análise técnica, investigação aplicada e compreensão das dinâmicas comunitárias, permitindo desenvolver soluções participativas, eficientes e alinhadas aos desafios reais das organizações.', 'My approach combines technical analysis, applied research, and understanding of community dynamics, allowing me to develop participatory, efficient, and aligned solutions to the real challenges of organizations.') }}
-            </p>
-          </div>
+          <p class="about-paragraph" style="margin-bottom: 2rem;">
+            {{ t('Tenho experiência no desenho e implementação de sistemas de MEAL, incluindo processos de recolha, gestão, validação e análise de dados, desenvolvimento de avaliações, dashboards estratégicos e mecanismos de aprendizagem orientados por evidências. A minha abordagem combina análise técnica, investigação aplicada e compreensão das dinâmicas comunitárias, permitindo desenvolver soluções participativas, eficientes e alinhadas aos desafios reais das organizações.', 'I have experience in the design and implementation of MEAL systems, including data collection, management, validation, and analysis processes, development of evaluations, strategic dashboards, and evidence-oriented learning mechanisms. My approach combines technical analysis, applied research, and understanding of community dynamics, allowing me to develop participatory, efficient, and aligned solutions to the real challenges of organizations.') }}
+          </p>
 
-          <button @click="toggleExpand" class="read-more-btn">
-            <span>{{ isExpanded ? t('Ler menos', 'Read less') : t('Ler mais', 'Read more') }}</span>
-            <i class="fas" :class="isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-          </button>
-
-          <div class="about-education">
-            <h3><i class="fas fa-graduation-cap"></i> {{ t('Formação & Certificações', 'Education & Certifications') }}</h3>
-            <ul>
-              <li>
-                <strong>{{ t('Licenciatura em Psicologia Social e Comunitária', 'Bachelor in Social and Community Psychology') }}</strong>
-                <span>{{ t('Universidade Eduardo Mondlane', 'Eduardo Mondlane University') }}</span>
-              </li>
-              <li>
-                <strong>{{ t('Extensão Universitária em Gênero, Diversidade e Inclusão Social', 'University Extension in Gender, Diversity and Social Inclusion') }}</strong>
-                <span>{{ t('Universidade de São Paulo (USP)', 'University of São Paulo (USP)') }}</span>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>

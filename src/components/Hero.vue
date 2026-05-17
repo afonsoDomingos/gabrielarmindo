@@ -13,7 +13,7 @@ const { t } = useLanguage();
           <span>{{ t('Consultor Independente – Maputo, Moçambique', 'Independent Consultant – Maputo, Mozambique') }}</span>
         </div>
         <h1 class="hero-title">
-          <span class="hero-greeting reveal-text">{{ t('Olá, Eu sou', "Hello, I'm") }}</span> <br />
+          <span class="hero-greeting reveal-text">{{ t('Olá, sou', "Hello, I'm") }}</span> <br />
           <span class="gradient-text hero-name animated-name">Gabriel Armindo</span>
         </h1>
         <p class="hero-subtitle">{{ t('Fortalecimento Institucional · MEAL · Investigação · Comunicação Estratégica', 'Institutional Strengthening · MEAL · Research · Strategic Communication') }}</p>
