@@ -18,25 +18,25 @@ const { t } = useLanguage();
         </h1>
         <p class="hero-subtitle">{{ t('Fortalecimento Institucional · MEAL · Investigação · Comunicação Estratégica', 'Institutional Strengthening · MEAL · Research · Strategic Communication') }}</p>
         <p class="hero-description">
-          {{ t('Da evidência à decisão: ajudamos organizações a medir impacto, estruturar sistemas e comunicar valor.', 'From evidence to decision: we help organizations measure impact, structure systems and communicate value.') }}
+          {{ t('Transformo dados, evidências e experiências em sistemas de aprendizagem, tomada de decisão e posicionamento institucional.', 'I transform data, evidence, and experiences into systems of learning, decision-making, and institutional positioning.') }}
         </p>
 
         <div class="hero-stats">
           <div class="stat-item reveal">
             <div class="stat-number">5</div>
-            <div class="stat-label">{{ t('Anos Exp', 'Years Exp') }}</div>
+            <div class="stat-label">{{ t('Anos de experiência', 'Years of experience') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.1s">
             <div class="stat-number">6</div>
-            <div class="stat-label">{{ t('Projectos', 'Projects') }}</div>
+            <div class="stat-label">{{ t('Projectos implementados', 'Implemented projects') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.2s">
             <div class="stat-number">5</div>
-            <div class="stat-label">{{ t('Organizações', 'Organizations') }}</div>
+            <div class="stat-label">{{ t('Organizações apoiadas', 'Supported organizations') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.3s">
             <div class="stat-number">100</div>
-            <div class="stat-label">{{ t('Pessoas Mentoradas', 'People Mentored') }}</div>
+            <div class="stat-label">{{ t('Pessoas mentoradas', 'People mentored') }}</div>
           </div>
         </div>
 
