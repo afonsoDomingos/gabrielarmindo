@@ -112,7 +112,7 @@ const experiences = computed(() => [
             <!-- Formação e Certificação -->
             <div v-else-if="activeTab === 'education'" class="tab-pane" key="edu">
               <div class="education-section">
-                <h3 class="pane-title">{{ t('Certificações & Formações', 'Certifications & Training') }}</h3>
+                <h3 class="pane-title">{{ t('Certificações & Recomendações', 'Certifications & Recommendations') }}</h3>
                 <p class="pane-subtitle">{{ t('Certificados profissionais, cartas de recomendação e distinções obtidas ao longo da trajectória profissional.', 'Professional certificates, recommendation letters and distinctions obtained throughout my professional career.') }}</p>
                 
                 <div class="cert-category-grid">

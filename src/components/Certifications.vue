@@ -31,7 +31,7 @@ const certifications = computed(() => [
     <div class="container">
       <div class="section-header text-center reveal">
         <span class="section-tag">{{ t('Qualificações', 'Qualifications') }}</span>
-        <h2 class="section-title">{{ t('Certificações & Treinamentos', 'Certifications & Training') }}</h2>
+        <h2 class="section-title">{{ t('Certificações & Recomendações', 'Certifications & Recommendations') }}</h2>
       </div>
 
       <div class="cert-grid">

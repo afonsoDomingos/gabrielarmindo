@@ -42,7 +42,7 @@ const toggleExpand = () => {
           </button>
 
           <div class="about-education">
-            <h3><i class="fas fa-graduation-cap"></i> {{ t('Formação Académica', 'Academic Education') }}</h3>
+            <h3><i class="fas fa-graduation-cap"></i> {{ t('Formação & Certificações', 'Education & Certifications') }}</h3>
             <ul>
               <li>
                 <strong>{{ t('Licenciatura em Psicologia Social e Comunitária', 'Bachelor in Social and Community Psychology') }}</strong>
