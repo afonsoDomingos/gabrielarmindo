@@ -26,12 +26,6 @@ const certifications = [
 
 const experiences = computed(() => [
   {
-    role: t('Director de Programas', 'Program Director'),
-    company: t('Innovation and Solutions, Moçambique', 'Innovation and Solutions, Mozambique'),
-    period: t('05/2025 - Presente', '05/2025 - Present'),
-    desc: t('Gestão estratégica de programas, coordenação de equipas, elaboração de propostas técnicas, garantia de qualidade e supervisão de relatórios, Monitoria e Avaliação.', 'Strategic program management, team coordination, technical proposals, quality assurance, report oversight, M&E.')
-  },
-  {
     role: t('Consultor de Monitoria, Avaliação e Pesquisa', 'Monitoring, Evaluation and Research Consultant'),
     company: 'Consulting And Coaching Agency',
     period: t('09/2025 - Presente', '09/2025 - Present'),
@@ -45,7 +39,7 @@ const experiences = computed(() => [
     company: 'ODEI',
     period: t('2023 - 2025', '2023 - 2025'),
     desc: t(
-      '• Coordenação e implementação de sistemas de MEAL\n• Monitoria de projectos e avaliações (baseline, PDM e outcome monitoring)\n• Gestão da qualidade de dados e mecanismos de accountability comunitária\n• Desenvolvimento de ferramentas digitais de recolha de dados\n• Formação e supervisão de inquiridores\n• Produção de relatórios técnicos e acompanhamento de campo com foco em qualidade e conformidade humanitária',
+      '• Coordenação e implementação de sistemas de MEAL\n• Monitoria de projectos e avaliações (baseline, PDM e outcome monitoring)\n• Gestão da qualidade de dados e mechanisms de accountability comunitária\n• Desenvolvimento de ferramentas digitais de recolha de dados\n• Formação e supervisão de inquiridores\n• Produção de relatórios técnicos e acompanhamento de campo com foco em qualidade e conformidade humanitária',
       '• Coordination and implementation of MEAL systems\n• Project monitoring and evaluations (baseline, PDM and outcome monitoring)\n• Data quality management and community accountability mechanisms\n• Development of digital data collection tools\n• Training and supervision of surveyors\n• Production of technical reports and field monitoring focusing on quality and humanitarian compliance'
     )
   },
