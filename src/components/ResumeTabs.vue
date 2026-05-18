@@ -92,10 +92,25 @@ const experiences = computed(() => [
             <!-- Formação e Certificação -->
             <div v-if="activeTab === 'education'" class="tab-pane" key="edu">
               <div class="education-section">
-                <h3 class="pane-title">{{ t('Certificações & Recomendações', 'Certifications & Recommendations') }}</h3>
-                <p class="pane-subtitle">{{ t('Certificados profissionais, cartas de recomendação e distinções obtidas ao longo da trajectória profissional.', 'Professional certificates, recommendation letters and distinctions obtained throughout my professional career.') }}</p>
+                <h3 class="pane-title">{{ t('Formação & Certificações', 'Education & Certifications') }}</h3>
+                <p class="pane-subtitle">{{ t('Formação académica, certificações profissionais e qualificações técnicas obtidas ao longo da trajectória.', 'Academic education, professional certifications, and technical qualifications obtained throughout my career.') }}</p>
                 
                 <div class="cert-category-grid">
+                  <!-- Formação Académica -->
+                  <div class="cert-category">
+                    <h4 class="category-title"><i class="fas fa-graduation-cap"></i> {{ t('Formação Académica', 'Academic Education') }}</h4>
+                    <div class="cert-list">
+                      <div class="cert-item glass-card">
+                        <h5>{{ t('Licenciatura em Psicologia Social e das Organizações', 'Bachelor in Social and Organizational Psychology') }}</h5>
+                        <p class="issuer">Universidade Eduardo Mondlane (2018 - 2022)</p>
+                      </div>
+                      <div class="cert-item glass-card">
+                        <h5>{{ t('Técnico Médio de Agro-Pecuária', 'Agricultural and Livestock Technical School') }}</h5>
+                        <p class="issuer">Instituto Agrário de Chimoio (2013 - 2015)</p>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- Gestao de projectos & M&A -->
                   <div class="cert-category">
                     <h4 class="category-title"><i class="fas fa-tasks"></i> {{ t('Gestão de Projectos & M&A', 'Project Management & M&E') }}</h4>
@@ -776,7 +791,7 @@ const experiences = computed(() => [
 /* Certificações Categorizadas */
 .cert-category-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2.5rem;
 }
 
