@@ -190,14 +190,60 @@ const seedInitialData = async () => {
   }
 };
 
-mongoose.connect(MONGODB_URI)
-  .then(async () => {
-    console.log('🍃 Conectado com sucesso ao MongoDB Atlas!');
-    await seedInitialData();
-  })
-  .catch((err) => {
-    console.error('❌ Erro na conexão com o MongoDB Atlas:', err.message);
-  });
+// Database Connection & Serverless Helper
+let dbPromise = null;
+const connectDB = async () => {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+  if (!dbPromise) {
+    const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      console.error('❌ MONGODB_URI não configurada nas variáveis de ambiente!');
+      throw new Error('Variável MONGODB_URI não encontrada nas configurações do ambiente/servidor.');
+    }
+    dbPromise = mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 8000
+    }).then(async (m) => {
+      console.log('🍃 Conectado com sucesso ao MongoDB Atlas!');
+      await seedInitialData();
+      return m;
+    }).catch(err => {
+      console.error('❌ Erro na conexão com o MongoDB Atlas:', err.message);
+      dbPromise = null;
+      throw err;
+    });
+  }
+  return dbPromise;
+};
+
+// Initial connection for persistent node processes
+if (process.env.MONGODB_URI) {
+  connectDB().catch(e => console.warn('Conexão assíncrona inicial:', e.message));
+} else {
+  console.warn('⚠️ MONGODB_URI não encontrada nas variáveis de ambiente.');
+}
+
+// Middleware to ensure DB connection before executing any /api route
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    try {
+      await connectDB();
+      next();
+    } catch (err) {
+      console.error('❌ Falha na conexão MongoDB para a rota:', req.path, err.message);
+      return res.status(500).json({
+        message: 'Falha ao conectar com o banco de dados MongoDB Atlas.',
+        error: err.message,
+        hint: !process.env.MONGODB_URI 
+          ? 'Certifique-se de configurar MONGODB_URI nas variáveis de ambiente do seu provedor (ex: Vercel Project Settings > Environment Variables).' 
+          : 'Verifique se o cluster do MongoDB Atlas permite conexões de qualquer IP (0.0.0.0/0 no Network Access).'
+      });
+    }
+  } else {
+    next();
+  }
+});
 
 // Auth Configuration
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'info@gabrielarmindo.com';
@@ -216,8 +262,11 @@ const authenticate = (req, res, next) => {
 // --- AUTH ROUTES ---
 app.post('/api/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const cleanEmail = email?.toLowerCase()?.trim();
+    const { email, password } = req.body || {};
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email e senha são obrigatórios.' });
+    }
+    const cleanEmail = email.toLowerCase().trim();
 
     // 1. Procurar no MongoDB
     let user = await User.findOne({ email: cleanEmail });
@@ -248,9 +297,10 @@ app.post('/api/login', async (req, res) => {
       });
     }
 
-    res.status(401).json({ message: 'Email ou senha inválidos.' });
+    return res.status(401).json({ message: 'Email ou senha inválidos.' });
   } catch (err) {
-    res.status(500).json({ message: 'Erro no servidor durante login', error: err.message });
+    console.error('❌ Erro no /api/login:', err);
+    return res.status(500).json({ message: 'Erro no servidor durante login', error: err.message });
   }
 });
 
