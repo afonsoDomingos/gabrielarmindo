@@ -26,6 +26,7 @@ const Post = require('./models/Post');
 const Package = require('./models/Package');
 const Message = require('./models/Message');
 const Testimonial = require('./models/Testimonial');
+const User = require('./models/User');
 
 // Cloudinary Configuration with Local Fallback
 let upload;
@@ -171,6 +172,19 @@ const seedInitialData = async () => {
       });
       console.log('✅ Depoimento inicial inserido!');
     }
+
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      console.log('Populando usuário administrador inicial no MongoDB...');
+      await User.create({
+        name: 'Gabriel Armindo',
+        email: process.env.ADMIN_EMAIL || 'info@gabrielarmindo.com',
+        password: process.env.ADMIN_PASSWORD || '@Admin123@',
+        role: 'superadmin',
+        avatar: '/images/perfil1.png'
+      });
+      console.log('✅ Usuário administrador criado com sucesso no MongoDB Atlas!');
+    }
   } catch (err) {
     console.error('Erro ao popular dados iniciais:', err.message);
   }
@@ -200,12 +214,43 @@ const authenticate = (req, res, next) => {
 };
 
 // --- AUTH ROUTES ---
-app.post('/api/login', (req, res) => {
-  const { email, password } = req.body;
-  if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-    res.json({ token: AUTH_TOKEN, user: { email: ADMIN_EMAIL, name: 'Gabriel Armindo' } });
-  } else {
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const cleanEmail = email?.toLowerCase()?.trim();
+
+    // 1. Procurar no MongoDB
+    let user = await User.findOne({ email: cleanEmail });
+
+    // 2. Se não existir no banco mas bater com as credenciais padrão, criar no MongoDB
+    if (!user && (email === ADMIN_EMAIL || cleanEmail === ADMIN_EMAIL.toLowerCase()) && password === ADMIN_PASSWORD) {
+      user = await User.create({
+        name: 'Gabriel Armindo',
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
+        role: 'superadmin',
+        avatar: '/images/perfil1.png'
+      });
+    }
+
+    if (user && user.password === password) {
+      user.lastLogin = new Date();
+      await user.save();
+      return res.json({
+        token: AUTH_TOKEN,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          avatar: user.avatar
+        }
+      });
+    }
+
     res.status(401).json({ message: 'Email ou senha inválidos.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro no servidor durante login', error: err.message });
   }
 });
 
