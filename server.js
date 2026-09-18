@@ -429,6 +429,76 @@ app.delete('/api/blog/:id', authenticate, async (req, res) => {
   }
 });
 
+// Like post
+app.post('/api/blog/:id/like', async (req, res) => {
+  try {
+    const { id } = req.params;
+    let post = await Post.findById(id);
+    if (!post && mongoose.Types.ObjectId.isValid(id)) {
+      post = await Post.findById(id);
+    }
+    if (!post) {
+      post = await Post.findOne({ slug: id });
+    }
+    if (!post) {
+      return res.status(404).json({ message: 'Artigo não encontrado.' });
+    }
+    post.likes = (post.likes || 0) + 1;
+    await post.save();
+    res.json({ likes: post.likes });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao registrar like', error: err.message });
+  }
+});
+
+// Comment on post
+app.post('/api/blog/:id/comment', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, content } = req.body;
+    if (!name || !content) {
+      return res.status(400).json({ message: 'Nome e comentário são obrigatórios.' });
+    }
+
+    let post = await Post.findById(id);
+    if (!post) {
+      post = await Post.findOne({ slug: id });
+    }
+    if (!post) {
+      return res.status(404).json({ message: 'Artigo não encontrado.' });
+    }
+
+    const newComment = {
+      name: name.trim(),
+      content: content.trim(),
+      createdAt: new Date()
+    };
+
+    post.comments.push(newComment);
+    await post.save();
+
+    res.status(201).json({ message: 'Comentário publicado com sucesso!', comments: post.comments });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao publicar comentário', error: err.message });
+  }
+});
+
+// Delete comment (admin only)
+app.delete('/api/blog/:id/comment/:commentId', authenticate, async (req, res) => {
+  try {
+    const { id, commentId } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: 'Artigo não encontrado.' });
+    }
+    post.comments = post.comments.filter(c => c._id.toString() !== commentId);
+    await post.save();
+    res.json({ message: 'Comentário excluído com sucesso!', comments: post.comments });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao excluir comentário', error: err.message });
+  }
+});
+
 // --- PACKAGES ROUTES (MongoDB) ---
 app.get('/api/packages', async (req, res) => {
   try {
