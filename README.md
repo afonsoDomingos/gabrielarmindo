@@ -1,60 +1,88 @@
-# Portfólio - Gabriel Armindo
+# Portfólio Profissional & Painel Administrativo - Gabriel Armindo
 
-Este é o portfólio profissional de Gabriel Armindo, Especialista em Monitoria, Avaliação (M&E) e Análise de Dados. O projeto foi desenvolvido com foco em performance, design moderno e facilidade de gestão de conteúdo através de um sistema de blog integrado.
+Plataforma profissional e sistema de gestão de conteúdos (CMS / Admin) de **Gabriel Armindo**, Especialista Sénior em Monitoria, Avaliação (MEAL / M&E), Análise de Dados e Psicologia Social.
 
-## 🚀 Tecnologias Utilizadas
+---
 
-- **Frontend**: HTML5, CSS3 (Variáveis CSS, Flexbox, Grid), JavaScript (ES6+).
-- **Backend**: Node.js, Express.
-- **Design**: Responsivo, Glassmorphism, Gradientes modernos.
-- **Ícones**: Font Awesome.
+## 🚀 Tecnologias
+
+- **Frontend**: Vue.js 3 (Composition API, `<script setup>`), Vite 5, Vue Router 4, Chart.js & vue-chartjs.
+- **Estilos & UI**: CSS3 Moderno, Glassmorphism, Dark/Modern Themes, Font Awesome 6, Google Fonts (Inter, Outfit).
+- **Backend**: Node.js, Express, Mongoose (MongoDB ODM), Multer.
+- **Banco de Dados**: **MongoDB Atlas** (Cloud Database persistente).
+- **Armazenamento de Imagens**: Suporte integrado para Cloudinary e upload local (`public/uploads/`).
+
+---
 
 ## 📂 Estrutura do Projeto
 
 ```
 /
-├── public/              # Arquivos estáticos do frontend
-│   ├── css/             # Estilos CSS
-│   ├── js/              # Lógica JavaScript
-│   ├── images/          # Imagens do site e blog
-│   └── index.html       # Página principal
-├── server.js            # Servidor backend e API
-├── package.json         # Dependências e scripts
-└── .env                 # Variáveis de ambiente
+├── models/                  # Modelos Mongoose (MongoDB)
+│   ├── Post.js              # Artigos do Blog (slug, views, category, etc.)
+│   ├── Package.js           # Catálogo de Serviços & Consultoria
+│   ├── Message.js           # Mensagens do Formulário de Contacto (Inbox)
+│   └── Testimonial.js       # Depoimentos & Avaliações
+├── src/
+│   ├── components/          # Componentes Vue da Landing Page
+│   │   ├── Navbar.vue, Hero.vue, About.vue, ResumeTabs.vue
+│   │   ├── ServicesOverview.vue, Services.vue, Blog.vue, Contact.vue, etc.
+│   │   └── Testimonials.vue # Depoimentos dinâmicos sincronizados com MongoDB
+│   ├── views/
+│   │   ├── Home.vue         # Página inicial pública
+│   │   ├── Login.vue        # Autenticação de Administrador
+│   │   └── Admin.vue        # Painel Administrativo Completo
+│   ├── router/              # Rotas e guardas de autenticação
+│   └── main.js              # Configurações globais, interatividade e scroll reveal
+├── public/                  # Arquivos estáticos e uploads locais
+├── server.js                # Servidor Express, conexão Atlas e APIs REST
+├── .env                     # Variáveis de ambiente e MongoDB URI
+└── package.json
 ```
+
+---
 
 ## 🛠️ Como Executar
 
-1. **Instale as dependências**:
+1. **Instalar Dependências**:
    ```bash
    npm install
    ```
 
-2. **Inicie o servidor**:
-   Para desenvolvimento (com hot-reload):
+2. **Configuração de Ambiente (`.env`)**:
+   Configure as variáveis de conexão no arquivo `.env`:
+   ```env
+   PORT=3000
+   MONGODB_URI=mongodb+srv://<usuario>:<senha>@cluster0.oe0akin.mongodb.net/gabrielarmindo?retryWrites=true&w=majority
+   ADMIN_EMAIL=info@gabrielarmindo.com
+   ADMIN_PASSWORD=@Admin123@
+   JWT_SECRET=gabrielarmindo_secret_key_2026_secure
+   ```
+
+3. **Iniciar em Modo de Desenvolvimento** (Backend + Frontend com hot-reload):
    ```bash
    npm run dev
    ```
-   
-   Para produção:
+
+4. **Modo Produção**:
    ```bash
+   npm run build
    npm start
    ```
-
-3. **Acesse**:
-   Abra seu navegador em `http://localhost:3000`.
-
-## ✨ Funcionalidades
-
-- **Design Premium**: Interface moderna com animações suaves e paleta de cores profissional.
-- **Blog Dinâmico**: Sistema integrado para criar e listar artigos sobre M&A e Análise de Dados.
-- **Contador Animado**: Estatísticas de experiência e impacto com animação de contagem.
-- **Formulário de Contato**: Funcional e pronto para integração com serviços de email.
-- **Responsividade**: Adapta-se perfeitamente a celulares, tablets e desktops.
-
-## 📝 Personalização
-
-Para adicionar novos posts ao blog, você pode usar o botão "Criar Novo Post" na seção de blog (os dados são salvos em memória enquanto o servidor estiver rodando) ou editar o array `blogPosts` no arquivo `server.js` para adicionar posts permanentes.
+   Acesse em: `http://localhost:3000`
 
 ---
-Desenvolvido para Afonso Domingos.
+
+## 🔐 Painel Administrativo (/admin)
+
+Para acessar o console de administração:
+1. Abra `http://localhost:3000/login` (ou clique no link "Admin" no rodapé da página).
+2. **Email**: `info@gabrielarmindo.com`
+3. **Senha**: `@Admin123@`
+
+### Funcionalidades do Painel:
+- 📊 **Visão Geral**: Métricas em tempo real (Total de Artigos, Visualizações totais, Serviços ativos, Mensagens recebidas) e gráficos interativos de categorias.
+- ✍️ **Gestão de Blog**: Publicação, edição e exclusão de artigos, geração automática de slugs amigáveis, upload ou URL de capas, visualizações acumuladas e filtros por categoria.
+- 💼 **Serviços & Planos**: Criação e edição de pacotes de consultoria com checklist dinâmico de entregáveis e definição de preços.
+- 📬 **Mensagens (Inbox)**: Leitor de mensagens enviadas por visitantes no formulário de contacto do site, com status de lida/não lida, resposta rápida por email e exclusão.
+- 💬 **Testemunhos**: Gestão de depoimentos de clientes e mentorados com avaliação por estrelas.

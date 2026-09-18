@@ -1,28 +1,71 @@
+const dns = require('dns');
+// Set custom DNS to bypass local Windows DNS SRV lookup issues with MongoDB Atlas
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  console.warn('Aviso DNS:', e.message);
+}
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const fs = require('fs');
+const mongoose = require('mongoose');
 const multer = require('multer');
 require('dotenv').config();
 
-// Cloudinary Config
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
-// Multer + Cloudinary Storage
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'portfolio_blog',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
+// Models
+const Post = require('./models/Post');
+const Package = require('./models/Package');
+const Message = require('./models/Message');
+const Testimonial = require('./models/Testimonial');
+
+// Cloudinary Configuration with Local Fallback
+let upload;
+const hasCloudinary = process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET;
+
+if (hasCloudinary) {
+  try {
+    const cloudinary = require('cloudinary').v2;
+    const { CloudinaryStorage } = require('multer-storage-cloudinary');
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET
+    });
+    const storage = new CloudinaryStorage({
+      cloudinary: cloudinary,
+      params: {
+        folder: 'portfolio_blog',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
+      }
+    });
+    upload = multer({ storage: storage });
+  } catch (err) {
+    console.warn('Falha ao configurar Cloudinary, usando disco local:', err.message);
   }
-});
-const upload = multer({ storage: storage });
+}
+
+if (!upload) {
+  const localStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, uploadsDir);
+    },
+    filename: function (req, file, cb) {
+      const ext = path.extname(file.originalname);
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, 'img-' + uniqueSuffix + ext);
+    }
+  });
+  upload = multer({ storage: localStorage });
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,232 +74,459 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
+app.use('/uploads', express.static(uploadsDir));
 app.use(express.static('dist'));
 
-// Admin Credentials
-const ADMIN_EMAIL = 'info@gabrielarmindo.com';
-const ADMIN_PASSWORD = '@Admin123@';
-const AUTH_TOKEN = 'mock-session-token-12345'; // Em produção, usar JWT
+// Database Connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/gabrielarmindodb';
+if (!process.env.MONGODB_URI) {
+  console.warn('⚠️  MONGODB_URI não encontrada no .env. Utilizando URI local ou de fallback.');
+}
 
-// Auth Middleware
+// Initial Seed Data
+const seedInitialData = async () => {
+  try {
+    const postCount = await Post.countDocuments();
+    if (postCount === 0) {
+      console.log('Populando artigos de blog iniciais no MongoDB...');
+      await Post.insertMany([
+        {
+          title: 'A Importância do MEAL em Projectos de Impacto Social',
+          slug: 'importancia-meal-projectos-impacto-social',
+          excerpt: 'Como sistemas de monitoria e avaliação transformam a gestão de projectos humanitários e asseguram resultados sustentáveis.',
+          content: '<p>A <strong>Monitoria, Avaliação, Prestação de Contas e Aprendizagem (MEAL)</strong> é a espinha dorsal de qualquer intervenção de desenvolvimento eficaz. Neste artigo, exploramos como o desenho de quadros lógicos robustos e a recolha sistemática de dados permitem não apenas medir o sucesso, mas aprender com os desafios e adaptar estratégias em tempo real para maximizar o impacto nas comunidades.</p><p>Um sistema MEAL bem estruturado garante transparência para doadores e beneficiários, permitindo tomadas de decisão baseadas em evidências rigorosas.</p>',
+          author: 'Gabriel Armindo',
+          category: 'MEAL',
+          image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+          views: 124,
+          published: true
+        },
+        {
+          title: 'Análise de Dados com Power BI para Tomada de Decisão Estratégica',
+          slug: 'analise-dados-power-bi-decisao-estrategica',
+          excerpt: 'Transformando dados brutos em dashboards interativos e insights acionáveis para stakeholders e doadores.',
+          content: '<p>No sector humanitário e corporativo, a capacidade de visualizar dados complexos de forma clara é crucial. Utilizando ferramentas modernas como <strong>Power BI</strong> e <strong>SPSS</strong>, conseguimos transformar folhas de cálculo densas em indicadores visuais que facilitam a compreensão rápida do progresso do projecto.</p><p>Discutiremos técnicas de limpeza de dados, modelagem analítica e as melhores práticas para criar dashboards que suportem a tomada de decisão baseada em evidências sólidas.</p>',
+          author: 'Gabriel Armindo',
+          category: 'Dados',
+          image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop',
+          views: 87,
+          published: true
+        },
+        {
+          title: 'Psicologia Social e Inclusão em Contextos Humanitários Complexos',
+          slug: 'psicologia-social-inclusao-humanitarios-complexos',
+          excerpt: 'A integração de abordagens sensíveis ao género e protecção baseada em direitos humanos em intervenções comunitárias.',
+          content: '<p>A minha formação em <strong>Psicologia Social e Comunitária</strong> permite uma visão aprofundada sobre como as intervenções afectam as dinâmicas comunitárias e individuais. Este artigo foca na importância de incluir perspectivas de género e inclusão social (GESI) desde a fase inicial de diagnóstico.</p><p>Garantir que populações vulneráveis tenham voz ativa no processo de avaliação não é apenas um imperativo ético, mas uma garantia de eficácia de longo prazo.</p>',
+          author: 'Gabriel Armindo',
+          category: 'Geral',
+          image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=800&auto=format&fit=crop',
+          views: 95,
+          published: true
+        }
+      ]);
+      console.log('✅ Artigos de blog iniciais inseridos com sucesso!');
+    }
+
+    const packageCount = await Package.countDocuments();
+    if (packageCount === 0) {
+      console.log('Populando pacotes de serviços iniciais no MongoDB...');
+      await Package.insertMany([
+        {
+          title: 'Consultoria MEAL Completa',
+          price: 'Sob Consulta',
+          description: 'Desenvolvimento integral de sistemas de Monitoria, Avaliação, Prestação de Contas e Aprendizagem.',
+          features: ['Design de Quadro Lógico', 'Planos de Monitoria & Indicadores', 'Sistemas de Feedback e Mecanismos de Reclamação'],
+          icon: 'fas fa-chart-line',
+          order: 1
+        },
+        {
+          title: 'Análise de Dados e BI',
+          price: 'A partir de $250',
+          description: 'Transformação de dados brutos em dashboards interativos para tomada de decisão ágil.',
+          features: ['Dashboards Interativos no Power BI', 'Limpeza e Tratamento Avançado de Dados', 'Relatórios Executivos para Doadores'],
+          icon: 'fas fa-database',
+          order: 2
+        },
+        {
+          title: 'Treinamento e Capacitação',
+          price: 'Personalizado',
+          description: 'Capacitação prática de equipas em recolha digital e análise estatística.',
+          features: ['Treinamento Prático em KoboToolbox', 'Mentoria em Análise Estatística (SPSS/Excel)', 'Workshops Hands-on de MEAL'],
+          icon: 'fas fa-users-cog',
+          order: 3
+        }
+      ]);
+      console.log('✅ Pacotes de serviços iniciais inseridos com sucesso!');
+    }
+
+    const testimonialCount = await Testimonial.countDocuments();
+    if (testimonialCount === 0) {
+      console.log('Populando depoimento inicial no MongoDB...');
+      await Testimonial.create({
+        name: 'Samuel Matola',
+        role: 'Consultor de Pesquisa | Oficial de MEAL',
+        content: 'Participar da mentoria em Monitoria e Avaliação com Gabriel Armindo foi uma experiência transformadora para a minha carreira. Os conteúdos práticos e bem estruturados ajudaram-me a aplicar os conceitos no dia a dia, dando-me confiança para atuar como Consultor e Oficial de MEAL. Sou muito grato pelo profissionalismo e dedicação do mentor.',
+        rating: 5,
+        active: true
+      });
+      console.log('✅ Depoimento inicial inserido!');
+    }
+  } catch (err) {
+    console.error('Erro ao popular dados iniciais:', err.message);
+  }
+};
+
+mongoose.connect(MONGODB_URI)
+  .then(async () => {
+    console.log('🍃 Conectado com sucesso ao MongoDB Atlas!');
+    await seedInitialData();
+  })
+  .catch((err) => {
+    console.error('❌ Erro na conexão com o MongoDB Atlas:', err.message);
+  });
+
+// Auth Configuration
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'info@gabrielarmindo.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '@Admin123@';
+const AUTH_TOKEN = process.env.JWT_SECRET || 'gabrielarmindo_secret_key_2026_secure';
+
 const authenticate = (req, res, next) => {
   const token = req.headers['authorization'];
   if (token === `Bearer ${AUTH_TOKEN}`) {
     next();
   } else {
-    res.status(401).json({ message: 'Não autorizado' });
+    res.status(401).json({ message: 'Não autorizado. Faça login novamente.' });
   }
 };
 
-// Login Route
+// --- AUTH ROUTES ---
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
-
   if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-    res.json({ token: AUTH_TOKEN });
+    res.json({ token: AUTH_TOKEN, user: { email: ADMIN_EMAIL, name: 'Gabriel Armindo' } });
   } else {
-    res.status(401).json({ message: 'Credenciais inválidas' });
+    res.status(401).json({ message: 'Email ou senha inválidos.' });
   }
 });
 
-// Image Upload Route
+// --- STATS ROUTE ---
+app.get('/api/admin/stats', authenticate, async (req, res) => {
+  try {
+    const totalPosts = await Post.countDocuments();
+    const totalPackages = await Package.countDocuments();
+    const totalMessages = await Message.countDocuments();
+    const unreadMessages = await Message.countDocuments({ read: false });
+    
+    // Aggregation for category distribution
+    const categoryStats = await Post.aggregate([
+      { $group: { _id: '$category', count: { $sum: 1 } } }
+    ]);
+    
+    // Total views calculation
+    const viewsAgg = await Post.aggregate([
+      { $group: { _id: null, totalViews: { $sum: '$views' } } }
+    ]);
+    const totalViews = viewsAgg.length > 0 ? viewsAgg[0].totalViews : 0;
+
+    res.json({
+      totalPosts,
+      totalPackages,
+      totalMessages,
+      unreadMessages,
+      totalViews,
+      categoryStats: categoryStats.reduce((acc, curr) => {
+        acc[curr._id || 'Geral'] = curr.count;
+        return acc;
+      }, {})
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao obter estatísticas', error: err.message });
+  }
+});
+
+// --- IMAGE UPLOAD ROUTE ---
 app.post('/api/upload', authenticate, upload.single('image'), (req, res) => {
   if (req.file) {
-    res.json({ url: req.file.path });
+    // If local storage, build relative URL
+    let fileUrl = req.file.path;
+    if (!hasCloudinary || !fileUrl.startsWith('http')) {
+      fileUrl = `/uploads/${req.file.filename}`;
+    }
+    res.json({ url: fileUrl });
   } else {
-    res.status(400).json({ message: 'Falha no upload da imagem' });
+    res.status(400).json({ message: 'Nenhuma imagem enviada ou erro no upload.' });
   }
 });
 
-// In-memory storage for blog posts (em produção, usar banco de dados)
-let blogPosts = [
-  {
-    id: 1,
-    title: 'A Importância do MEAL em Projectos de Impacto Social',
-    slug: 'importancia-meal-projectos-impacto-social',
-    excerpt: 'Como sistemas de monitoria e avaliação transformam a gestão de projectos humanitários e asseguram resultados.',
-    content: 'A Monitoria, Avaliação, Prestação de Contas e Aprendizagem (MEAL) é a espinha dorsal de qualquer intervenção de desenvolvimento eficaz. Neste artigo, exploramos como o desenho de quadros lógicos robustos e a recolha sistemática de dados permitem não apenas medir o sucesso, mas aprender com os desafios e adaptar estratégias em tempo real para maximizar o impacto nas comunidades...',
-    author: 'Gabriel Armindo',
-    date: new Date().toISOString(),
-    category: 'MEAL',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: 2,
-    title: 'Análise de Dados com Power BI para Tomada de Decisão',
-    slug: 'analise-dados-power-bi-decisao',
-    excerpt: 'Transformando dados brutos em dashboards estratégicos e insights acionáveis para stakeholders e doadores.',
-    content: 'No sector humanitário, a capacidade de visualizar dados complexos de forma clara é crucial. Utilizando ferramentas como Power BI e SPSS, conseguimos transformar folhas de cálculo densas em indicadores visuais que facilitam a compreensão do progresso do projecto. Discutiremos técnicas de limpeza de dados e as melhores práticas para criar dashboards que suportem a tomada de decisão baseada em evidências...',
-    author: 'Gabriel Armindo',
-    date: new Date(Date.now() - 86400000 * 3).toISOString(),
-    category: 'Dados',
-    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: 3,
-    title: 'Psicologia Social e Inclusão em Contextos Humanitários',
-    slug: 'psicologia-social-inclusao-humanitarios',
-    excerpt: 'A integração de abordagens sensíveis ao género e protecção baseada em direitos humanos em projectos complexos.',
-    content: 'A minha formação em Psicologia Social e Comunitária permite uma visão única sobre como as intervenções afectam as dinâmicas sociais. Este post foca na importância de incluir perspectivas de género e inclusão social (GESI) desde o desenho do projecto, garantindo que as populações mais vulneráveis não sejam apenas beneficiárias, mas participantes activas no seu próprio desenvolvimento...',
-    author: 'Gabriel Armindo',
-    date: new Date(Date.now() - 86400000 * 7).toISOString(),
-    category: 'Geral',
-    image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=800&auto=format&fit=crop'
-  }
-];
-
-let servicePackages = [
-  {
-    id: 1,
-    title: 'Consultoria MEAL Completa',
-    price: 'Sob Consulta',
-    description: 'Desenvolvimento integral de sistemas de Monitoria, Avaliação, Prestação de Contas e Aprendizagem.',
-    features: ['Design de Quadro Lógico', 'Planos de Monitoria', 'Sistemas de Feedback'],
-    icon: 'fas fa-chart-line'
-  },
-  {
-    id: 2,
-    title: 'Análise de Dados e BI',
-    price: 'A partir de $250',
-    description: 'Transformação de dados brutos em dashboards interativos para tomada de decisão.',
-    features: ['Dashboards Power BI', 'Limpeza de Dados', 'Análise Estatística'],
-    icon: 'fas fa-database'
-  },
-  {
-    id: 3,
-    title: 'Treinamento e Capacitação',
-    price: 'Personalizado',
-    description: 'Capacitação de equipes em ferramentas de coleta e análise de dados (Kobo, SPSS, Excel).',
-    features: ['Treinamento KoboToolbox', 'Mentoria em SPSS', 'Workshops MEAL'],
-    icon: 'fas fa-users-cog'
-  }
-];
-
-// API Routes
-// Packages Routes
-app.get('/api/packages', (req, res) => {
-  console.log(`Enviando ${servicePackages.length} pacotes para o frontend`);
-  res.json(servicePackages);
-});
-
-app.post('/api/packages', authenticate, (req, res) => {
-  const newPackage = {
-    ...req.body,
-    id: servicePackages.length > 0 ? Math.max(...servicePackages.map(p => p.id)) + 1 : 1
-  };
-  servicePackages.push(newPackage);
-  res.status(201).json(newPackage);
-});
-
-app.put('/api/packages/:id', authenticate, (req, res) => {
-  const index = servicePackages.findIndex(p => p.id === parseInt(req.params.id));
-  if (index !== -1) {
-    servicePackages[index] = { ...req.body, id: parseInt(req.params.id) };
-    res.json(servicePackages[index]);
-  } else {
-    res.status(404).json({ message: 'Pacote não encontrado' });
+// --- BLOG ROUTES (MongoDB) ---
+// Get all posts (supports ?search= and ?category=)
+app.get('/api/blog', async (req, res) => {
+  try {
+    const { search, category } = req.query;
+    const filter = {};
+    if (category && category !== 'Todos') {
+      filter.category = category;
+    }
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { excerpt: { $regex: search, $options: 'i' } }
+      ];
+    }
+    const posts = await Post.find(filter).sort({ date: -1 });
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao buscar artigos', error: err.message });
   }
 });
 
-app.delete('/api/packages/:id', authenticate, (req, res) => {
-  const index = servicePackages.findIndex(p => p.id === parseInt(req.params.id));
-  if (index !== -1) {
-    servicePackages.splice(index, 1);
-    res.json({ message: 'Pacote deletado' });
-  } else {
-    res.status(404).json({ message: 'Pacote não encontrado' });
+// Get single post by slug or ID & increment views
+app.get('/api/blog/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    let post = await Post.findOne({ slug });
+    if (!post && mongoose.Types.ObjectId.isValid(slug)) {
+      post = await Post.findById(slug);
+    }
+    if (post) {
+      post.views = (post.views || 0) + 1;
+      await post.save();
+      res.json(post);
+    } else {
+      res.status(404).json({ message: 'Artigo não encontrado.' });
+    }
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao buscar artigo', error: err.message });
   }
 });
 
-// Get all blog posts
-app.get('/api/blog', (req, res) => {
-  const sortedPosts = blogPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-  res.json(sortedPosts);
-});
+// Create new post
+app.post('/api/blog', authenticate, async (req, res) => {
+  try {
+    const { title, content, excerpt, category, image, author, published } = req.body;
+    
+    if (!title || !content) {
+      return res.status(400).json({ message: 'Título e conteúdo são obrigatórios.' });
+    }
 
-// Get single blog post
-app.get('/api/blog/:slug', (req, res) => {
-  const post = blogPosts.find(p => p.slug === req.params.slug);
-  if (post) {
-    res.json(post);
-  } else {
-    res.status(404).json({ message: 'Post não encontrado' });
+    // Generate unique slug
+    let baseSlug = title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\w\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-');
+
+    let slug = baseSlug;
+    let counter = 1;
+    while (await Post.findOne({ slug })) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+
+    const newPost = new Post({
+      title,
+      slug,
+      excerpt: excerpt || title,
+      content,
+      category: category || 'Geral',
+      image: image || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+      author: author || 'Gabriel Armindo',
+      published: published !== undefined ? published : true,
+      date: new Date()
+    });
+
+    const saved = await newPost.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao criar artigo', error: err.message });
   }
 });
 
-// Create new blog post
-app.post('/api/blog', authenticate, (req, res) => {
-  const { title, content, excerpt, category, image } = req.body;
+// Update post
+app.put('/api/blog/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = { ...req.body };
+    
+    // If title changed, update slug
+    if (updateData.title && !updateData.slug) {
+      updateData.slug = updateData.title
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\w\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+    }
 
-  const slug = title
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-');
-
-  const newPost = {
-    id: blogPosts.length + 1,
-    title,
-    slug,
-    excerpt,
-    content,
-    author: 'Gabriel Armindo',
-    date: new Date().toISOString(),
-    category: category || 'Geral',
-    image: image || 'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=800&auto=format&fit=crop'
-  };
-
-  blogPosts.push(newPost);
-  res.status(201).json(newPost);
-});
-
-// Update blog post
-app.put('/api/blog/:id', authenticate, (req, res) => {
-  const postIndex = blogPosts.findIndex(p => p.id === parseInt(req.params.id));
-
-  if (postIndex !== -1) {
-    blogPosts[postIndex] = {
-      ...blogPosts[postIndex],
-      ...req.body,
-      id: parseInt(req.params.id)
-    };
-    res.json(blogPosts[postIndex]);
-  } else {
-    res.status(404).json({ message: 'Post não encontrado' });
+    const updated = await Post.findByIdAndUpdate(id, updateData, { new: true });
+    if (!updated) {
+      return res.status(404).json({ message: 'Artigo não encontrado.' });
+    }
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao atualizar artigo', error: err.message });
   }
 });
 
-// Delete blog post
-app.delete('/api/blog/:id', authenticate, (req, res) => {
-  const postIndex = blogPosts.findIndex(p => p.id === parseInt(req.params.id));
-
-  if (postIndex !== -1) {
-    blogPosts.splice(postIndex, 1);
-    res.json({ message: 'Post deletado com sucesso' });
-  } else {
-    res.status(404).json({ message: 'Post não encontrado' });
+// Delete post
+app.delete('/api/blog/:id', authenticate, async (req, res) => {
+  try {
+    const deleted = await Post.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Artigo não encontrado.' });
+    }
+    res.json({ message: 'Artigo excluído com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao excluir artigo', error: err.message });
   }
 });
 
-// Contact form endpoint
-app.post('/api/contact', (req, res) => {
-  const { name, email, message } = req.body;
-
-  console.log('Nova mensagem de contato:');
-  console.log(`Nome: ${name}`);
-  console.log(`Email: ${email}`);
-  console.log(`Mensagem: ${message}`);
-
-  // Em produção, enviar email ou salvar no banco de dados
-  res.json({ message: 'Mensagem enviada com sucesso!' });
+// --- PACKAGES ROUTES (MongoDB) ---
+app.get('/api/packages', async (req, res) => {
+  try {
+    const packages = await Package.find().sort({ order: 1, createdAt: 1 });
+    res.json(packages);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao buscar pacotes', error: err.message });
+  }
 });
 
-// Serve index.html for all routes (SPA)
+app.post('/api/packages', authenticate, async (req, res) => {
+  try {
+    const newPkg = new Package(req.body);
+    const saved = await newPkg.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao criar pacote', error: err.message });
+  }
+});
+
+app.put('/api/packages/:id', authenticate, async (req, res) => {
+  try {
+    const updated = await Package.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updated) {
+      return res.status(404).json({ message: 'Pacote não encontrado.' });
+    }
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao atualizar pacote', error: err.message });
+  }
+});
+
+app.delete('/api/packages/:id', authenticate, async (req, res) => {
+  try {
+    const deleted = await Package.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Pacote não encontrado.' });
+    }
+    res.json({ message: 'Pacote deletado com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao deletar pacote', error: err.message });
+  }
+});
+
+// --- CONTACT & MESSAGES ROUTES (MongoDB) ---
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).json({ message: 'Nome, email e mensagem são obrigatórios.' });
+    }
+    
+    const newMessage = await Message.create({
+      name,
+      email,
+      subject: subject || 'Contacto via Website',
+      message
+    });
+
+    console.log(`📩 Nova mensagem recebida de: ${name} (${email})`);
+    res.json({ message: 'Mensagem enviada com sucesso!', id: newMessage._id });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao enviar mensagem', error: err.message });
+  }
+});
+
+app.get('/api/messages', authenticate, async (req, res) => {
+  try {
+    const messages = await Message.find().sort({ createdAt: -1 });
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao listar mensagens', error: err.message });
+  }
+});
+
+app.patch('/api/messages/:id/read', authenticate, async (req, res) => {
+  try {
+    const msg = await Message.findById(req.params.id);
+    if (!msg) {
+      return res.status(404).json({ message: 'Mensagem não encontrada.' });
+    }
+    msg.read = req.body.read !== undefined ? req.body.read : !msg.read;
+    await msg.save();
+    res.json(msg);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao atualizar mensagem', error: err.message });
+  }
+});
+
+app.delete('/api/messages/:id', authenticate, async (req, res) => {
+  try {
+    const deleted = await Message.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Mensagem não encontrada.' });
+    }
+    res.json({ message: 'Mensagem excluída com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao excluir mensagem', error: err.message });
+  }
+});
+
+// --- TESTIMONIALS ROUTES (MongoDB) ---
+app.get('/api/testimonials', async (req, res) => {
+  try {
+    const testimonials = await Testimonial.find({ active: true }).sort({ createdAt: -1 });
+    res.json(testimonials);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao buscar testemunhos', error: err.message });
+  }
+});
+
+app.post('/api/testimonials', authenticate, async (req, res) => {
+  try {
+    const newTestimonial = await Testimonial.create(req.body);
+    res.status(201).json(newTestimonial);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao criar testemunho', error: err.message });
+  }
+});
+
+app.put('/api/testimonials/:id', authenticate, async (req, res) => {
+  try {
+    const updated = await Testimonial.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao atualizar testemunho', error: err.message });
+  }
+});
+
+app.delete('/api/testimonials/:id', authenticate, async (req, res) => {
+  try {
+    await Testimonial.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Testemunho excluído com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao excluir testemunho', error: err.message });
+  }
+});
+
+// Serve index.html for all frontend SPA routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`🚀 Servidor backend activo em http://localhost:${PORT}`);
 });

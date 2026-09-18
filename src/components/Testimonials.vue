@@ -1,24 +1,50 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
 import { useLanguage } from '../store/language';
 
 const { t } = useLanguage();
 
-const testimonials = computed(() => [
+const defaultTestimonials = [
   {
     text: t("Participar da mentoria em Monitoria e Avaliação com Gabriel Armindo foi uma experiência transformadora para a minha carreira. Os conteúdos práticos e bem estruturados ajudaram-me a aplicar os conceitos no dia a dia, dando-me confiança para atuar como Consultor e Oficial de MEAL. Sou muito grato pelo profissionalismo e dedicação do mentor e recomendo esta mentoria a todos que desejam crescer na área de Monitoria, Avaliação, Prestação de Contas e Aprendizagem.", "Participating in the Monitoring and Evaluation mentorship with Gabriel Armindo was a transformative experience for my career. The practical and well-structured contents helped me apply the concepts in my daily life, giving me confidence to act as a Consultant and MEAL Officer. I am very grateful for the mentor's professionalism and dedication and I recommend this mentorship to everyone who wants to grow in the Monitoring, Evaluation, Accountability and Learning area."),
     name: "Samuel Matola",
     role: t("Consultor de Pesquisa | Oficial de MEAL", "Research Consultant | MEAL Officer")
   }
-]);
+];
+
+const dbTestimonials = ref([]);
+
+const fetchTestimonials = async () => {
+  try {
+    const res = await axios.get('/api/testimonials');
+    if (res.data && res.data.length > 0) {
+      dbTestimonials.value = res.data.map(item => ({
+        text: item.content,
+        name: item.name,
+        role: item.role
+      }));
+    }
+  } catch (e) {
+    // fallback to default
+  }
+};
+
+onMounted(fetchTestimonials);
+
+const testimonials = computed(() => {
+  return dbTestimonials.value.length > 0 ? dbTestimonials.value : defaultTestimonials;
+});
 
 const currentIndex = ref(0);
 
 const next = () => {
+  if (testimonials.value.length === 0) return;
   currentIndex.value = (currentIndex.value + 1) % testimonials.value.length;
 };
 
 const prev = () => {
+  if (testimonials.value.length === 0) return;
   currentIndex.value = (currentIndex.value - 1 + testimonials.value.length) % testimonials.value.length;
 };
 </script>

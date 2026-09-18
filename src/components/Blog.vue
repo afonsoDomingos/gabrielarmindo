@@ -18,10 +18,20 @@ const fetchPosts = async () => {
   }
 };
 
-const openPost = (post) => {
+const openPost = async (post) => {
   selectedPost.value = post;
   isModalOpen.value = true;
   document.body.style.overflow = 'hidden';
+  try {
+    const slugOrId = post.slug || post._id || post.id;
+    const res = await axios.get(`/api/blog/${slugOrId}`);
+    if (res.data) {
+      selectedPost.value = res.data;
+      post.views = res.data.views;
+    }
+  } catch (e) {
+    // Ignore error
+  }
 };
 
 const closeModal = () => {
@@ -41,7 +51,7 @@ onMounted(fetchPosts);
       </div>
 
       <div class="blog-grid reveal-container">
-        <div v-for="post in posts" :key="post.id" class="blog-card glass-card reveal-item" @click="openPost(post)">
+        <div v-for="post in posts" :key="post._id || post.id" class="blog-card glass-card reveal-item" @click="openPost(post)">
           <div class="blog-image">
             <img v-if="post.image" :src="post.image" :alt="post.title" style="width: 100%; height: 100%; object-fit: cover;" />
             <i v-else class="fas fa-image"></i>
