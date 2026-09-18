@@ -527,6 +527,10 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor backend activo em http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor backend activo em http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
