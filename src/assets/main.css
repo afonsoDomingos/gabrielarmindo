@@ -386,47 +386,107 @@ ul {
     border-color: var(--primary-color);
 }
 
-/* --- Scroll to Top Button --- */
-.scroll-top-btn {
+/* --- Modern Scroll Capsule Pill Widget --- */
+.scroll-pill-widget {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 50px;
-    height: 50px;
-    background: var(--gradient-1);
-    color: white;
-    border-radius: 50%;
+    width: 46px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    border-radius: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    cursor: pointer;
+    padding: 6px 4px;
+    gap: 3px;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(44, 82, 130, 0.1);
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.scroll-top-btn.visible {
+.scroll-pill-widget.visible {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
-.scroll-top-btn:hover {
-    transform: translateY(-5px) scale(1.1);
-    box-shadow: 0 10px 25px rgba(44, 82, 130, 0.5);
+.scroll-pill-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 30px;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.scroll-pill-up {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.scroll-pill-up:hover {
+    color: #1e293b;
+    transform: translateY(-2px);
+}
+
+.scroll-pill-percent {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #334155;
+    font-family: var(--font-accent);
+    letter-spacing: -0.2px;
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+    padding: 2px 0;
+}
+
+.scroll-pill-down {
+    width: 36px;
+    height: 36px;
+}
+
+.scroll-pill-icon-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ecfdf5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #059669;
+    font-size: 0.85rem;
+    transition: all 0.25s ease;
+}
+
+.scroll-pill-down:hover .scroll-pill-icon-circle {
+    background: #d1fae5;
+    color: #047857;
+    transform: scale(1.08) translateY(1px);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
 }
 
 @media (max-width: 480px) {
-    .scroll-top-btn {
+    .scroll-pill-widget {
         bottom: 20px;
-        right: 20px;
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+        right: 16px;
+        width: 42px;
+        padding: 5px 3px;
+    }
+    .scroll-pill-icon-circle {
+        width: 30px;
+        height: 30px;
+        font-size: 0.78rem;
+    }
+    .scroll-pill-percent {
+        font-size: 0.68rem;
     }
 }

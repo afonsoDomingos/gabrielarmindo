@@ -53,24 +53,52 @@ const domObserver = new MutationObserver(() => {
 
 domObserver.observe(document.body, { childList: true, subtree: true });
 
-// 3. Scroll to Top Logic
-const createScrollTopButton = () => {
-    const btn = document.createElement('button');
-    btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    btn.className = 'scroll-top-btn';
-    btn.setAttribute('aria-label', 'Voltar ao topo');
-    document.body.appendChild(btn);
+// 3. Scroll Pill Widget (Up Arrow, Live Percentage, Down Arrow)
+const createScrollWidget = () => {
+    const widget = document.createElement('div');
+    widget.className = 'scroll-pill-widget';
+    widget.innerHTML = `
+        <button class="scroll-pill-btn scroll-pill-up" aria-label="Rolar para o topo" title="Ir para o topo">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+        <span class="scroll-pill-percent">0%</span>
+        <button class="scroll-pill-btn scroll-pill-down" aria-label="Rolar para o fim" title="Ir para o fim">
+            <div class="scroll-pill-icon-circle">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </button>
+    `;
+    document.body.appendChild(widget);
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 400) {
-            btn.classList.add('visible');
-        } else {
-            btn.classList.remove('visible');
+    const percentEl = widget.querySelector('.scroll-pill-percent');
+    const upBtn = widget.querySelector('.scroll-pill-up');
+    const downBtn = widget.querySelector('.scroll-pill-down');
+
+    const updateScroll = () => {
+        const winScroll = window.scrollY || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = height > 0 ? Math.min(Math.max(Math.round((winScroll / height) * 100), 0), 100) : 0;
+        
+        if (percentEl) {
+            percentEl.textContent = `${scrolled}%`;
         }
+
+        if (winScroll > 100) {
+            widget.classList.add('visible');
+        } else {
+            widget.classList.remove('visible');
+        }
+    };
+
+    window.addEventListener('scroll', updateScroll, { passive: true });
+    updateScroll();
+
+    upBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    btn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    downBtn.addEventListener('click', () => {
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
     });
 };
 
@@ -82,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom, .reveal-blur, .reveal-container');
     reveals.forEach(el => revealObserver.observe(el));
 
-    // Create Scroll button
-    createScrollTopButton();
+    // Create Scroll Pill Widget
+    createScrollWidget();
 
     // Smooth scroll for anchors
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
