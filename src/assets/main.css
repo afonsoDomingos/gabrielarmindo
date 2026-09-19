@@ -434,14 +434,14 @@ ul {
 }
 
 .scroll-pill-up:hover {
-    color: #1e293b;
+    color: var(--primary-color);
     transform: translateY(-2px);
 }
 
 .scroll-pill-percent {
     font-size: 0.72rem;
     font-weight: 700;
-    color: #334155;
+    color: var(--text-primary);
     font-family: var(--font-accent);
     letter-spacing: -0.2px;
     font-variant-numeric: tabular-nums;
@@ -458,20 +458,20 @@ ul {
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: #ecfdf5;
+    background: rgba(37, 99, 235, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #059669;
+    color: var(--primary-color);
     font-size: 0.85rem;
-    transition: all 0.25s ease;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .scroll-pill-down:hover .scroll-pill-icon-circle {
-    background: #d1fae5;
-    color: #047857;
+    background: var(--primary-color);
+    color: #ffffff;
     transform: scale(1.08) translateY(1px);
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
 @media (max-width: 480px) {
