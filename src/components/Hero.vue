@@ -572,14 +572,15 @@ onUnmounted(() => {
 
 :global([data-theme="light"]) .hero-bg {
     background: 
-        radial-gradient(circle at 20% 20%, rgba(255, 123, 26, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(234, 88, 12, 0.05) 0%, transparent 50%),
-        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        radial-gradient(circle at 20% 20%, rgba(255, 123, 26, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(234, 88, 12, 0.04) 0%, transparent 50%);
+    /* No white/light base gradient — .hero background-color already handles it */
+    opacity: 1;
 }
 
 :global([data-theme="light"]) .hero-bg::after {
     background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-    opacity: 0.5;
+    opacity: 0.35;
 }
 
 :global([data-theme="light"]) .hero-title {

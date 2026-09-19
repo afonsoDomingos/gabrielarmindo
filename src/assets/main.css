@@ -208,6 +208,8 @@ ul {
     display: inline-block;
     transition: all var(--transition-normal);
     cursor: default;
+    color: var(--text-primary);
+    -webkit-text-fill-color: var(--text-primary);
 }
 
 .text-center .section-title::after {
