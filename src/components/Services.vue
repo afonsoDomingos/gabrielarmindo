@@ -282,7 +282,7 @@ const getDisplayPrice = (plan) => {
   font-size: 1.35rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #2d3748;
+  color: var(--text-primary);
 }
 
 .price-container {
@@ -325,7 +325,7 @@ const getDisplayPrice = (plan) => {
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   font-size: 0.95rem;
-  color: #4a5568;
+  color: var(--text-secondary);
 }
 
 .service-features li i {
