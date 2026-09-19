@@ -411,11 +411,25 @@ onUnmounted(() => {
     border: 4px solid var(--bg-primary);
     position: relative;
     z-index: 3;
+    animation: grayscaleCycle 7s ease-in-out infinite, floatProfile 6s ease-in-out infinite;
+    transition: filter 0.6s ease;
+}
+
+@keyframes grayscaleCycle {
+    0%, 20% {
+        filter: grayscale(0%) contrast(100%) brightness(100%);
+    }
+    45%, 65% {
+        filter: grayscale(100%) contrast(110%) brightness(98%);
+    }
+    90%, 100% {
+        filter: grayscale(0%) contrast(100%) brightness(100%);
+    }
 }
 
 @keyframes floatProfile {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
 }
 
 .image-glow {
