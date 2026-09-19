@@ -31,6 +31,7 @@ const { t } = useLanguage();
         <div class="vibe-credit">
           <span>Powered by</span>
           <a href="https://wehosthere.co.mz" target="_blank" class="wehosthere-link">
+            <span class="wehosthere-text">WeHostHere</span>
             <img src="/images/Wehosthere.png" alt="WeHostHere" class="wehosthere-logo" />
           </a>
         </div>
@@ -73,26 +74,48 @@ const { t } = useLanguage();
 
 .vibe-credit {
     margin-top: 1.5rem;
-    display: flex; align-items: center; justify-content: center;
-    gap: 8px; font-size: 0.8rem; opacity: 0.75;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.88rem;
     color: var(--text-muted);
 }
 
 .wehosthere-link {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    gap: 8px;
     text-decoration: none;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: all 0.25s ease;
 }
+
+.wehosthere-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #0284c7;
+    letter-spacing: -0.2px;
+    transition: color 0.2s;
+}
+
+.wehosthere-link:hover .wehosthere-text {
+    color: #0369a1;
+}
+
 .wehosthere-link:hover {
-    opacity: 1;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
+
 .wehosthere-logo {
-    height: 22px;
+    height: 34px;
     width: auto;
     object-fit: contain;
     border-radius: 4px;
+    transition: transform 0.25s ease;
+}
+
+.wehosthere-link:hover .wehosthere-logo {
+    transform: scale(1.06);
 }
 @media (max-width: 768px) {
     .footer-content {
