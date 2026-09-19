@@ -139,7 +139,7 @@ onMounted(fetchPosts);
             <p class="blog-excerpt">{{ post.excerpt }}</p>
             <div class="blog-footer">
               <div class="blog-author">
-                <i class="fas fa-user-circle"></i>
+                <img src="/images/perfil1.png" alt="Gabriel Armindo" class="author-avatar-img" />
                 <span>{{ post.author || 'Gabriel Armindo' }}</span>
               </div>
               <span class="blog-read-more">
@@ -172,7 +172,10 @@ onMounted(fetchPosts);
 
           <div class="blog-meta-modal">
             <span><i class="far fa-calendar-alt"></i> {{ new Date(selectedPost.date || selectedPost.createdAt).toLocaleDateString() }}</span>
-            <span><i class="fas fa-user"></i> {{ selectedPost.author || 'Gabriel Armindo' }}</span>
+            <span class="author-modal-badge">
+              <img src="/images/perfil1.png" alt="Gabriel Armindo" class="author-avatar-img-sm" />
+              {{ selectedPost.author || 'Gabriel Armindo' }}
+            </span>
           </div>
 
           <!-- Conteúdo -->
@@ -331,9 +334,48 @@ onMounted(fetchPosts);
     border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+.blog-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-secondary, #475569);
+}
+
+.author-avatar-img {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    border: 1.5px solid var(--primary-color, #2563eb);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.author-modal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.author-avatar-img-sm {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    border: 1.5px solid var(--primary-color, #2563eb);
+    flex-shrink: 0;
+}
+
 .blog-read-more {
     color: var(--primary-color, #FF7B1A);
     font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 /* Modal Styles */
