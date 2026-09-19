@@ -172,11 +172,6 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-
-    <div class="scroll-indicator">
-      <span>{{ t('Role para explorar', 'Scroll to explore') }}</span>
-      <div class="mouse"></div>
-    </div>
   </section>
 </template>
 
@@ -525,45 +520,6 @@ onUnmounted(() => {
 .card-2 { top: 50%; left: -2%; animation-delay: 1s; }
 .card-3 { bottom: 8%; right: 18%; animation-delay: 2s; }
 
-.scroll-indicator {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: #94a3b8;
-    z-index: 2;
-}
-
-.mouse {
-    width: 24px;
-    height: 36px;
-    border: 2px solid rgba(255, 255, 255, 0.35);
-    border-radius: 12px;
-    position: relative;
-}
-
-.mouse::after {
-    content: '';
-    position: absolute;
-    top: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 6px;
-    background: var(--primary-color);
-    border-radius: 2px;
-    animation: scrollMouse 2s infinite;
-}
-
-@keyframes scrollMouse {
-    0% { opacity: 1; transform: translate(-50%, 0); }
-    100% { opacity: 0; transform: translate(-50%, 14px); }
-}
-
 @media (max-width: 968px) {
     .hero { padding-top: 90px; padding-bottom: 80px; min-height: 100vh; }
     .hero-container { grid-template-columns: 1fr; text-align: center; gap: var(--spacing-md); }
@@ -572,7 +528,6 @@ onUnmounted(() => {
     .hero-buttons { justify-content: center; gap: 0.85rem; margin-bottom: 1.5rem; }
     .hero-social { justify-content: center; margin-top: 1.25rem; }
     .hero-description { margin-left: auto; margin-right: auto; max-width: 90%; text-align: center; }
-    .scroll-indicator { bottom: 1rem; }
     
     .profile-frame {
         width: 280px;
