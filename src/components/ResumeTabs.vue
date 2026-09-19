@@ -411,7 +411,8 @@ onMounted(fetchResume);
 .tabs-content {
   padding: var(--spacing-lg);
   min-height: 400px;
-  background: white;
+  background: var(--card-bg);
+  color: var(--text-primary);
 }
 
 .tab-pane {
@@ -508,16 +509,17 @@ onMounted(fetchResume);
   height: 1rem;
   background: var(--primary-dark);
   border-radius: 50%;
-  border: 4px solid white;
+  border: 4px solid var(--card-bg);
   z-index: 2;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 .timeline-card {
   padding: 1.5rem 2rem;
-  background: white;
+  background: var(--card-bg);
+  border: var(--card-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--card-shadow);
   transition: all 0.3s ease;
 }
 
@@ -536,7 +538,7 @@ onMounted(fetchResume);
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
-  color: #1a202c;
+  color: var(--text-primary);
 }
 
 .role-company .company {
@@ -579,8 +581,8 @@ onMounted(fetchResume);
 /* Tabs Header Specifics */
 .tabs-header {
   display: flex;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--card-bg);
+  border: var(--card-border);
   border-radius: var(--radius-md);
   margin-bottom: 2rem;
 }
@@ -753,9 +755,9 @@ onMounted(fetchResume);
 
 .cert-work-card {
   padding: 1.75rem;
-  background: white;
+  background: var(--card-bg);
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0,0,0,0.04);
+  border: var(--card-border);
 }
 
 .cert-work-card .card-type {
@@ -769,7 +771,7 @@ onMounted(fetchResume);
   font-size: 1.15rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #1a202c;
+  color: var(--text-primary);
   line-height: 1.4;
 }
 

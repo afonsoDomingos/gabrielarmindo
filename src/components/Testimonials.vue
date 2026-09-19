@@ -102,10 +102,13 @@ const prev = () => {
 .testimonial-content {
   text-align: center;
   padding: 3rem;
-  background: #fffaf5;
-  border: 1px solid rgba(255, 123, 26, 0.15);
+  background: var(--card-bg);
+  border: var(--card-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  color: var(--text-primary);
   flex: 1;
+  transition: var(--theme-transition);
 }
 
 .rating {
@@ -120,7 +123,7 @@ const prev = () => {
 .testimonial-text {
   font-size: 1.15rem;
   line-height: 1.8;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-style: italic;
   margin-bottom: 2.5rem;
 }
@@ -128,7 +131,7 @@ const prev = () => {
 .testimonial-author h4 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1a202c;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -142,10 +145,10 @@ const prev = () => {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: none;
-  background: white;
+  border: var(--card-border);
+  background: var(--card-bg);
   color: var(--text-primary);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: var(--card-shadow);
   display: flex;
   align-items: center;
   justify-content: center;

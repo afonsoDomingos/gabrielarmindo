@@ -2,7 +2,7 @@
    CSS Variables & Root Styles
    ======================================== */
 :root {
-    /* Colors - Vibrant Orange & Dark Slate Palette (Paleta oficial do Painel de Controlo) */
+    /* Colors - Vibrant Orange & Dark Slate Palette */
     --primary-hue: 25;
     --primary-sat: 100%;
     --primary-light: 55%;
@@ -13,14 +13,6 @@
 
     --secondary-color: #F97316;
     --accent-color: #0F172A;
-
-    --text-primary: #0F172A;
-    --text-secondary: #334155;
-    --text-muted: #64748B;
-
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-tertiary: #f1f5f9;
 
     --gradient-1: linear-gradient(135deg, #FF7B1A 0%, #EA580C 100%);
     --gradient-2: linear-gradient(135deg, #FF7B1A 0%, #FB923C 100%);
@@ -37,16 +29,11 @@
     --font-primary: 'Inter', sans-serif;
     --font-accent: 'Outfit', sans-serif;
 
-    /* Shadows */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
-
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
+    --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 
     /* Border Radius */
     --radius-sm: 8px;
@@ -54,13 +41,79 @@
     --radius-lg: 16px;
     --radius-xl: 24px;
     --radius-full: 9999px;
+}
 
-    /* Card Standard */
-    --card-bg: white;
-    --card-border: 1px solid rgba(0, 0, 0, 0.05);
+/* ==========================================================
+   Dark Theme (Default)
+   ========================================================== */
+:root,
+[data-theme="dark"],
+.dark-theme {
+    --bg-primary: #070D1E;
+    --bg-secondary: #0B132B;
+    --bg-tertiary: #111C38;
+
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+
+    --card-bg: #0D1730;
+    --card-border: 1px solid rgba(255, 255, 255, 0.08);
     --card-radius: var(--radius-lg);
-    --card-shadow: var(--shadow-sm);
-    --card-shadow-hover: var(--shadow-xl);
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    --card-shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.5);
+
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --input-bg: rgba(255, 255, 255, 0.05);
+    --input-border: rgba(255, 255, 255, 0.14);
+    --input-text: #F8FAFC;
+
+    --nav-bg: rgba(11, 19, 43, 0.85);
+    --nav-bg-scrolled: rgba(11, 19, 43, 0.96);
+    --nav-text: #CBD5E1;
+    --nav-text-active: #FFFFFF;
+    --nav-border: rgba(255, 255, 255, 0.08);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
+/* ==========================================================
+   Light Theme (White Mode)
+   ========================================================== */
+[data-theme="light"],
+.light-theme {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
+
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
+
+    --card-bg: #ffffff;
+    --card-border: 1px solid rgba(0, 0, 0, 0.06);
+    --card-radius: var(--radius-lg);
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --card-shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.12);
+
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+    --input-text: #0F172A;
+
+    --nav-bg: rgba(255, 255, 255, 0.92);
+    --nav-bg-scrolled: rgba(255, 255, 255, 0.98);
+    --nav-text: #334155;
+    --nav-text-active: #0F172A;
+    --nav-border: rgba(0, 0, 0, 0.06);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 768px) {
@@ -91,6 +144,9 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: var(--theme-transition);
 }
 
 @media (max-width: 768px) {
@@ -105,7 +161,9 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
+    transition: var(--theme-transition);
 }
+
 
 a {
     text-decoration: none;
@@ -392,11 +450,12 @@ ul {
     bottom: 30px;
     right: 30px;
     width: 46px;
-    background: rgba(255, 255, 255, 0.96);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 30px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
+    border: var(--card-border);
+    box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -406,7 +465,7 @@ ul {
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px) scale(0.95);
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .scroll-pill-widget.visible {

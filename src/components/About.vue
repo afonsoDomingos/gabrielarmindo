@@ -75,7 +75,7 @@ const { t } = useLanguage();
     align-items: center;
     gap: 0.75rem;
     padding: 0.8rem 1.8rem;
-    background: white;
+    background: var(--card-bg);
     border: 2px solid var(--primary-color);
     color: var(--primary-color);
     border-radius: var(--radius-md);

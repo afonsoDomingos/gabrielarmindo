@@ -241,8 +241,11 @@ const getDisplayPrice = (plan) => {
   flex-direction: column;
   padding: 2rem 1.75rem;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  background: white;
-  border: 1px solid rgba(0,0,0,0.05);
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  color: var(--text-primary);
 }
 
 .popular-card {
@@ -272,7 +275,7 @@ const getDisplayPrice = (plan) => {
   text-align: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #edf2f7;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .service-title {
@@ -372,7 +375,7 @@ const getDisplayPrice = (plan) => {
   padding: 4px;
   border-radius: 50px;
   margin-top: 1rem;
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid var(--border-subtle);
 }
 
 .currency-toggle button {
@@ -388,7 +391,7 @@ const getDisplayPrice = (plan) => {
 }
 
 .currency-toggle button.active {
-  background: white;
+  background: var(--card-bg);
   color: var(--primary-color);
   box-shadow: var(--shadow-sm);
 }

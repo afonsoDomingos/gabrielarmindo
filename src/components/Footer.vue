@@ -30,7 +30,7 @@ const { t } = useLanguage();
         
         <div class="vibe-credit">
           <span>Powered by</span>
-          <a href="https://wehosthere.co.mz" target="_blank" class="wehosthere-link">
+          <a href="https://wehosthere.com" target="_blank" class="wehosthere-link">
             <span class="wehosthere-text">WeHostHere</span>
             <img src="/images/Wehosthere.png" alt="WeHostHere" class="wehosthere-logo" />
           </a>
@@ -42,9 +42,11 @@ const { t } = useLanguage();
 
 <style scoped>
 .footer {
-    background: #fff;
+    background: var(--bg-secondary);
     padding: 4rem 0 2rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    transition: var(--theme-transition);
 }
 
 .footer-content {
@@ -54,16 +56,30 @@ const { t } = useLanguage();
     margin-bottom: 3rem;
 }
 
+.footer-brand p {
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
 .footer-social { display: flex; gap: 1rem; }
 .footer-social a {
     width: 40px; height: 40px; border-radius: 50%;
-    background: #f8f9fa; display: flex; align-items: center; justify-content: center;
+    background: var(--input-bg); 
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    display: flex; align-items: center; justify-content: center;
     transition: 0.3s;
 }
-.footer-social a:hover { background: var(--gradient-1); color: white; transform: translateY(-3px); }
+.footer-social a:hover { background: var(--gradient-1); color: white; border-color: transparent; transform: translateY(-3px); }
 
 .footer-bottom {
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-subtle);
     padding-top: 2rem;
     text-align: center;
     color: var(--text-muted);

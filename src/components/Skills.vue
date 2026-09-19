@@ -43,12 +43,14 @@ const { t } = useLanguage();
 
 .experience-card {
     padding: var(--spacing-md);
-    background: white;
+    background: var(--card-bg);
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: var(--card-border);
+    color: var(--text-primary);
     display: flex;
     gap: 1.5rem;
     align-items: flex-start;
+    transition: var(--theme-transition);
 }
 
 .exp-icon {

@@ -125,11 +125,12 @@ const handleSubmit = async () => {
 .contact-content a { font-weight: 600; font-size: 1.1rem; }
 
 .contact-form {
-    background: white;
+    background: var(--card-bg);
     padding: 3rem;
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xl);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--card-shadow);
+    border: var(--card-border);
+    transition: var(--theme-transition);
 }
 
 .status-msg {
@@ -142,8 +143,9 @@ const handleSubmit = async () => {
 .form-group label { display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-primary); }
 .form-group input, .form-group textarea {
     width: 100%; padding: 1rem 1.25rem;
-    border: 1px solid #edf2f7; border-radius: 12px;
-    background: #f8fafc;
+    border: 1px solid var(--input-border); border-radius: 12px;
+    background: var(--input-bg);
+    color: var(--text-primary);
     font-family: inherit;
     transition: all 0.3s ease;
 }
@@ -151,8 +153,8 @@ const handleSubmit = async () => {
 .form-group input:focus, .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(255, 123, 26, 0.1);
+    background: var(--input-bg);
+    box-shadow: 0 0 0 4px rgba(255, 123, 26, 0.15);
 }
 
 @media (max-width: 968px) {
