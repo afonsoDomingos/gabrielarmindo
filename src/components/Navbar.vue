@@ -31,7 +31,7 @@ onUnmounted(() => {
   <nav class="nav" :class="{ 'scrolled': isScrolled }">
     <div class="nav-container container">
       <a href="/" class="nav-logo">
-        <div class="logo-icon">G</div>
+        <img src="/images/perfil1.png" alt="Gabriel Armindo" class="logo-photo" />
         <div class="logo-text-group">
           <span class="logo-text">Gabriel</span>
           <span class="logo-accent">Armindo</span>
@@ -95,23 +95,21 @@ onUnmounted(() => {
     font-family: var(--font-accent);
 }
 
-.logo-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--gradient-1);
-    color: white;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 800;
-    box-shadow: 0 4px 10px rgba(44, 82, 130, 0.3);
-    transition: var(--transition-normal);
+.logo-photo {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 4px 12px rgba(44, 82, 130, 0.2);
+    transition: all var(--transition-normal);
 }
 
-.nav-logo:hover .logo-icon {
-    transform: rotate(-10deg) scale(1.1);
+.nav-logo:hover .logo-photo {
+    transform: scale(1.08);
+    border-color: var(--secondary-color);
+    box-shadow: 0 6px 16px rgba(44, 82, 130, 0.35);
 }
 
 .logo-text-group {
