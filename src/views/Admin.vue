@@ -86,6 +86,44 @@ const testimonialForm = ref({
   active: true
 });
 
+// Resume / Trajectory State
+const resume = ref({
+  skillsIntro: { title: '', description: '' },
+  education: [],
+  skillBars: [],
+  skillCards: [],
+  experiences: [],
+  studies: [],
+  partners: []
+});
+const resumeSubTab = ref('education'); // 'education', 'skills', 'experience', 'studies', 'partners'
+
+// Resume Modals State
+const isEduModalOpen = ref(false);
+const editingEduIndex = ref(-1);
+const eduForm = ref({ title: '', issuer: '', category: 'Formação Académica' });
+
+const isSkillBarModalOpen = ref(false);
+const editingSkillBarIndex = ref(-1);
+const skillBarForm = ref({ name: '', percentage: 90 });
+
+const isSkillCardModalOpen = ref(false);
+const editingSkillCardIndex = ref(-1);
+const skillCardForm = ref({ title: '', years: '5+ Anos', subtitle: '', description: '' });
+
+const isExpModalOpen = ref(false);
+const editingExpIndex = ref(-1);
+const expForm = ref({ role: '', company: '', period: '', tag: '', desc: '' });
+
+const isStudyModalOpen = ref(false);
+const editingStudyIndex = ref(-1);
+const studyForm = ref({ title: '', description: '', tags: [] });
+const newStudyTag = ref('');
+
+const isPartnerModalOpen = ref(false);
+const editingPartnerIndex = ref(-1);
+const partnerForm = ref({ name: '', description: '', icon: 'fas fa-university' });
+
 // Image Upload Preview
 const isUploading = ref(false);
 const uploadTab = ref('upload'); // 'upload' or 'url'
@@ -100,18 +138,23 @@ const getAuthHeaders = () => {
 const fetchData = async () => {
   isLoading.value = true;
   try {
-    const [postsRes, packagesRes, messagesRes, statsRes, testRes] = await Promise.all([
+    const [postsRes, packagesRes, messagesRes, statsRes, testRes, resumeRes] = await Promise.all([
       axios.get('/api/blog'),
       axios.get('/api/packages'),
       axios.get('/api/messages', getAuthHeaders()).catch(() => ({ data: [] })),
       axios.get('/api/admin/stats', getAuthHeaders()).catch(() => ({ data: null })),
-      axios.get('/api/testimonials').catch(() => ({ data: [] }))
+      axios.get('/api/testimonials').catch(() => ({ data: [] })),
+      axios.get('/api/resume').catch(() => ({ data: null }))
     ]);
 
     posts.value = postsRes.data || [];
     packages.value = packagesRes.data || [];
     messages.value = messagesRes.data || [];
     testimonials.value = testRes.data || [];
+
+    if (resumeRes?.data) {
+      resume.value = resumeRes.data;
+    }
 
     if (statsRes.data) {
       stats.value = statsRes.data;
@@ -463,6 +506,223 @@ const deleteTestimonial = async (item) => {
   }
 };
 
+// --- RESUME & TRAJECTORY ACTIONS ---
+const saveResumeToDb = async (message = 'Currículo atualizado com sucesso!') => {
+  try {
+    await axios.put('/api/resume', resume.value, getAuthHeaders());
+    showToast(message);
+  } catch (err) {
+    showToast('Erro ao atualizar currículo: ' + (err.response?.data?.message || err.message), 'error');
+  }
+};
+
+// Education
+const openEduModal = (item = null, index = -1) => {
+  editingEduIndex.value = index;
+  if (item) {
+    eduForm.value = { ...item };
+  } else {
+    eduForm.value = { title: '', issuer: '', category: 'Formação Académica' };
+  }
+  isEduModalOpen.value = true;
+};
+
+const saveEdu = async () => {
+  if (!eduForm.value.title || !eduForm.value.issuer) {
+    showToast('Título e instituição são obrigatórios!', 'error');
+    return;
+  }
+  if (!resume.value.education) resume.value.education = [];
+  if (editingEduIndex.value >= 0) {
+    resume.value.education[editingEduIndex.value] = { ...eduForm.value };
+  } else {
+    resume.value.education.push({ ...eduForm.value });
+  }
+  isEduModalOpen.value = false;
+  await saveResumeToDb('Formação/Certificação salva com sucesso!');
+};
+
+const deleteEdu = async (index) => {
+  if (!confirm('Deseja realmente remover esta certificação?')) return;
+  resume.value.education.splice(index, 1);
+  await saveResumeToDb('Item removido com sucesso!');
+};
+
+// Skills
+const saveSkillsIntro = async () => {
+  await saveResumeToDb('Texto introdutório de competências salvo!');
+};
+
+const openSkillBarModal = (item = null, index = -1) => {
+  editingSkillBarIndex.value = index;
+  if (item) {
+    skillBarForm.value = { ...item };
+  } else {
+    skillBarForm.value = { name: '', percentage: 90 };
+  }
+  isSkillBarModalOpen.value = true;
+};
+
+const saveSkillBar = async () => {
+  if (!skillBarForm.value.name) {
+    showToast('Nome da competência é obrigatório!', 'error');
+    return;
+  }
+  if (!resume.value.skillBars) resume.value.skillBars = [];
+  if (editingSkillBarIndex.value >= 0) {
+    resume.value.skillBars[editingSkillBarIndex.value] = { ...skillBarForm.value };
+  } else {
+    resume.value.skillBars.push({ ...skillBarForm.value });
+  }
+  isSkillBarModalOpen.value = false;
+  await saveResumeToDb('Barra de competência salva!');
+};
+
+const deleteSkillBar = async (index) => {
+  if (!confirm('Remover esta barra de competência?')) return;
+  resume.value.skillBars.splice(index, 1);
+  await saveResumeToDb('Competência removida!');
+};
+
+const openSkillCardModal = (item = null, index = -1) => {
+  editingSkillCardIndex.value = index;
+  if (item) {
+    skillCardForm.value = { ...item };
+  } else {
+    skillCardForm.value = { title: '', years: '5+ Anos', subtitle: '', description: '' };
+  }
+  isSkillCardModalOpen.value = true;
+};
+
+const saveSkillCard = async () => {
+  if (!skillCardForm.value.title || !skillCardForm.value.description) {
+    showToast('Título e descrição são obrigatórios!', 'error');
+    return;
+  }
+  if (!resume.value.skillCards) resume.value.skillCards = [];
+  if (editingSkillCardIndex.value >= 0) {
+    resume.value.skillCards[editingSkillCardIndex.value] = { ...skillCardForm.value };
+  } else {
+    resume.value.skillCards.push({ ...skillCardForm.value });
+  }
+  isSkillCardModalOpen.value = false;
+  await saveResumeToDb('Cartão de destaque salvo!');
+};
+
+const deleteSkillCard = async (index) => {
+  if (!confirm('Remover este cartão de destaque?')) return;
+  resume.value.skillCards.splice(index, 1);
+  await saveResumeToDb('Cartão removido!');
+};
+
+// Experience
+const openExpModal = (item = null, index = -1) => {
+  editingExpIndex.value = index;
+  if (item) {
+    expForm.value = { ...item };
+  } else {
+    expForm.value = { role: '', company: '', period: '', tag: '', desc: '' };
+  }
+  isExpModalOpen.value = true;
+};
+
+const saveExp = async () => {
+  if (!expForm.value.role || !expForm.value.company || !expForm.value.desc) {
+    showToast('Cargo, empresa e descrição são obrigatórios!', 'error');
+    return;
+  }
+  if (!resume.value.experiences) resume.value.experiences = [];
+  if (editingExpIndex.value >= 0) {
+    resume.value.experiences[editingExpIndex.value] = { ...expForm.value };
+  } else {
+    resume.value.experiences.push({ ...expForm.value });
+  }
+  isExpModalOpen.value = false;
+  await saveResumeToDb('Experiência profissional salva com sucesso!');
+};
+
+const deleteExp = async (index) => {
+  if (!confirm('Deseja excluir esta experiência profissional?')) return;
+  resume.value.experiences.splice(index, 1);
+  await saveResumeToDb('Experiência removida!');
+};
+
+// Studies
+const openStudyModal = (item = null, index = -1) => {
+  editingStudyIndex.value = index;
+  newStudyTag.value = '';
+  if (item) {
+    studyForm.value = { ...item, tags: [...(item.tags || [])] };
+  } else {
+    studyForm.value = { title: '', description: '', tags: [] };
+  }
+  isStudyModalOpen.value = true;
+};
+
+const addStudyTag = () => {
+  if (newStudyTag.value.trim()) {
+    studyForm.value.tags.push(newStudyTag.value.trim());
+    newStudyTag.value = '';
+  }
+};
+
+const removeStudyTag = (tagIdx) => {
+  studyForm.value.tags.splice(tagIdx, 1);
+};
+
+const saveStudy = async () => {
+  if (!studyForm.value.title || !studyForm.value.description) {
+    showToast('Título e descrição do estudo são obrigatórios!', 'error');
+    return;
+  }
+  if (!resume.value.studies) resume.value.studies = [];
+  if (editingStudyIndex.value >= 0) {
+    resume.value.studies[editingStudyIndex.value] = { ...studyForm.value };
+  } else {
+    resume.value.studies.push({ ...studyForm.value });
+  }
+  isStudyModalOpen.value = false;
+  await saveResumeToDb('Estudo/Avaliação salvo com sucesso!');
+};
+
+const deleteStudy = async (index) => {
+  if (!confirm('Remover este item de estudos?')) return;
+  resume.value.studies.splice(index, 1);
+  await saveResumeToDb('Estudo removido!');
+};
+
+// Partners
+const openPartnerModal = (item = null, index = -1) => {
+  editingPartnerIndex.value = index;
+  if (item) {
+    partnerForm.value = { ...item };
+  } else {
+    partnerForm.value = { name: '', description: '', icon: 'fas fa-university' };
+  }
+  isPartnerModalOpen.value = true;
+};
+
+const savePartner = async () => {
+  if (!partnerForm.value.name || !partnerForm.value.description) {
+    showToast('Nome do parceiro e descrição são obrigatórios!', 'error');
+    return;
+  }
+  if (!resume.value.partners) resume.value.partners = [];
+  if (editingPartnerIndex.value >= 0) {
+    resume.value.partners[editingPartnerIndex.value] = { ...partnerForm.value };
+  } else {
+    resume.value.partners.push({ ...partnerForm.value });
+  }
+  isPartnerModalOpen.value = false;
+  await saveResumeToDb('Parceiro salvo com sucesso!');
+};
+
+const deletePartner = async (index) => {
+  if (!confirm('Remover este parceiro?')) return;
+  resume.value.partners.splice(index, 1);
+  await saveResumeToDb('Parceiro removido!');
+};
+
 // --- LOGOUT ---
 const logout = () => {
   localStorage.removeItem('gabriel_admin_token');
@@ -500,7 +760,7 @@ const logout = () => {
 
         <button :class="{ active: activeTab === 'blog' }" @click="activeTab = 'blog'">
           <i class="fas fa-newspaper"></i>
-          <span>Artigos do Blog</span>
+          <span>Artigos & Publicações</span>
           <span class="badge-count">{{ posts.length }}</span>
         </button>
 
@@ -520,6 +780,11 @@ const logout = () => {
           <i class="fas fa-star"></i>
           <span>Testemunhos</span>
           <span class="badge-count">{{ testimonials.length }}</span>
+        </button>
+
+        <button :class="{ active: activeTab === 'resume' }" @click="activeTab = 'resume'">
+          <i class="fas fa-user-graduate"></i>
+          <span>Currículo & Trajetória</span>
         </button>
       </nav>
 
@@ -544,7 +809,8 @@ const logout = () => {
               activeTab === 'blog' ? 'Gestão de Artigos & Publicações' : 
               activeTab === 'packages' ? 'Catálogo de Serviços & Consultoria' : 
               activeTab === 'messages' ? 'Mensagens Recebidas do Formulário' : 
-              'Gestão de Testemunhos & Avaliações' 
+              activeTab === 'testimonials' ? 'Gestão de Testemunhos & Avaliações' :
+              'Gestão de Currículo & Trajetória'
             }}
           </h1>
           <p class="topbar-sub">Banco de Dados Ativo: <strong>cluster0.oe0akin.mongodb.net (gabrielarmindodb)</strong></p>
@@ -559,6 +825,21 @@ const logout = () => {
           </button>
           <button v-if="activeTab === 'testimonials'" @click="openTestimonialModal()" class="btn-action-top">
             <i class="fas fa-plus"></i> Novo Depoimento
+          </button>
+          <button v-if="activeTab === 'resume' && resumeSubTab === 'education'" @click="openEduModal()" class="btn-action-top">
+            <i class="fas fa-plus"></i> Nova Certificação
+          </button>
+          <button v-if="activeTab === 'resume' && resumeSubTab === 'skills'" @click="openSkillBarModal()" class="btn-action-top">
+            <i class="fas fa-plus"></i> Nova Competência
+          </button>
+          <button v-if="activeTab === 'resume' && resumeSubTab === 'experience'" @click="openExpModal()" class="btn-action-top">
+            <i class="fas fa-plus"></i> Nova Experiência
+          </button>
+          <button v-if="activeTab === 'resume' && resumeSubTab === 'studies'" @click="openStudyModal()" class="btn-action-top">
+            <i class="fas fa-plus"></i> Novo Estudo
+          </button>
+          <button v-if="activeTab === 'resume' && resumeSubTab === 'partners'" @click="openPartnerModal()" class="btn-action-top">
+            <i class="fas fa-plus"></i> Novo Parceiro
           </button>
 
           <div class="admin-profile-pill">
@@ -965,6 +1246,253 @@ const logout = () => {
             </div>
           </div>
 
+          <!-- TAB 6: RESUME & TRAJECTORY -->
+          <div v-if="activeTab === 'resume'" class="tab-pane fade-in">
+            <!-- Sub-navigation Pills -->
+            <div class="action-bar-glass resume-subnav-bar">
+              <div class="filter-tabs-pills">
+                <button 
+                  :class="['filter-pill', { active: resumeSubTab === 'education' }]"
+                  @click="resumeSubTab = 'education'"
+                >
+                  <i class="fas fa-graduation-cap"></i> Formação & Certificações ({{ resume.education?.length || 0 }})
+                </button>
+                <button 
+                  :class="['filter-pill', { active: resumeSubTab === 'skills' }]"
+                  @click="resumeSubTab = 'skills'"
+                >
+                  <i class="fas fa-bolt"></i> Competências
+                </button>
+                <button 
+                  :class="['filter-pill', { active: resumeSubTab === 'experience' }]"
+                  @click="resumeSubTab = 'experience'"
+                >
+                  <i class="fas fa-briefcase"></i> Experiência ({{ resume.experiences?.length || 0 }})
+                </button>
+                <button 
+                  :class="['filter-pill', { active: resumeSubTab === 'studies' }]"
+                  @click="resumeSubTab = 'studies'"
+                >
+                  <i class="fas fa-book-open"></i> Estudos & Avaliações ({{ resume.studies?.length || 0 }})
+                </button>
+                <button 
+                  :class="['filter-pill', { active: resumeSubTab === 'partners' }]"
+                  @click="resumeSubTab = 'partners'"
+                >
+                  <i class="fas fa-handshake"></i> Parceiros ({{ resume.partners?.length || 0 }})
+                </button>
+              </div>
+
+              <div class="subtab-action-wrap">
+                <button v-if="resumeSubTab === 'education'" @click="openEduModal()" class="btn-primary-add">
+                  <i class="fas fa-plus"></i> Nova Certificação
+                </button>
+                <button v-if="resumeSubTab === 'skills'" @click="openSkillBarModal()" class="btn-primary-add">
+                  <i class="fas fa-plus"></i> Nova Competência (%)
+                </button>
+                <button v-if="resumeSubTab === 'experience'" @click="openExpModal()" class="btn-primary-add">
+                  <i class="fas fa-plus"></i> Nova Experiência
+                </button>
+                <button v-if="resumeSubTab === 'studies'" @click="openStudyModal()" class="btn-primary-add">
+                  <i class="fas fa-plus"></i> Novo Estudo
+                </button>
+                <button v-if="resumeSubTab === 'partners'" @click="openPartnerModal()" class="btn-primary-add">
+                  <i class="fas fa-plus"></i> Novo Parceiro
+                </button>
+              </div>
+            </div>
+
+            <!-- SUB-TAB 1: FORMAÇÃO & CERTIFICAÇÕES -->
+            <div v-if="resumeSubTab === 'education'" class="resume-subpane">
+              <div class="card table-container-card">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Título da Formação / Certificação</th>
+                      <th>Instituição / Entidade Emissora</th>
+                      <th>Categoria</th>
+                      <th class="text-right">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(edu, idx) in resume.education" :key="idx">
+                      <td class="font-semibold">{{ edu.title }}</td>
+                      <td><span class="issuer-tag">{{ edu.issuer }}</span></td>
+                      <td>
+                        <span class="cat-badge" :class="edu.category?.includes('Académica') ? 'cat-academic' : edu.category?.includes('Dados') ? 'cat-data' : 'cat-meal'">
+                          {{ edu.category }}
+                        </span>
+                      </td>
+                      <td class="text-right">
+                        <div class="btn-actions-cluster">
+                          <button @click="openEduModal(edu, idx)" class="action-btn edit" title="Editar">
+                            <i class="fas fa-pencil-alt"></i>
+                          </button>
+                          <button @click="deleteEdu(idx)" class="action-btn delete" title="Excluir">
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr v-if="!resume.education || resume.education.length === 0">
+                      <td colspan="4" class="text-center empty-cell">
+                        <i class="fas fa-graduation-cap"></i>
+                        <p>Nenhuma formação ou certificação cadastrada.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- SUB-TAB 2: COMPETÊNCIAS -->
+            <div v-if="resumeSubTab === 'skills'" class="resume-subpane">
+              <!-- Intro Text Box -->
+              <div class="card resume-card-box mb-4">
+                <div class="card-header">
+                  <h3><i class="fas fa-pen-fancy"></i> Título & Texto Introdutório da Secção</h3>
+                  <button @click="saveSkillsIntro" class="btn-save-sm">
+                    <i class="fas fa-save"></i> Salvar Textos
+                  </button>
+                </div>
+                <div class="form-grid-2">
+                  <div class="form-group span-2">
+                    <label>Título em Destaque</label>
+                    <textarea v-model="resume.skillsIntro.title" rows="2" placeholder="Especialista em M&E,\nKoboToolbox e Análise de Dados"></textarea>
+                  </div>
+                  <div class="form-group span-2">
+                    <label>Texto Introdutório</label>
+                    <textarea v-model="resume.skillsIntro.description" rows="3" placeholder="Mais de 10 anos de experiência..."></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="skills-admin-dual-grid">
+                <!-- Barras de Progresso -->
+                <div class="card resume-card-box">
+                  <div class="card-header">
+                    <h3><i class="fas fa-chart-bar"></i> Barras de Nível de Domínio (%)</h3>
+                    <button @click="openSkillBarModal()" class="btn-link">+ Adicionar Barra</button>
+                  </div>
+                  <div class="skill-bar-admin-list">
+                    <div v-for="(bar, idx) in resume.skillBars" :key="idx" class="skill-bar-admin-item">
+                      <div class="bar-info-row">
+                        <strong>{{ bar.name }}</strong>
+                        <span class="pct-badge">{{ bar.percentage }}%</span>
+                      </div>
+                      <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" :style="{ width: bar.percentage + '%' }"></div>
+                      </div>
+                      <div class="bar-actions-row">
+                        <button @click="openSkillBarModal(bar, idx)" class="btn-icon" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                        <button @click="deleteSkillBar(idx)" class="btn-icon text-red" title="Remover"><i class="fas fa-trash-alt"></i></button>
+                      </div>
+                    </div>
+                    <p v-if="!resume.skillBars || resume.skillBars.length === 0" class="empty-text">Nenhuma barra de competência cadastrada.</p>
+                  </div>
+                </div>
+
+                <!-- Cartões de Destaque -->
+                <div class="card resume-card-box">
+                  <div class="card-header">
+                    <h3><i class="fas fa-id-card"></i> Cartões de Especialidade em Destaque</h3>
+                    <button @click="openSkillCardModal()" class="btn-link">+ Adicionar Cartão</button>
+                  </div>
+                  <div class="skill-cards-admin-list">
+                    <div v-for="(sc, idx) in resume.skillCards" :key="idx" class="skill-card-admin-item">
+                      <div class="sc-top">
+                        <h4>{{ sc.title }}</h4>
+                        <span class="sc-years">{{ sc.years }}</span>
+                      </div>
+                      <span v-if="sc.subtitle" class="sc-sub">{{ sc.subtitle }}</span>
+                      <p class="sc-desc">{{ sc.description }}</p>
+                      <div class="sc-actions">
+                        <button @click="openSkillCardModal(sc, idx)" class="action-btn edit" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                        <button @click="deleteSkillCard(idx)" class="action-btn delete" title="Remover"><i class="fas fa-trash-alt"></i></button>
+                      </div>
+                    </div>
+                    <p v-if="!resume.skillCards || resume.skillCards.length === 0" class="empty-text">Nenhum cartão de destaque cadastrado.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUB-TAB 3: EXPERIÊNCIA PROFISSIONAL -->
+            <div v-if="resumeSubTab === 'experience'" class="resume-subpane">
+              <div class="experience-admin-list">
+                <div v-for="(exp, idx) in resume.experiences" :key="idx" class="card exp-admin-card">
+                  <div class="exp-admin-header">
+                    <div>
+                      <h3>{{ exp.role }}</h3>
+                      <span class="exp-company-text"><i class="fas fa-building"></i> {{ exp.company }}</span>
+                    </div>
+                    <div class="exp-meta-right">
+                      <span class="exp-period-badge"><i class="far fa-calendar-alt"></i> {{ exp.period }}</span>
+                      <span v-if="exp.tag" class="exp-tag-badge">{{ exp.tag }}</span>
+                      <div class="btn-actions-cluster">
+                        <button @click="openExpModal(exp, idx)" class="action-btn edit" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                        <button @click="deleteExp(idx)" class="action-btn delete" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="exp-admin-desc">
+                    <p style="white-space: pre-line;">{{ exp.desc }}</p>
+                  </div>
+                </div>
+                <div v-if="!resume.experiences || resume.experiences.length === 0" class="card text-center p-8">
+                  <p class="empty-text">Nenhuma experiência profissional cadastrada.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUB-TAB 4: ESTUDOS & AVALIAÇÕES -->
+            <div v-if="resumeSubTab === 'studies'" class="resume-subpane">
+              <div class="studies-admin-grid">
+                <div v-for="(study, idx) in resume.studies" :key="idx" class="card study-admin-card">
+                  <div class="study-card-top">
+                    <h4>{{ study.title }}</h4>
+                    <div class="btn-actions-cluster">
+                      <button @click="openStudyModal(study, idx)" class="action-btn edit" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                      <button @click="deleteStudy(idx)" class="action-btn delete" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                  </div>
+                  <p class="study-card-desc">{{ study.description }}</p>
+                  <div class="study-tags-row" v-if="study.tags && study.tags.length">
+                    <span v-for="(tag, tIdx) in study.tags" :key="tIdx" class="tag-badge">{{ tag }}</span>
+                  </div>
+                </div>
+                <div v-if="!resume.studies || resume.studies.length === 0" class="card text-center p-8 span-all">
+                  <p class="empty-text">Nenhum estudo cadastrado.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUB-TAB 5: PARCEIROS -->
+            <div v-if="resumeSubTab === 'partners'" class="resume-subpane">
+              <div class="partners-admin-grid">
+                <div v-for="(partner, idx) in resume.partners" :key="idx" class="card partner-admin-card">
+                  <div class="partner-admin-header">
+                    <div class="partner-icon-circle">
+                      <i :class="partner.icon || 'fas fa-university'"></i>
+                    </div>
+                    <div>
+                      <h4>{{ partner.name }}</h4>
+                    </div>
+                    <div class="btn-actions-cluster ml-auto">
+                      <button @click="openPartnerModal(partner, idx)" class="action-btn edit" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                      <button @click="deletePartner(idx)" class="action-btn delete" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                  </div>
+                  <p class="partner-admin-desc">{{ partner.description }}</p>
+                </div>
+                <div v-if="!resume.partners || resume.partners.length === 0" class="card text-center p-8 span-all">
+                  <p class="empty-text">Nenhum parceiro cadastrado.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </div>
     </main>
@@ -1276,6 +1804,265 @@ const logout = () => {
             <button type="button" @click="isTestimonialModalOpen = false" class="btn-cancel">Cancelar</button>
             <button type="submit" class="btn-save">
               <i class="fas fa-save"></i> Salvar Depoimento
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESUME EDUCATION MODAL -->
+    <div v-if="isEduModalOpen" class="modal-overlay-custom">
+      <div class="modal-dialog">
+        <div class="modal-header-custom">
+          <div>
+            <h3>{{ editingEduIndex >= 0 ? 'Editar Formação/Certificação' : 'Nova Formação/Certificação' }}</h3>
+            <span class="modal-subtitle">Exibido na secção de Formação & Certificações</span>
+          </div>
+          <button @click="isEduModalOpen = false" class="btn-close-modal">&times;</button>
+        </div>
+
+        <form @submit.prevent="saveEdu" class="modal-form">
+          <div class="form-grid-2">
+            <div class="form-group span-2">
+              <label>Título do Curso / Certificação <span class="required">*</span></label>
+              <input type="text" v-model="eduForm.title" required placeholder="Ex: Licenciatura em Psicologia Social" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Instituição / Entidade Emissora <span class="required">*</span></label>
+              <input type="text" v-model="eduForm.issuer" required placeholder="Ex: Universidade Eduardo Mondlane (2018 - 2022)" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Categoria <span class="required">*</span></label>
+              <select v-model="eduForm.category">
+                <option value="Formação Académica">Formação Académica</option>
+                <option value="Gestão de Projectos & M&A">Gestão de Projectos & M&A</option>
+                <option value="Análise de Dados & BI">Análise de Dados & BI</option>
+                <option value="Outras">Outras Certificações</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer-custom">
+            <button type="button" @click="isEduModalOpen = false" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i> Salvar no MongoDB
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESUME SKILL BAR MODAL -->
+    <div v-if="isSkillBarModalOpen" class="modal-overlay-custom">
+      <div class="modal-dialog">
+        <div class="modal-header-custom">
+          <div>
+            <h3>{{ editingSkillBarIndex >= 0 ? 'Editar Barra de Competência' : 'Nova Barra de Competência' }}</h3>
+            <span class="modal-subtitle">Defina o nome da competência e a percentagem de domínio</span>
+          </div>
+          <button @click="isSkillBarModalOpen = false" class="btn-close-modal">&times;</button>
+        </div>
+
+        <form @submit.prevent="saveSkillBar" class="modal-form">
+          <div class="form-grid-2">
+            <div class="form-group span-2">
+              <label>Nome da Competência <span class="required">*</span></label>
+              <input type="text" v-model="skillBarForm.name" required placeholder="Ex: KoboToolbox Design" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Nível de Domínio: <strong>{{ skillBarForm.percentage }}%</strong></label>
+              <input type="range" v-model.number="skillBarForm.percentage" min="10" max="100" step="5" class="range-slider" />
+            </div>
+          </div>
+
+          <div class="modal-footer-custom">
+            <button type="button" @click="isSkillBarModalOpen = false" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i> Salvar no MongoDB
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESUME SKILL CARD MODAL -->
+    <div v-if="isSkillCardModalOpen" class="modal-overlay-custom">
+      <div class="modal-dialog">
+        <div class="modal-header-custom">
+          <div>
+            <h3>{{ editingSkillCardIndex >= 0 ? 'Editar Cartão de Especialidade' : 'Novo Cartão de Especialidade' }}</h3>
+            <span class="modal-subtitle">Cartão de destaque com anos de experiência</span>
+          </div>
+          <button @click="isSkillCardModalOpen = false" class="btn-close-modal">&times;</button>
+        </div>
+
+        <form @submit.prevent="saveSkillCard" class="modal-form">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Título <span class="required">*</span></label>
+              <input type="text" v-model="skillCardForm.title" required placeholder="Ex: KoboToolbox Expert" />
+            </div>
+
+            <div class="form-group">
+              <label>Anos / Tempo de Experiência</label>
+              <input type="text" v-model="skillCardForm.years" placeholder="Ex: 10+ Anos" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Subtítulo</label>
+              <input type="text" v-model="skillCardForm.subtitle" placeholder="Ex: Design e Implementação" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Descrição Detalhada <span class="required">*</span></label>
+              <textarea v-model="skillCardForm.description" rows="3" required placeholder="Especialista em desenho de formulários Excel para KoboToolbox..."></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer-custom">
+            <button type="button" @click="isSkillCardModalOpen = false" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i> Salvar no MongoDB
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESUME EXPERIENCE MODAL -->
+    <div v-if="isExpModalOpen" class="modal-overlay-custom">
+      <div class="modal-dialog large">
+        <div class="modal-header-custom">
+          <div>
+            <h3>{{ editingExpIndex >= 0 ? 'Editar Experiência Profissional' : 'Nova Experiência Profissional' }}</h3>
+            <span class="modal-subtitle">Adicione cargos, organizações, períodos e detalhes</span>
+          </div>
+          <button @click="isExpModalOpen = false" class="btn-close-modal">&times;</button>
+        </div>
+
+        <form @submit.prevent="saveExp" class="modal-form">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Cargo / Função <span class="required">*</span></label>
+              <input type="text" v-model="expForm.role" required placeholder="Ex: Consultor de Monitoria, Avaliação e Pesquisa" />
+            </div>
+
+            <div class="form-group">
+              <label>Empresa / Organização <span class="required">*</span></label>
+              <input type="text" v-model="expForm.company" required placeholder="Ex: Consulting And Coaching Agency" />
+            </div>
+
+            <div class="form-group">
+              <label>Período <span class="required">*</span></label>
+              <input type="text" v-model="expForm.period" required placeholder="Ex: 09/2025 - Presente ou 2023 - 2025" />
+            </div>
+
+            <div class="form-group">
+              <label>Etiqueta / Tag (Opcional)</label>
+              <input type="text" v-model="expForm.tag" placeholder="Ex: TEMPO PARCIAL ou TEMPO INTEGRAL" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Descrição das Responsabilidades & Entregas <span class="required">*</span></label>
+              <textarea v-model="expForm.desc" rows="6" required placeholder="• Atividade 1&#10;• Atividade 2&#10;• Atividade 3"></textarea>
+              <small class="hint">Dica: use marcadores "• " e quebras de linha para listar os pontos claramente.</small>
+            </div>
+          </div>
+
+          <div class="modal-footer-custom">
+            <button type="button" @click="isExpModalOpen = false" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i> Salvar no MongoDB
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESUME STUDY MODAL -->
+    <div v-if="isStudyModalOpen" class="modal-overlay-custom">
+      <div class="modal-dialog">
+        <div class="modal-header-custom">
+          <div>
+            <h3>{{ editingStudyIndex >= 0 ? 'Editar Estudo / Avaliação' : 'Novo Estudo / Avaliação' }}</h3>
+            <span class="modal-subtitle">Exibido na secção de estudos</span>
+          </div>
+          <button @click="isStudyModalOpen = false" class="btn-close-modal">&times;</button>
+        </div>
+
+        <form @submit.prevent="saveStudy" class="modal-form">
+          <div class="form-grid-2">
+            <div class="form-group span-2">
+              <label>Título do Estudo <span class="required">*</span></label>
+              <input type="text" v-model="studyForm.title" required placeholder="Ex: Concepção e Realização de Avaliações" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Descrição <span class="required">*</span></label>
+              <textarea v-model="studyForm.description" rows="3" required placeholder="Resumo do estudo ou consultoria..."></textarea>
+            </div>
+
+            <div class="form-group span-2">
+              <label>Tags / Metodologias</label>
+              <div class="tags-input-cluster">
+                <input type="text" v-model="newStudyTag" @keydown.enter.prevent="addStudyTag" placeholder="Digite uma tag (ex: Baseline) e clique Adicionar" />
+                <button type="button" @click="addStudyTag" class="btn-tag-add">Adicionar</button>
+              </div>
+              <div class="tags-preview-list" v-if="studyForm.tags && studyForm.tags.length">
+                <span v-for="(tg, tIdx) in studyForm.tags" :key="tIdx" class="tag-pill-edit">
+                  {{ tg }}
+                  <i @click="removeStudyTag(tIdx)" class="fas fa-times"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer-custom">
+            <button type="button" @click="isStudyModalOpen = false" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i> Salvar no MongoDB
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESUME PARTNER MODAL -->
+    <div v-if="isPartnerModalOpen" class="modal-overlay-custom">
+      <div class="modal-dialog">
+        <div class="modal-header-custom">
+          <div>
+            <h3>{{ editingPartnerIndex >= 0 ? 'Editar Parceiro' : 'Novo Parceiro / Organização' }}</h3>
+            <span class="modal-subtitle">Organizações e clientes parceiros</span>
+          </div>
+          <button @click="isPartnerModalOpen = false" class="btn-close-modal">&times;</button>
+        </div>
+
+        <form @submit.prevent="savePartner" class="modal-form">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Nome do Parceiro <span class="required">*</span></label>
+              <input type="text" v-model="partnerForm.name" required placeholder="Ex: ODEI" />
+            </div>
+
+            <div class="form-group">
+              <label>Ícone FontAwesome</label>
+              <input type="text" v-model="partnerForm.icon" placeholder="Ex: fas fa-university ou fas fa-brain" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Descrição da Colaboração <span class="required">*</span></label>
+              <textarea v-model="partnerForm.description" rows="3" required placeholder="Resumo da colaboração ou projetos implementados..."></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer-custom">
+            <button type="button" @click="isPartnerModalOpen = false" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i> Salvar no MongoDB
             </button>
           </div>
         </form>
@@ -2545,7 +3332,333 @@ const logout = () => {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Resume & Trajectory Styles */
+.resume-subnav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.subtab-action-wrap {
+  display: flex;
+  align-items: center;
+}
+.resume-subpane {
+  width: 100%;
+}
+.resume-card-box {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 24px;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.mb-4 {
+  margin-bottom: 24px;
+}
+.btn-save-sm {
+  background: var(--primary-color, #FF7B1A);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.btn-save-sm:hover {
+  background: #e66b12;
+  transform: translateY(-1px);
+}
+.skills-admin-dual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.skill-bar-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 16px;
+}
+.skill-bar-admin-item {
+  background: #f8fafc;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+.bar-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+.pct-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+.bar-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+.skill-cards-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+.skill-card-admin-item {
+  background: #f8fafc;
+  border-left: 4px solid var(--primary-color, #FF7B1A);
+  padding: 16px;
+  border-radius: 8px;
+  border-top: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.sc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.sc-top h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.sc-years {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.sc-sub {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--primary-color, #FF7B1A);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.sc-desc {
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.sc-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.experience-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.exp-admin-card {
+  padding: 20px 24px;
+}
+.exp-admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.exp-admin-header h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+.exp-company-text {
+  color: var(--primary-color, #FF7B1A);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.exp-meta-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.exp-period-badge {
+  font-size: 0.82rem;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+.exp-tag-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+.exp-admin-desc p {
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.studies-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+.study-admin-card {
+  padding: 20px;
+}
+.study-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.study-card-top h4 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.study-card-desc {
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.study-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #334155;
+}
+.partners-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+.partner-admin-card {
+  padding: 20px;
+}
+.partner-admin-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.partner-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #fff7ed;
+  color: var(--primary-color, #FF7B1A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.partner-admin-header h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.ml-auto {
+  margin-left: auto;
+}
+.partner-admin-desc {
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.5;
+}
+.issuer-tag {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+.cat-academic {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.cat-data {
+  background: #f0fdf4;
+  color: #166534;
+}
+.cat-meal {
+  background: #fff7ed;
+  color: #c2410c;
+}
+.range-slider {
+  width: 100%;
+  accent-color: var(--primary-color, #FF7B1A);
+}
+.tags-input-cluster {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.btn-tag-add {
+  background: #334155;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.tags-preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag-pill-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+}
+.tag-pill-edit i {
+  cursor: pointer;
+  color: #94a3b8;
+}
+.tag-pill-edit i:hover {
+  color: #ef4444;
+}
+
 @media (max-width: 1024px) {
-  .charts-row, .quick-overview-row { grid-template-columns: 1fr; }
+  .charts-row, .quick-overview-row, .skills-admin-dual-grid { grid-template-columns: 1fr; }
 }
 </style>

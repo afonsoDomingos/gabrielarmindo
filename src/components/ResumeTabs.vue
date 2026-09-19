@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
 import { useLanguage } from '../store/language';
 
 const { t } = useLanguage();
@@ -14,61 +15,163 @@ const tabs = computed(() => [
   { id: 'partners', label: t('Parceiros', 'Partners') }
 ]);
 
-const certifications = [
-  { title: 'MEAL para Desenvolvimento', issuer: 'Humanitarian Leadership Academy' },
-  { title: 'Monitoria e Avaliação de projectos', issuer: 'SentiPensar' },
-  { title: 'Teoria de Mudança', issuer: 'SentiPensar' },
-  { title: 'Data Analytics Essentials Course', issuer: 'CISCO Networking Academy' },
-  { title: 'Gestão e Análise de Dados', issuer: 'CBS (Extensão Univ.)' },
-  { title: 'Power BI - Business Intelligence', issuer: 'Expert Cursos' },
-  { title: 'Excel: Do Zero ao Avançado', issuer: 'EvolutionTech Training' }
-];
+const resumeData = ref({
+  skillsIntro: {
+    title: 'Especialista em M&E,\nKoboToolbox e Análise de Dados',
+    description: 'Mais de 10 anos de experiência em Monitoria e Avaliação, com expertise comprovada em KoboToolbox, Excel Avançado, Power BI e gestão de programas.'
+  },
+  education: [
+    { category: 'Formação Académica', title: 'Licenciatura em Psicologia Social e das Organizações', issuer: 'Universidade Eduardo Mondlane (2018 - 2022)' },
+    { category: 'Formação Académica', title: 'Técnico Médio de Agro-Pecuária', issuer: 'Instituto Agrário de Chimoio (2013 - 2015)' },
+    { category: 'Gestão de Projectos & M&A', title: 'Certificação em MEAL para Desenvolvimento', issuer: 'Humanitarian Leadership Academy' },
+    { category: 'Gestão de Projectos & M&A', title: 'Certificação em Monitoria e Avaliação de Projectos', issuer: 'SentiPensar' },
+    { category: 'Gestão de Projectos & M&A', title: 'Certificação em Teoria da Mudança', issuer: 'SentiPensar' },
+    { category: 'Análise de Dados & BI', title: 'Certificação em Data Analytics Essentials', issuer: 'Cisco Networking Academy' },
+    { category: 'Análise de Dados & BI', title: 'Extensão Universitária em Gestão e Análise de Dados com KoboToolbox, Excel, Power BI, SPSS e R', issuer: 'Corporate Business School' },
+    { category: 'Análise de Dados & BI', title: 'Certificação em Power BI – Business Intelligence', issuer: 'Expert Cursos' },
+    { category: 'Análise de Dados & BI', title: 'Certificação em Excel: Do Zero ao Avançado', issuer: 'EvolutionTech Training' },
+    { category: 'Análise de Dados & BI', title: 'Certificação em Análise de Dados com Excel', issuer: 'EvolutionTech Training' }
+  ],
+  skillBars: [
+    { name: 'KoboToolbox Design', percentage: 95 },
+    { name: 'Excel Avançado', percentage: 90 },
+    { name: 'Sistemas M&E', percentage: 95 },
+    { name: 'Power BI & Data Analysis', percentage: 85 },
+    { name: 'Program Management', percentage: 88 }
+  ],
+  skillCards: [
+    {
+      title: 'KoboToolbox Expert',
+      years: '10+ Anos',
+      subtitle: 'Design e Implementação',
+      description: 'Especialista em desenho de formulários Excel para KoboToolbox, validação, lógica condicional e integração com sistemas M&E.'
+    },
+    {
+      title: 'M&E Specialist',
+      years: '10+ Anos',
+      subtitle: 'Monitoria e Avaliação',
+      description: 'Implementação de sistemas M&E completos, desde desenho até relatórios, incluindo baseline, endline e avaliações de impacto.'
+    },
+    {
+      title: 'Data Analysis Expert',
+      years: '8+ Anos',
+      subtitle: 'Excel & Power BI',
+      description: 'Criação de dashboards avançados em Excel e Power BI para análise de dados, KPIs e tomada de decisão baseada em evidências.'
+    }
+  ],
+  experiences: [
+    {
+      role: 'Consultor de Monitoria, Avaliação e Pesquisa',
+      company: 'Consulting And Coaching Agency',
+      period: '09/2025 - Presente',
+      tag: '',
+      desc: '• Desenvolvimento de cursos em Monitoria & Avaliação, Excel, Análise de Dados e KoboToolbox\n• Capacitação de equipas e parceiros através de formações técnicas e mentorias\n• Desenho de formulários em XLSForm/KoboToolbox, integração com ODK e Power BI\n• Desenvolvimento de planos de M&A, estudos de base, avaliações de impacto e relatórios técnicos\n• Garantia da qualidade de dados (DQA) e apoio à tomada de decisão baseada em evidências'
+    },
+    {
+      role: 'Especialista em Monitoria e Avaliação',
+      company: 'ODEI',
+      period: '2023 - 2025',
+      tag: '',
+      desc: '• Coordenação e implementação de sistemas de MEAL\n• Monitoria de projectos e avaliações (baseline, PDM e outcome monitoring)\n• Gestão da qualidade de dados e mechanisms de accountability comunitária\n• Desenvolvimento de ferramentas digitais de recolha de dados\n• Formação e supervisão de inquiridores\n• Produção de relatórios técnicos e acompanhamento de campo com foco em qualidade e conformidade humanitária'
+    },
+    {
+      role: 'Docente',
+      company: 'Escola de Desenho, Monitoria e Avaliação',
+      period: '11/2025 - Actualmente',
+      tag: 'TEMPO PARCIAL',
+      desc: 'Docente dos módulos de Monitoria & Avaliação e Análise de Dados.'
+    },
+    {
+      role: 'Consultor de Pesquisa',
+      company: 'Prátiq Consultoria',
+      period: '2021 - 2023',
+      tag: '',
+      desc: '• Desenvolvimento de propostas técnicas e financeiras\n• Elaboração de protocolos de pesquisa\n• Gestão da qualidade e integridade de dados\n• Análise de evidências e produção de relatórios analíticos para apoio à tomada de decisão'
+    },
+    {
+      role: 'Técnico de Apoio Psicossocial',
+      company: 'Helen Keller International',
+      period: '2019 - 2021',
+      tag: '',
+      desc: '• Implementação de intervenções psicossociais inclusivas para jovens com deficiência visual\n• Apoio em direitos humanos, protecção, inclusão social e fortalecimento comunitário\n• Gestão de casos de VBG e apoio psicossocial individual e familiar\n• Mobilização comunitária e articulação multissectorial com autoridades locais e unidades sanitárias'
+    }
+  ],
+  studies: [
+    {
+      title: 'Concepção e Realização de Avaliações',
+      description: 'Especialista na concepção e realização de avaliações completas incluindo baseline, endline, outcome e avaliações de impacto para organizações.',
+      tags: ['Baseline', 'Endline', 'PDM']
+    },
+    {
+      title: 'Pesquisas Sociais & Psicológicas',
+      description: 'Pesquisas sociais e antropológicas incluindo estudos sobre intervenção psicológica em situações de crise.',
+      tags: ['Psicologia', 'Qualitativo']
+    },
+    {
+      title: 'Avaliações de Necessidades',
+      description: 'Avaliações de necessidades para resposta humanitária e desenvolvimento comunitário em contextos de emergência e pós-conflito.',
+      tags: ['Emergência', 'Humanitário']
+    },
+    {
+      title: 'Pesquisa de Mercado',
+      description: 'Análises de mercado e auditorias de qualidade de dados (DQA) para garantir integridade e precisão dos sistemas M&E.',
+      tags: ['Análise de Mercado', 'DQA']
+    }
+  ],
+  partners: [
+    {
+      name: 'ODEI',
+      description: 'Coordenação técnica de sistemas de MEAL, DQA e gestão de qualidade de dados em projectos humanitários.',
+      icon: 'fas fa-university'
+    },
+    {
+      name: 'Consulting And Coaching Agency',
+      description: 'Consultoria especializada em capacitação de equipas, dashboards estratégicos e recolha digital (KoboToolbox).',
+      icon: 'fas fa-brain'
+    }
+  ]
+});
 
-const experiences = computed(() => [
-  {
-    role: t('Consultor de Monitoria, Avaliação e Pesquisa', 'Monitoring, Evaluation and Research Consultant'),
-    company: 'Consulting And Coaching Agency',
-    period: t('09/2025 - Presente', '09/2025 - Present'),
-    desc: t(
-      '• Desenvolvimento de cursos em Monitoria & Avaliação, Excel, Análise de Dados e KoboToolbox\n• Capacitação de equipas e parceiros através de formações técnicas e mentorias\n• Desenho de formulários em XLSForm/KoboToolbox, integração com ODK e Power BI\n• Desenvolvimento de planos de M&A, estudos de base, avaliações de impacto e relatórios técnicos\n• Garantia da qualidade de dados (DQA) e apoio à tomada de decisão baseada em evidências',
-      '• Development of courses in Monitoring & Evaluation, Excel, Data Analysis and KoboToolbox\n• Training of teams and partners through technical courses and mentorships\n• Form design in XLSForm/KoboToolbox, integration with ODK and Power BI\n• Development of M&E plans, baseline studies, impact evaluations and technical reports\n• Data quality assurance (DQA) and support for evidence-based decision making'
-    )
-  },
-  {
-    role: t('Especialista em Monitoria e Avaliação', 'Monitoring and Evaluation Specialist'),
-    company: 'ODEI',
-    period: t('2023 - 2025', '2023 - 2025'),
-    desc: t(
-      '• Coordenação e implementação de sistemas de MEAL\n• Monitoria de projectos e avaliações (baseline, PDM e outcome monitoring)\n• Gestão da qualidade de dados e mechanisms de accountability comunitária\n• Desenvolvimento de ferramentas digitais de recolha de dados\n• Formação e supervisão de inquiridores\n• Produção de relatórios técnicos e acompanhamento de campo com foco em qualidade e conformidade humanitária',
-      '• Coordination and implementation of MEAL systems\n• Project monitoring and evaluations (baseline, PDM and outcome monitoring)\n• Data quality management and community accountability mechanisms\n• Development of digital data collection tools\n• Training and supervision of surveyors\n• Production of technical reports and field monitoring focusing on quality and humanitarian compliance'
-    )
-  },
-  {
-    role: t('Docente', 'Lecturer'),
-    company: t('Escola de Desenho, Monitoria e Avaliação', 'School of Design, Monitoring and Evaluation'),
-    period: t('11/2025 - Actualmente', '11/2025 - Present'),
-    tag: t('TEMPO PARCIAL', 'PART-TIME'),
-    desc: t('Docente dos módulos de Monitoria & Avaliação e Análise de Dados.', 'Lecturer for the Monitoring & Evaluation and Data Analysis modules.')
-  },
-  {
-    role: t('Consultor de Pesquisa', 'Research Consultant'),
-    company: 'Prátiq Consultoria',
-    period: t('2021 - 2023', '2021 - 2023'),
-    desc: t(
-      '• Desenvolvimento de propostas técnicas e financeiras\n• Elaboração de protocolos de pesquisa\n• Gestão da qualidade e integridade de dados\n• Análise de evidências e produção de relatórios analíticos para apoio à tomada de decisão',
-      '• Development of technical and financial proposals\n• Preparation of research protocols\n• Data quality and integrity management\n• Evidence analysis and production of analytical reports for decision-making support'
-    )
-  },
-  {
-    role: t('Técnico de Apoio Psicossocial', 'Psychosocial Support Technician'),
-    company: 'Helen Keller International',
-    period: t('2019 - 2021', '2019 - 2021'),
-    desc: t(
-      '• Implementação de intervenções psicossociais inclusivas para jovens com deficiência visual\n• Apoio em direitos humanos, protecção, inclusão social e fortalecimento comunitário\n• Gestão de casos de VBG e apoio psicossocial individual e familiar\n• Mobilização comunitária e articulação multissectorial com autoridades locais e unidades sanitárias',
-      '• Implementation of inclusive psychosocial interventions for visually impaired youth\n• Support for human rights, protection, social inclusion and community strengthening\n• GBV case management and individual and family psychosocial support\n• Community mobilization and multi-sectoral coordination with local authorities and health facilities'
-    )
+// Category Icon Helper
+const getCategoryIcon = (category) => {
+  if (category?.includes('Académica') || category?.includes('Academic')) return 'fas fa-graduation-cap';
+  if (category?.includes('Gestão') || category?.includes('Project') || category?.includes('M&A')) return 'fas fa-tasks';
+  if (category?.includes('Dados') || category?.includes('Data') || category?.includes('BI')) return 'fas fa-chart-line';
+  return 'fas fa-certificate';
+};
+
+// Grouped Education
+const groupedEducation = computed(() => {
+  const groups = {};
+  const list = resumeData.value.education || [];
+  list.forEach(item => {
+    const cat = item.category || 'Outras';
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(item);
+  });
+  return groups;
+});
+
+const fetchResume = async () => {
+  try {
+    const res = await axios.get('/api/resume');
+    if (res.data) {
+      resumeData.value = {
+        skillsIntro: res.data.skillsIntro || resumeData.value.skillsIntro,
+        education: res.data.education?.length ? res.data.education : resumeData.value.education,
+        skillBars: res.data.skillBars?.length ? res.data.skillBars : resumeData.value.skillBars,
+        skillCards: res.data.skillCards?.length ? res.data.skillCards : resumeData.value.skillCards,
+        experiences: res.data.experiences?.length ? res.data.experiences : resumeData.value.experiences,
+        studies: res.data.studies?.length ? res.data.studies : resumeData.value.studies,
+        partners: res.data.partners?.length ? res.data.partners : resumeData.value.partners
+      };
+    }
+  } catch (err) {
+    console.warn('Usando dados de currículo locais/fallback:', err.message);
   }
-]);
+};
+
+onMounted(fetchResume);
 </script>
 
 <template>
@@ -96,63 +199,12 @@ const experiences = computed(() => [
                 <p class="pane-subtitle">{{ t('Formação académica, certificações profissionais e qualificações técnicas obtidas ao longo da trajectória.', 'Academic education, professional certifications, and technical qualifications obtained throughout my career.') }}</p>
                 
                 <div class="cert-category-grid">
-                  <!-- Formação Académica -->
-                  <div class="cert-category">
-                    <h4 class="category-title"><i class="fas fa-graduation-cap"></i> {{ t('Formação Académica', 'Academic Education') }}</h4>
+                  <div v-for="(items, categoryName) in groupedEducation" :key="categoryName" class="cert-category">
+                    <h4 class="category-title"><i :class="getCategoryIcon(categoryName)"></i> {{ t(categoryName, categoryName) }}</h4>
                     <div class="cert-list">
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Licenciatura em Psicologia Social e das Organizações', 'Bachelor in Social and Organizational Psychology') }}</h5>
-                        <p class="issuer">Universidade Eduardo Mondlane (2018 - 2022)</p>
-                      </div>
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Técnico Médio de Agro-Pecuária', 'Agricultural and Livestock Technical School') }}</h5>
-                        <p class="issuer">Instituto Agrário de Chimoio (2013 - 2015)</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Gestao de projectos & M&A -->
-                  <div class="cert-category">
-                    <h4 class="category-title"><i class="fas fa-tasks"></i> {{ t('Gestão de Projectos & M&A', 'Project Management & M&E') }}</h4>
-                    <div class="cert-list">
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Certificação em MEAL para Desenvolvimento', 'Certification in MEAL for Development') }}</h5>
-                        <p class="issuer">Humanitarian Leadership Academy</p>
-                      </div>
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Certificação em Monitoria e Avaliação de Projectos', 'Certification in Project Monitoring and Evaluation') }}</h5>
-                        <p class="issuer">SentiPensar</p>
-                      </div>
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Certificação em Teoria da Mudança', 'Certification in Theory of Change') }}</h5>
-                        <p class="issuer">SentiPensar</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Analise de dados & BI -->
-                  <div class="cert-category">
-                    <h4 class="category-title"><i class="fas fa-chart-line"></i> {{ t('Análise de Dados & BI', 'Data Analysis & BI') }}</h4>
-                    <div class="cert-list">
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Certificação em Data Analytics Essentials', 'Certification in Data Analytics Essentials') }}</h5>
-                        <p class="issuer">Cisco Networking Academy</p>
-                      </div>
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Extensão Universitária em Gestão e Análise de Dados com KoboToolbox, Excel, Power BI, SPSS e R', 'University Extension in Data Management and Analysis with KoboToolbox, Excel, Power BI, SPSS and R') }}</h5>
-                        <p class="issuer">Corporate Business School</p>
-                      </div>
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Certificação em Power BI – Business Intelligence', 'Certification in Power BI – Business Intelligence') }}</h5>
-                        <p class="issuer">Expert Cursos</p>
-                      </div>
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Certificação em Excel: Do Zero ao Avançado', 'Certification in Excel: Zero to Advanced') }}</h5>
-                        <p class="issuer">EvolutionTech Training</p>
-                      </div>
-                      <div class="cert-item glass-card">
-                        <h5>{{ t('Certificação em Análise de Dados com Excel', 'Certification in Data Analysis with Excel') }}</h5>
-                        <p class="issuer">EvolutionTech Training</p>
+                      <div v-for="(cert, idx) in items" :key="idx" class="cert-item glass-card">
+                        <h5>{{ t(cert.title, cert.title) }}</h5>
+                        <p class="issuer">{{ cert.issuer }}</p>
                       </div>
                     </div>
                   </div>
@@ -165,55 +217,19 @@ const experiences = computed(() => [
               <div class="skills-split-grid">
                 <!-- Coluna Esquerda: Progress Bars -->
                 <div class="skills-progress-col">
-                  <h3>{{ t('Especialista em M&E,', 'Expert in M&E,') }}<br>{{ t('KoboToolbox e Análise de Dados', 'KoboToolbox and Data Analysis') }}</h3>
+                  <h3 style="white-space: pre-line;">{{ resumeData.skillsIntro?.title || 'Especialista em M&E,\nKoboToolbox e Análise de Dados' }}</h3>
                   <p class="skills-intro-text">
-                    {{ t('Mais de 10 anos de experiência em Monitoria e Avaliação, com expertise comprovada em KoboToolbox, Excel Avançado, Power BI e gestão de programas.', 'More than 10 years of experience in Monitoring and Evaluation, with proven expertise in KoboToolbox, Advanced Excel, Power BI and program management.') }}
+                    {{ resumeData.skillsIntro?.description }}
                   </p>
                   
                   <div class="progress-list">
-                    <div class="progress-item">
+                    <div v-for="(bar, idx) in resumeData.skillBars" :key="idx" class="progress-item">
                       <div class="progress-info">
-                        <span>KoboToolbox Design</span>
-                        <span>95%</span>
+                        <span>{{ bar.name }}</span>
+                        <span>{{ bar.percentage }}%</span>
                       </div>
                       <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: 95%"></div>
-                      </div>
-                    </div>
-                    <div class="progress-item">
-                      <div class="progress-info">
-                        <span>{{ t('Excel Avançado', 'Advanced Excel') }}</span>
-                        <span>90%</span>
-                      </div>
-                      <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: 90%"></div>
-                      </div>
-                    </div>
-                    <div class="progress-item">
-                      <div class="progress-info">
-                        <span>{{ t('Sistemas M&E', 'M&E Systems') }}</span>
-                        <span>95%</span>
-                      </div>
-                      <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: 95%"></div>
-                      </div>
-                    </div>
-                    <div class="progress-item">
-                      <div class="progress-info">
-                        <span>Power BI & Data Analysis</span>
-                        <span>85%</span>
-                      </div>
-                      <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: 85%"></div>
-                      </div>
-                    </div>
-                    <div class="progress-item">
-                      <div class="progress-info">
-                        <span>Program Management</span>
-                        <span>88%</span>
-                      </div>
-                      <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: 88%"></div>
+                        <div class="progress-bar-fill" :style="{ width: bar.percentage + '%' }"></div>
                       </div>
                     </div>
                   </div>
@@ -221,39 +237,15 @@ const experiences = computed(() => [
 
                 <!-- Coluna Direita: Cards Detalhados -->
                 <div class="skills-cards-col">
-                  <div class="skill-detail-card">
+                  <div v-for="(card, idx) in resumeData.skillCards" :key="idx" class="skill-detail-card">
                     <div class="card-border-left"></div>
                     <div class="card-content">
                       <div class="card-header-mini">
-                        <h4>{{ t('KoboToolbox Expert', 'KoboToolbox Expert') }}</h4>
-                        <span class="years">{{ t('10+ Anos', '10+ Years') }}</span>
+                        <h4>{{ card.title }}</h4>
+                        <span class="years">{{ card.years }}</span>
                       </div>
-                      <p class="subtitle">{{ t('Design e Implementação', 'Design and Implementation') }}</p>
-                      <p class="description">{{ t('Especialista em desenho de formulários Excel para KoboToolbox, validação, lógica condicional e integração com sistemas M&E.', 'Expert in designing Excel forms for KoboToolbox, validation, conditional logic and integration with M&E systems.') }}</p>
-                    </div>
-                  </div>
-
-                  <div class="skill-detail-card">
-                    <div class="card-border-left"></div>
-                    <div class="card-content">
-                      <div class="card-header-mini">
-                        <h4>{{ t('M&E Specialist', 'M&E Specialist') }}</h4>
-                        <span class="years">{{ t('10+ Anos', '10+ Years') }}</span>
-                      </div>
-                      <p class="subtitle">{{ t('Monitoria e Avaliação', 'Monitoring and Evaluation') }}</p>
-                      <p class="description">{{ t('Implementação de sistemas M&E completos, desde desenho até relatórios, incluindo baseline, endline e avaliações de impacto.', 'Implementation of full M&E systems, from design to reporting, including baseline, endline and impact evaluations.') }}</p>
-                    </div>
-                  </div>
-
-                  <div class="skill-detail-card">
-                    <div class="card-border-left"></div>
-                    <div class="card-content">
-                      <div class="card-header-mini">
-                        <h4>{{ t('Data Analysis Expert', 'Data Analysis Expert') }}</h4>
-                        <span class="years">{{ t('8+ Anos', '8+ Years') }}</span>
-                      </div>
-                      <p class="subtitle">{{ t('Excel & Power BI', 'Excel & Power BI') }}</p>
-                      <p class="description">{{ t('Criação de dashboards avançados em Excel e Power BI para análise de dados, KPIs e tomada de decisão baseada em evidências.', 'Creation of advanced dashboards in Excel and Power BI for data analysis, KPIs and evidence-based decision making.') }}</p>
+                      <p v-if="card.subtitle" class="subtitle">{{ card.subtitle }}</p>
+                      <p class="description">{{ card.description }}</p>
                     </div>
                   </div>
                 </div>
@@ -263,7 +255,7 @@ const experiences = computed(() => [
             <!-- Experiência -->
             <div v-else-if="activeTab === 'experience'" class="tab-pane" key="exp">
               <div class="experience-timeline">
-                <div v-for="(exp, i) in experiences" :key="i" class="timeline-item-wrapper">
+                <div v-for="(exp, i) in resumeData.experiences" :key="i" class="timeline-item-wrapper">
                   <div class="timeline-dot"></div>
                   <div class="timeline-card glass-card">
                     <div class="card-header">
@@ -285,48 +277,14 @@ const experiences = computed(() => [
             <!-- Estudos -->
             <div v-else-if="activeTab === 'studies'" class="tab-pane" key="studies">
               <div class="studies-grid">
-                <!-- Card 1 -->
-                <div class="study-item glass-card">
+                <div v-for="(study, idx) in resumeData.studies" :key="idx" class="study-item glass-card">
                   <div class="study-icon"><i class="fas fa-search"></i></div>
-                  <h5>{{ t('Concepção e Realização de Avaliações', 'Conception and Realization of Evaluations') }}</h5>
-                  <p>{{ t('Especialista na concepção e realização de avaliações completas incluindo baseline, endline, outcome e avaliações de impacto para organizações.', 'Expert in the design and conduct of full evaluations including baseline, endline, outcome and impact evaluations for organizations.') }}</p>
-                  <div class="study-tags">
-                    <span class="tag tag-blue">Baseline</span>
-                    <span class="tag tag-green">Endline</span>
-                    <span class="tag tag-indigo">PDM</span>
-                  </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="study-item glass-card">
-                  <div class="study-icon"><i class="fas fa-users-cog"></i></div>
-                  <h5>{{ t('Pesquisas Sociais & Psicológicas', 'Social & Psychological Research') }}</h5>
-                  <p>{{ t('Pesquisas sociais e antropológicas incluindo estudos sobre intervenção psicológica em situações de crise.', 'Social and anthropological research including studies on psychological intervention in crisis situations.') }}</p>
-                  <div class="study-tags">
-                    <span class="tag tag-darkblue">{{ t('Psicologia', 'Psychology') }}</span>
-                    <span class="tag tag-emerald">{{ t('Qualitativo', 'Qualitative') }}</span>
-                  </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="study-item glass-card">
-                  <div class="study-icon"><i class="fas fa-clipboard-check"></i></div>
-                  <h5>{{ t('Avaliações de Necessidades', 'Needs Assessments') }}</h5>
-                  <p>{{ t('Avaliações de necessidades para resposta humanitária e desenvolvimento comunitário em contextos de emergência e pós-conflito.', 'Needs assessments for humanitarian response and community development in emergency and post-conflict contexts.') }}</p>
-                  <div class="study-tags">
-                    <span class="tag tag-red">{{ t('Emergência', 'Emergency') }}</span>
-                    <span class="tag tag-yellow">{{ t('Humanitário', 'Humanitarian') }}</span>
-                  </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="study-item glass-card">
-                  <div class="study-icon"><i class="fas fa-poll"></i></div>
-                  <h5>{{ t('Pesquisa de Mercado', 'Market Research') }}</h5>
-                  <p>{{ t('Análises de mercado e auditorias de qualidade de dados (DQA) para garantir integridade e precisão dos sistemas M&E.', 'Market analysis and Data Quality Audits (DQA) to ensure integrity and accuracy of M&E systems.') }}</p>
-                  <div class="study-tags">
-                    <span class="tag tag-emerald">{{ t('Análise de Mercado', 'Market Analysis') }}</span>
-                    <span class="tag tag-darkblue">DQA</span>
+                  <h5>{{ study.title }}</h5>
+                  <p>{{ study.description }}</p>
+                  <div class="study-tags" v-if="study.tags && study.tags.length">
+                    <span v-for="(tag, tIdx) in study.tags" :key="tIdx" class="tag" :class="'tag-' + ['blue', 'green', 'indigo', 'emerald', 'darkblue', 'red', 'yellow'][tIdx % 7]">
+                      {{ tag }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -339,15 +297,10 @@ const experiences = computed(() => [
                 <p class="pane-subtitle">{{ t('Organizações, ONGs e parceiros com os quais colaborei para a implementação de projectos de desenvolvimento e acção humanitária.', 'Organizations, NGOs, and partners with whom I collaborated to implement development and humanitarian action projects.') }}</p>
                 
                 <div class="partners-grid">
-                  <div class="partner-card glass-card">
-                    <div class="partner-icon"><i class="fas fa-university"></i></div>
-                    <h5>ODEI</h5>
-                    <p>{{ t('Coordenação técnica de sistemas de MEAL, DQA e gestão de qualidade de dados em projectos humanitários.', 'Technical coordination of MEAL systems, DQA, and data quality management in humanitarian projects.') }}</p>
-                  </div>
-                  <div class="partner-card glass-card">
-                    <div class="partner-icon"><i class="fas fa-brain"></i></div>
-                    <h5>Consulting And Coaching Agency</h5>
-                    <p>{{ t('Consultoria especializada em capacitação de equipas, dashboards estratégicos e recolha digital (KoboToolbox).', 'Specialized consulting in team training, strategic dashboards, and digital data collection (KoboToolbox).') }}</p>
+                  <div v-for="(partner, idx) in resumeData.partners" :key="idx" class="partner-card glass-card">
+                    <div class="partner-icon"><i :class="partner.icon || 'fas fa-handshake'"></i></div>
+                    <h5>{{ partner.name }}</h5>
+                    <p>{{ partner.description }}</p>
                   </div>
                 </div>
               </div>

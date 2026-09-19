@@ -33,6 +33,7 @@ const Package = require('./models/Package');
 const Message = require('./models/Message');
 const Testimonial = require('./models/Testimonial');
 const User = require('./models/User');
+const Resume = require('./models/Resume');
 
 // Cloudinary Configuration with Local Fallback
 let upload;
@@ -92,6 +93,137 @@ app.use(express.static('dist'));
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/gabrielarmindodb';
 if (!process.env.MONGODB_URI) {
   console.warn('⚠️  MONGODB_URI não encontrada no .env. Utilizando URI local ou de fallback.');
+}
+
+// Default Resume / Trajectory Data
+function getDefaultResumeData() {
+  return {
+    skillsIntro: {
+      title: 'Especialista em M&E,\nKoboToolbox e Análise de Dados',
+      description: 'Mais de 10 anos de experiência em Monitoria e Avaliação, com expertise comprovada em KoboToolbox, Excel Avançado, Power BI e gestão de programas.'
+    },
+    education: [
+      { category: 'Formação Académica', title: 'Licenciatura em Psicologia Social e das Organizações', issuer: 'Universidade Eduardo Mondlane (2018 - 2022)', order: 1 },
+      { category: 'Formação Académica', title: 'Técnico Médio de Agro-Pecuária', issuer: 'Instituto Agrário de Chimoio (2013 - 2015)', order: 2 },
+      { category: 'Gestão de Projectos & M&A', title: 'Certificação em MEAL para Desenvolvimento', issuer: 'Humanitarian Leadership Academy', order: 3 },
+      { category: 'Gestão de Projectos & M&A', title: 'Certificação em Monitoria e Avaliação de Projectos', issuer: 'SentiPensar', order: 4 },
+      { category: 'Gestão de Projectos & M&A', title: 'Certificação em Teoria da Mudança', issuer: 'SentiPensar', order: 5 },
+      { category: 'Análise de Dados & BI', title: 'Certificação em Data Analytics Essentials', issuer: 'Cisco Networking Academy', order: 6 },
+      { category: 'Análise de Dados & BI', title: 'Extensão Universitária em Gestão e Análise de Dados com KoboToolbox, Excel, Power BI, SPSS e R', issuer: 'Corporate Business School', order: 7 },
+      { category: 'Análise de Dados & BI', title: 'Certificação em Power BI – Business Intelligence', issuer: 'Expert Cursos', order: 8 },
+      { category: 'Análise de Dados & BI', title: 'Certificação em Excel: Do Zero ao Avançado', issuer: 'EvolutionTech Training', order: 9 },
+      { category: 'Análise de Dados & BI', title: 'Certificação em Análise de Dados com Excel', issuer: 'EvolutionTech Training', order: 10 }
+    ],
+    skillBars: [
+      { name: 'KoboToolbox Design', percentage: 95 },
+      { name: 'Excel Avançado', percentage: 90 },
+      { name: 'Sistemas M&E', percentage: 95 },
+      { name: 'Power BI & Data Analysis', percentage: 85 },
+      { name: 'Program Management', percentage: 88 }
+    ],
+    skillCards: [
+      {
+        title: 'KoboToolbox Expert',
+        years: '10+ Anos',
+        subtitle: 'Design e Implementação',
+        description: 'Especialista em desenho de formulários Excel para KoboToolbox, validação, lógica condicional e integração com sistemas M&E.'
+      },
+      {
+        title: 'M&E Specialist',
+        years: '10+ Anos',
+        subtitle: 'Monitoria e Avaliação',
+        description: 'Implementação de sistemas M&E completos, desde desenho até relatórios, incluindo baseline, endline e avaliações de impacto.'
+      },
+      {
+        title: 'Data Analysis Expert',
+        years: '8+ Anos',
+        subtitle: 'Excel & Power BI',
+        description: 'Criação de dashboards avançados em Excel e Power BI para análise de dados, KPIs e tomada de decisão baseada em evidências.'
+      }
+    ],
+    experiences: [
+      {
+        role: 'Consultor de Monitoria, Avaliação e Pesquisa',
+        company: 'Consulting And Coaching Agency',
+        period: '09/2025 - Presente',
+        tag: '',
+        desc: '• Desenvolvimento de cursos em Monitoria & Avaliação, Excel, Análise de Dados e KoboToolbox\n• Capacitação de equipas e parceiros através de formações técnicas e mentorias\n• Desenho de formulários em XLSForm/KoboToolbox, integração com ODK e Power BI\n• Desenvolvimento de planos de M&A, estudos de base, avaliações de impacto e relatórios técnicos\n• Garantia da qualidade de dados (DQA) e apoio à tomada de decisão baseada em evidências',
+        order: 1
+      },
+      {
+        role: 'Especialista em Monitoria e Avaliação',
+        company: 'ODEI',
+        period: '2023 - 2025',
+        tag: '',
+        desc: '• Coordenação e implementação de sistemas de MEAL\n• Monitoria de projectos e avaliações (baseline, PDM e outcome monitoring)\n• Gestão da qualidade de dados e mechanisms de accountability comunitária\n• Desenvolvimento de ferramentas digitais de recolha de dados\n• Formação e supervisão de inquiridores\n• Produção de relatórios técnicos e acompanhamento de campo com foco em qualidade e conformidade humanitária',
+        order: 2
+      },
+      {
+        role: 'Docente',
+        company: 'Escola de Desenho, Monitoria e Avaliação',
+        period: '11/2025 - Actualmente',
+        tag: 'TEMPO PARCIAL',
+        desc: 'Docente dos módulos de Monitoria & Avaliação e Análise de Dados.',
+        order: 3
+      },
+      {
+        role: 'Consultor de Pesquisa',
+        company: 'Prátiq Consultoria',
+        period: '2021 - 2023',
+        tag: '',
+        desc: '• Desenvolvimento de propostas técnicas e financeiras\n• Elaboração de protocolos de pesquisa\n• Gestão da qualidade e integridade de dados\n• Análise de evidências e produção de relatórios analíticos para apoio à tomada de decisão',
+        order: 4
+      },
+      {
+        role: 'Técnico de Apoio Psicossocial',
+        company: 'Helen Keller International',
+        period: '2019 - 2021',
+        tag: '',
+        desc: '• Implementação de intervenções psicossociais inclusivas para jovens com deficiência visual\n• Apoio em direitos humanos, protecção, inclusão social e fortalecimento comunitário\n• Gestão de casos de VBG e apoio psicossocial individual e familiar\n• Mobilização comunitária e articulação multissectorial com autoridades locais e unidades sanitárias',
+        order: 5
+      }
+    ],
+    studies: [
+      {
+        title: 'Concepção e Realização de Avaliações',
+        description: 'Especialista na concepção e realização de avaliações completas incluindo baseline, endline, outcome e avaliações de impacto para organizações.',
+        tags: ['Baseline', 'Endline', 'PDM'],
+        order: 1
+      },
+      {
+        title: 'Pesquisas Sociais & Psicológicas',
+        description: 'Pesquisas sociais e antropológicas incluindo estudos sobre intervenção psicológica em situações de crise.',
+        tags: ['Psicologia', 'Qualitativo'],
+        order: 2
+      },
+      {
+        title: 'Avaliações de Necessidades',
+        description: 'Avaliações de necessidades para resposta humanitária e desenvolvimento comunitário em contextos de emergência e pós-conflito.',
+        tags: ['Emergência', 'Humanitário'],
+        order: 3
+      },
+      {
+        title: 'Pesquisa de Mercado',
+        description: 'Análises de mercado e auditorias de qualidade de dados (DQA) para garantir integridade e precisão dos sistemas M&E.',
+        tags: ['Análise de Mercado', 'DQA'],
+        order: 4
+      }
+    ],
+    partners: [
+      {
+        name: 'ODEI',
+        description: 'Coordenação técnica de sistemas de MEAL, DQA e gestão de qualidade de dados em projectos humanitários.',
+        icon: 'fas fa-university',
+        order: 1
+      },
+      {
+        name: 'Consulting And Coaching Agency',
+        description: 'Consultoria especializada em capacitação de equipas, dashboards estratégicos e recolha digital (KoboToolbox).',
+        icon: 'fas fa-brain',
+        order: 2
+      }
+    ]
+  };
 }
 
 // Initial Seed Data
@@ -194,6 +326,13 @@ const seedInitialData = async () => {
         avatar: '/images/perfil1.png'
       });
       console.log('✅ Usuário administrador criado com sucesso no MongoDB Atlas!');
+    }
+
+    const resumeCount = await Resume.countDocuments();
+    if (resumeCount === 0) {
+      console.log('Populando dados de currículo iniciais no MongoDB...');
+      await Resume.create(getDefaultResumeData());
+      console.log('✅ Dados de currículo iniciais inseridos com sucesso!');
     }
   } catch (err) {
     console.error('Erro ao popular dados iniciais:', err.message);
@@ -694,6 +833,46 @@ app.delete('/api/testimonials/:id', authenticate, async (req, res) => {
     res.json({ message: 'Testemunho excluído com sucesso!' });
   } catch (err) {
     res.status(500).json({ message: 'Erro ao excluir testemunho', error: err.message });
+  }
+});
+
+// --- RESUME & TRAJECTORY ROUTES (MongoDB) ---
+app.get('/api/resume', async (req, res) => {
+  try {
+    let resume = await Resume.findOne();
+    if (!resume) {
+      resume = await Resume.create(getDefaultResumeData());
+    }
+    res.json(resume);
+  } catch (err) {
+    console.error('Erro ao buscar currículo no MongoDB:', err.message);
+    res.status(500).json({ 
+      message: 'Erro ao buscar dados do currículo', 
+      error: err.message, 
+      fallback: getDefaultResumeData() 
+    });
+  }
+});
+
+app.put('/api/resume', authenticate, async (req, res) => {
+  try {
+    let resume = await Resume.findOne();
+    if (!resume) {
+      resume = new Resume(req.body);
+    } else {
+      if (req.body.skillsIntro) resume.skillsIntro = req.body.skillsIntro;
+      if (req.body.education) resume.education = req.body.education;
+      if (req.body.skillBars) resume.skillBars = req.body.skillBars;
+      if (req.body.skillCards) resume.skillCards = req.body.skillCards;
+      if (req.body.experiences) resume.experiences = req.body.experiences;
+      if (req.body.studies) resume.studies = req.body.studies;
+      if (req.body.partners) resume.partners = req.body.partners;
+    }
+    const saved = await resume.save();
+    res.json({ message: 'Currículo e trajetória atualizados com sucesso no MongoDB!', data: saved });
+  } catch (err) {
+    console.error('Erro ao salvar currículo no MongoDB:', err.message);
+    res.status(500).json({ message: 'Erro ao salvar dados do currículo', error: err.message });
   }
 });
 

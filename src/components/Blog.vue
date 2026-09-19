@@ -115,8 +115,8 @@ onMounted(fetchPosts);
   <section class="blog section" id="blog">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">{{ t('Insights & Artigos', 'Insights & Articles') }}</span>
-        <h2 class="section-title">{{ t('Meu Blog', 'My Blog') }}</h2>
+        <span class="section-tag">{{ t('Publicações & Insights', 'Publications & Insights') }}</span>
+        <h2 class="section-title">{{ t('Artigos', 'Articles') }}</h2>
       </div>
 
       <div class="blog-grid reveal-container">

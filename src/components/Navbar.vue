@@ -44,6 +44,7 @@ onUnmounted(() => {
           <li class="nav-item"><a href="#about" class="nav-link" @click="closeMenu">{{ t('Sobre', 'About') }}</a></li>
           <li class="nav-item"><a href="#services-overview" class="nav-link" @click="closeMenu">{{ t('Serviços', 'Services') }}</a></li>
           <li class="nav-item"><a href="#resume" class="nav-link" @click="closeMenu">{{ t('Portfólio', 'Portfolio') }}</a></li>
+          <li class="nav-item"><a href="#blog" class="nav-link" @click="closeMenu">{{ t('Artigos', 'Articles') }}</a></li>
           <li class="nav-item"><a href="#testimonials" class="nav-link" @click="closeMenu">{{ t('Testemunhos', 'Testimonials') }}</a></li>
           <li class="nav-item"><a href="#services" class="nav-link" @click="closeMenu">{{ t('Investimento', 'Investment') }}</a></li>
           <li class="nav-item"><a href="#contacto" class="nav-link" @click="closeMenu">{{ t('Contacto', 'Contact') }}</a></li>
