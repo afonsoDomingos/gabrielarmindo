@@ -1,9 +1,11 @@
 const dns = require('dns');
-// Set custom DNS to bypass local Windows DNS SRV lookup issues with MongoDB Atlas
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch (e) {
-  console.warn('Aviso DNS:', e.message);
+// Set custom DNS only on local Windows to bypass local Windows DNS SRV lookup issues
+if (process.platform === 'win32' && !process.env.VERCEL) {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (e) {
+    console.warn('Aviso DNS:', e.message);
+  }
 }
 
 const express = require('express');
