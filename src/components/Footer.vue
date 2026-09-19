@@ -29,9 +29,9 @@ const { t } = useLanguage();
         </p>
         
         <div class="vibe-credit">
-          <span>Powered By Vibe</span>
-          <a href="https://www.linkedin.com/in/afonso-domingos-6b59361a5/" target="_blank">
-            <img src="/images/vibe_author.png" alt="Vibe" />
+          <span>Powered by</span>
+          <a href="https://wehosthere.co.mz" target="_blank" class="wehosthere-link">
+            <img src="/images/Wehosthere.png" alt="WeHostHere" class="wehosthere-logo" />
           </a>
         </div>
       </div>
@@ -74,12 +74,25 @@ const { t } = useLanguage();
 .vibe-credit {
     margin-top: 1.5rem;
     display: flex; align-items: center; justify-content: center;
-    gap: 8px; font-size: 0.8rem; opacity: 0.8;
+    gap: 8px; font-size: 0.8rem; opacity: 0.75;
+    color: var(--text-muted);
 }
 
-.vibe-credit img {
-    width: 24px; height: 24px; border-radius: 50%;
-    border: 1px solid var(--primary-color);
+.wehosthere-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.wehosthere-link:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+.wehosthere-logo {
+    height: 22px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 4px;
 }
 @media (max-width: 768px) {
     .footer-content {
