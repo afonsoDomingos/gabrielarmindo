@@ -1,6 +1,86 @@
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useLanguage } from '../store/language';
+
 const { t } = useLanguage();
+
+const statsRef = ref(null);
+const counts = ref({
+  experience: 0,
+  projects: 0,
+  orgs: 0,
+  mentored: 0
+});
+
+const targets = {
+  experience: 5,
+  projects: 6,
+  orgs: 5,
+  mentored: 100
+};
+
+let animationFrameId = null;
+
+const animateCount = () => {
+  const duration = 1600; // ms
+  const startTime = performance.now();
+
+  const step = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Smooth easeOutCubic curve
+    const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+    counts.value.experience = Math.floor(easeProgress * targets.experience);
+    counts.value.projects = Math.floor(easeProgress * targets.projects);
+    counts.value.orgs = Math.floor(easeProgress * targets.orgs);
+    counts.value.mentored = Math.floor(easeProgress * targets.mentored);
+
+    if (progress < 1) {
+      animationFrameId = requestAnimationFrame(step);
+    } else {
+      counts.value.experience = targets.experience;
+      counts.value.projects = targets.projects;
+      counts.value.orgs = targets.orgs;
+      counts.value.mentored = targets.mentored;
+    }
+  };
+
+  if (animationFrameId) cancelAnimationFrame(animationFrameId);
+  animationFrameId = requestAnimationFrame(step);
+};
+
+let observer = null;
+
+onMounted(() => {
+  if (typeof IntersectionObserver !== 'undefined' && statsRef.value) {
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCount();
+        } else {
+          // Reset when out of view so it animates again when scrolling back
+          counts.value.experience = 0;
+          counts.value.projects = 0;
+          counts.value.orgs = 0;
+          counts.value.mentored = 0;
+          if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        }
+      });
+    }, {
+      threshold: 0.2
+    });
+
+    observer.observe(statsRef.value);
+  } else {
+    counts.value = { ...targets };
+  }
+});
+
+onUnmounted(() => {
+  if (observer) observer.disconnect();
+  if (animationFrameId) cancelAnimationFrame(animationFrameId);
+});
 </script>
 
 <template>
@@ -21,21 +101,21 @@ const { t } = useLanguage();
           {{ t('Transformo dados, evidências e experiências em sistemas de aprendizagem, tomada de decisão e posicionamento institucional.', 'I transform data, evidence, and experiences into systems of learning, decision-making, and institutional positioning.') }}
         </p>
 
-        <div class="hero-stats">
+        <div class="hero-stats" ref="statsRef">
           <div class="stat-item reveal">
-            <div class="stat-number">5</div>
+            <div class="stat-number">{{ counts.experience }}</div>
             <div class="stat-label">{{ t('Anos de experiência', 'Years of experience') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.1s">
-            <div class="stat-number">6</div>
+            <div class="stat-number">{{ counts.projects }}</div>
             <div class="stat-label">{{ t('Projectos implementados', 'Implemented projects') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.2s">
-            <div class="stat-number">5</div>
+            <div class="stat-number">{{ counts.orgs }}</div>
             <div class="stat-label">{{ t('Organizações apoiadas', 'Supported organizations') }}</div>
           </div>
           <div class="stat-item reveal" style="transition-delay: 0.3s">
-            <div class="stat-number">100</div>
+            <div class="stat-number">{{ counts.mentored }}</div>
             <div class="stat-label">{{ t('Pessoas mentoradas', 'People mentored') }}</div>
           </div>
         </div>
@@ -227,6 +307,8 @@ const { t } = useLanguage();
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 0.25rem;
+    font-variant-numeric: tabular-nums;
+    display: inline-block;
 }
 
 .stat-number::after { content: '+'; }
