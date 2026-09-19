@@ -632,7 +632,7 @@ onMounted(fetchResume);
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 1.5rem;
-  color: #1a202c;
+  color: var(--text-primary);
 }
 
 .skills-intro-text {
@@ -684,8 +684,8 @@ onMounted(fetchResume);
 .skill-detail-card {
   position: relative;
   padding: 1.5rem 2rem;
-  background: #fffaf5;
-  border: 1px solid rgba(255, 123, 26, 0.15);
+  background: var(--card-bg);
+  border: var(--card-border);
   border-radius: var(--radius-md);
   box-shadow: 0 4px 6px rgba(0,0,0,0.02);
   display: flex;
@@ -714,7 +714,7 @@ onMounted(fetchResume);
 .card-header-mini h4 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
 }
 
 .card-header-mini .years {
@@ -740,6 +740,7 @@ onMounted(fetchResume);
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .education-section .pane-subtitle {
@@ -830,7 +831,7 @@ onMounted(fetchResume);
   font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 0.35rem;
-  color: #1a202c;
+  color: var(--text-primary);
   line-height: 1.3;
 }
 
@@ -875,7 +876,7 @@ onMounted(fetchResume);
 .study-item h5 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
 }
 
 .study-item p {
@@ -943,7 +944,7 @@ onMounted(fetchResume);
 .partner-card h5 {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
 }
 
 .partner-card p {
@@ -993,8 +994,8 @@ onMounted(fetchResume);
 }
 
 .badge-period, .badge-loc {
-  background: #f1f5f9;
-  color: #475569;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 10px;
@@ -1005,14 +1006,14 @@ onMounted(fetchResume);
 }
 
 .badge-loc {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: rgba(3, 105, 161, 0.12);
+  color: #38bdf8;
 }
 
 .consultancy-card-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 0.35rem;
   line-height: 1.35;
 }
@@ -1020,7 +1021,7 @@ onMounted(fetchResume);
 .consultancy-client-row {
   font-size: 0.92rem;
   font-weight: 600;
-  color: #4a5568;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 8px;
