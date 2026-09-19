@@ -741,6 +741,7 @@ const deletePartner = async (index) => {
 // --- LOGOUT ---
 const logout = () => {
   localStorage.removeItem('gabriel_admin_token');
+  localStorage.removeItem('gabriel_admin_user');
   router.push('/login');
 };
 </script>

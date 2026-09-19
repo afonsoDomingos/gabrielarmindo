@@ -5,7 +5,17 @@ import Admin from '../views/Admin.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Home },
-    { path: '/login', name: 'Login', component: Login },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login,
+        // Se já tiver token, vai directo para o admin
+        beforeEnter: (to, from, next) => {
+            const token = localStorage.getItem('gabriel_admin_token');
+            if (token) next('/admin');
+            else next();
+        }
+    },
     {
         path: '/admin',
         name: 'Admin',
