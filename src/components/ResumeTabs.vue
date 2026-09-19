@@ -12,6 +12,7 @@ const tabs = computed(() => [
   { id: 'skills', label: t('Competências', 'Skills') },
   { id: 'experience', label: t('Experiência', 'Experience') },
   { id: 'studies', label: t('Estudos', 'Studies') },
+  { id: 'consultancies', label: t('Consultorias', 'Consultancies') },
   { id: 'partners', label: t('Parceiros', 'Partners') }
 ]);
 
@@ -118,6 +119,26 @@ const resumeData = ref({
       tags: ['Análise de Mercado', 'DQA']
     }
   ],
+  consultancies: [
+    {
+      title: 'Consultoria de Monitoria, Avaliação e Pesquisa',
+      client: 'Consulting And Coaching Agency',
+      period: '09/2025 - Presente',
+      location: 'Moçambique',
+      type: 'Consultoria M&E',
+      description: 'Desenvolvimento de cursos práticos e capacitação institucional em Monitoria & Avaliação, Excel Avançado e KoboToolbox. Desenho de formulários em XLSForm/ODK e integração com dashboards analíticos em Power BI.',
+      tags: ['M&E', 'KoboToolbox', 'Power BI', 'Capacitação']
+    },
+    {
+      title: 'Consultoria de Pesquisa e Avaliações Técnicas',
+      client: 'Prátiq Consultoria',
+      period: '2021 - 2023',
+      location: 'Moçambique',
+      type: 'Pesquisa Aplicada',
+      description: 'Desenvolvimento de propostas técnicas e financeiras, elaboração de protocolos de pesquisa de campo, supervisão de colecta e garantia da integridade e qualidade de dados analíticos.',
+      tags: ['Pesquisa', 'Protocolos', 'DQA', 'Análise']
+    }
+  ],
   partners: [
     {
       name: 'ODEI',
@@ -163,6 +184,7 @@ const fetchResume = async () => {
         skillCards: res.data.skillCards?.length ? res.data.skillCards : resumeData.value.skillCards,
         experiences: res.data.experiences?.length ? res.data.experiences : resumeData.value.experiences,
         studies: res.data.studies?.length ? res.data.studies : resumeData.value.studies,
+        consultancies: res.data.consultancies?.length ? res.data.consultancies : resumeData.value.consultancies,
         partners: res.data.partners?.length ? res.data.partners : resumeData.value.partners
       };
     }
@@ -285,6 +307,37 @@ onMounted(fetchResume);
                     <span v-for="(tag, tIdx) in study.tags" :key="tIdx" class="tag" :class="'tag-' + ['blue', 'green', 'indigo', 'emerald', 'darkblue', 'red', 'yellow'][tIdx % 7]">
                       {{ tag }}
                     </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Consultorias -->
+            <div v-else-if="activeTab === 'consultancies'" class="tab-pane" key="consultancies">
+              <div class="consultancies-section">
+                <h3 class="pane-title">{{ t('Consultorias & Serviços Prestados', 'Consultancies & Contracted Services') }}</h3>
+                <p class="pane-subtitle">{{ t('Experiência prática como consultor técnico em sistemas MEAL, capacitações institucionais, desenho de inquéritos KoboToolbox e produção de evidências analíticas.', 'Practical experience as a technical consultant in MEAL systems, institutional training, KoboToolbox survey design, and analytical evidence generation.') }}</p>
+
+                <div class="consultancies-public-grid">
+                  <div v-for="(item, idx) in resumeData.consultancies" :key="idx" class="consultancy-public-card glass-card">
+                    <div class="consultancy-card-header">
+                      <div class="consultancy-pills-row">
+                        <span class="badge-type" v-if="item.type">{{ item.type }}</span>
+                        <span class="badge-period"><i class="fas fa-calendar-alt"></i> {{ item.period }}</span>
+                        <span class="badge-loc" v-if="item.location"><i class="fas fa-map-marker-alt"></i> {{ item.location }}</span>
+                      </div>
+                      <h4 class="consultancy-card-title">{{ item.title }}</h4>
+                      <div class="consultancy-client-row">
+                        <i class="fas fa-building"></i>
+                        <span>{{ item.client }}</span>
+                      </div>
+                    </div>
+                    <p class="consultancy-card-desc">{{ item.description }}</p>
+                    <div class="study-tags" v-if="item.tags && item.tags.length">
+                      <span v-for="(tag, tIdx) in item.tags" :key="tIdx" class="tag" :class="'tag-' + ['blue', 'green', 'indigo', 'emerald', 'darkblue', 'red', 'yellow'][tIdx % 7]">
+                        {{ tag }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -895,5 +948,92 @@ onMounted(fetchResume);
   font-size: 0.9rem;
   color: var(--text-muted);
   line-height: 1.6;
+}
+
+/* Consultorias Section Styles */
+.consultancies-public-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.consultancy-public-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--primary-color, #FF7B1A);
+}
+
+.consultancy-public-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.consultancy-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.badge-type {
+  background: rgba(255, 123, 26, 0.12);
+  color: #c2410c;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.badge-period, .badge-loc {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.badge-loc {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.consultancy-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.35rem;
+  line-height: 1.35;
+}
+
+.consultancy-client-row {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #4a5568;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.consultancy-client-row i {
+  color: var(--primary-color, #FF7B1A);
+}
+
+.consultancy-card-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  white-space: pre-line;
+  flex-grow: 1;
 }
 </style>

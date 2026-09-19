@@ -99,9 +99,10 @@ const resume = ref({
   skillCards: [],
   experiences: [],
   studies: [],
-  partners: []
+  partners: [],
+  consultancies: []
 });
-const resumeSubTab = ref('education'); // 'education', 'skills', 'experience', 'studies', 'partners'
+const resumeSubTab = ref('education'); // 'education', 'skills', 'experience', 'studies', 'partners', 'consultancies'
 
 // Resume Modals State
 const isEduModalOpen = ref(false);
@@ -128,6 +129,19 @@ const newStudyTag = ref('');
 const isPartnerModalOpen = ref(false);
 const editingPartnerIndex = ref(-1);
 const partnerForm = ref({ name: '', description: '', icon: 'fas fa-university' });
+
+const isConsultancyModalOpen = ref(false);
+const editingConsultancyIndex = ref(-1);
+const consultancyForm = ref({
+  title: '',
+  client: '',
+  period: '',
+  location: 'Moçambique',
+  type: 'Consultoria M&E',
+  description: '',
+  tags: []
+});
+const newConsultancyTag = ref('');
 
 // Image Upload Preview
 const isUploading = ref(false);
@@ -738,6 +752,65 @@ const deletePartner = async (index) => {
   await saveResumeToDb('Parceiro removido!');
 };
 
+// Consultorias
+const openConsultancyModal = (item = null, index = -1) => {
+  editingConsultancyIndex.value = index;
+  if (item) {
+    consultancyForm.value = {
+      title: item.title || '',
+      client: item.client || '',
+      period: item.period || '',
+      location: item.location || 'Moçambique',
+      type: item.type || 'Consultoria M&E',
+      description: item.description || '',
+      tags: [...(item.tags || [])]
+    };
+  } else {
+    consultancyForm.value = {
+      title: '',
+      client: '',
+      period: '',
+      location: 'Moçambique',
+      type: 'Consultoria M&E',
+      description: '',
+      tags: []
+    };
+  }
+  isConsultancyModalOpen.value = true;
+};
+
+const addConsultancyTag = () => {
+  if (newConsultancyTag.value.trim()) {
+    consultancyForm.value.tags.push(newConsultancyTag.value.trim());
+    newConsultancyTag.value = '';
+  }
+};
+
+const removeConsultancyTag = (idx) => {
+  consultancyForm.value.tags.splice(idx, 1);
+};
+
+const saveConsultancy = async () => {
+  if (!consultancyForm.value.title || !consultancyForm.value.client || !consultancyForm.value.description) {
+    showToast('Título, cliente e descrição são obrigatórios!', 'error');
+    return;
+  }
+  if (!resume.value.consultancies) resume.value.consultancies = [];
+  if (editingConsultancyIndex.value >= 0) {
+    resume.value.consultancies[editingConsultancyIndex.value] = { ...consultancyForm.value };
+  } else {
+    resume.value.consultancies.push({ ...consultancyForm.value });
+  }
+  isConsultancyModalOpen.value = false;
+  await saveResumeToDb('Consultoria salva com sucesso!');
+};
+
+const deleteConsultancy = async (index) => {
+  if (!confirm('Remover esta consultoria?')) return;
+  resume.value.consultancies.splice(index, 1);
+  await saveResumeToDb('Consultoria removida!');
+};
+
 // --- LOGOUT ---
 const logout = () => {
   localStorage.removeItem('gabriel_admin_token');
@@ -856,6 +929,9 @@ const logout = () => {
           </button>
           <button v-if="activeTab === 'resume' && resumeSubTab === 'partners'" @click="openPartnerModal()" class="btn-action-top">
             <i class="fas fa-plus"></i> Novo Parceiro
+          </button>
+          <button v-if="activeTab === 'resume' && resumeSubTab === 'consultancies'" @click="openConsultancyModal()" class="btn-action-top">
+            <i class="fas fa-plus"></i> Nova Consultoria
           </button>
 
           <div class="admin-profile-pill">
@@ -1309,6 +1385,12 @@ const logout = () => {
                 >
                   <i class="fas fa-handshake"></i> Parceiros ({{ resume.partners?.length || 0 }})
                 </button>
+                <button 
+                  :class="['filter-pill', { active: resumeSubTab === 'consultancies' }]"
+                  @click="resumeSubTab = 'consultancies'"
+                >
+                  <i class="fas fa-file-contract"></i> Consultorias ({{ resume.consultancies?.length || 0 }})
+                </button>
               </div>
 
               <div class="subtab-action-wrap">
@@ -1326,6 +1408,9 @@ const logout = () => {
                 </button>
                 <button v-if="resumeSubTab === 'partners'" @click="openPartnerModal()" class="btn-primary-add">
                   <i class="fas fa-plus"></i> Novo Parceiro
+                </button>
+                <button v-if="resumeSubTab === 'consultancies'" @click="openConsultancyModal()" class="btn-primary-add">
+                  <i class="fas fa-plus"></i> Nova Consultoria
                 </button>
               </div>
             </div>
@@ -1515,6 +1600,36 @@ const logout = () => {
                 </div>
                 <div v-if="!resume.partners || resume.partners.length === 0" class="card text-center p-8 span-all">
                   <p class="empty-text">Nenhum parceiro cadastrado.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUB-TAB 6: CONSULTORIAS -->
+            <div v-if="resumeSubTab === 'consultancies'" class="resume-subpane">
+              <div class="consultancies-admin-grid">
+                <div v-for="(item, idx) in resume.consultancies" :key="idx" class="card consultancy-admin-card">
+                  <div class="consultancy-card-top">
+                    <div class="consultancy-meta-tags">
+                      <span class="consultancy-badge-type" v-if="item.type">{{ item.type }}</span>
+                      <span class="consultancy-badge-period"><i class="fas fa-calendar-alt"></i> {{ item.period }}</span>
+                      <span class="consultancy-badge-loc" v-if="item.location"><i class="fas fa-map-marker-alt"></i> {{ item.location }}</span>
+                    </div>
+                    <div class="btn-actions-cluster ml-auto">
+                      <button @click="openConsultancyModal(item, idx)" class="action-btn edit" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                      <button @click="deleteConsultancy(idx)" class="action-btn delete" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                  </div>
+                  <h4 class="consultancy-admin-title">{{ item.title }}</h4>
+                  <p class="consultancy-admin-client"><i class="fas fa-building"></i> {{ item.client }}</p>
+                  <p class="consultancy-admin-desc">{{ item.description }}</p>
+                  <div class="study-tags-row" v-if="item.tags && item.tags.length">
+                    <span v-for="(tg, tIdx) in item.tags" :key="tIdx" class="tag-badge">
+                      {{ tg }}
+                    </span>
+                  </div>
+                </div>
+                <div v-if="!resume.consultancies || resume.consultancies.length === 0" class="card text-center p-8 span-all">
+                  <p class="empty-text">Nenhuma consultoria cadastrada ainda. Clique no botão "Nova Consultoria" acima para adicionar.</p>
                 </div>
               </div>
             </div>
@@ -2140,6 +2255,74 @@ const logout = () => {
 
           <div class="modal-footer-custom">
             <button type="button" @click="isPartnerModalOpen = false" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i> Salvar no MongoDB
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESUME CONSULTANCY MODAL -->
+    <div v-if="isConsultancyModalOpen" class="modal-overlay-custom">
+      <div class="modal-dialog large">
+        <div class="modal-header-custom">
+          <div>
+            <h3>{{ editingConsultancyIndex >= 0 ? 'Editar Consultoria' : 'Nova Consultoria' }}</h3>
+            <span class="modal-subtitle">Exibido na secção de Consultorias do currículo</span>
+          </div>
+          <button @click="isConsultancyModalOpen = false" class="btn-close-modal">&times;</button>
+        </div>
+
+        <form @submit.prevent="saveConsultancy" class="modal-form">
+          <div class="form-grid-2">
+            <div class="form-group span-2">
+              <label>Título da Consultoria <span class="required">*</span></label>
+              <input type="text" v-model="consultancyForm.title" required placeholder="Ex: Consultor de Monitoria, Avaliação e Pesquisa" />
+            </div>
+
+            <div class="form-group">
+              <label>Cliente / Organização Contratante <span class="required">*</span></label>
+              <input type="text" v-model="consultancyForm.client" required placeholder="Ex: Agência Internacional / ONG / ODEI" />
+            </div>
+
+            <div class="form-group">
+              <label>Período <span class="required">*</span></label>
+              <input type="text" v-model="consultancyForm.period" required placeholder="Ex: 2023 - 2024 ou 06/2024 - 12/2024" />
+            </div>
+
+            <div class="form-group">
+              <label>Tipo / Especialidade</label>
+              <input type="text" v-model="consultancyForm.type" placeholder="Ex: Consultoria M&E ou Avaliação de Impacto" />
+            </div>
+
+            <div class="form-group">
+              <label>Localização</label>
+              <input type="text" v-model="consultancyForm.location" placeholder="Ex: Moçambique / Remoto" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Descrição Detalhada das Actividades e Entregas <span class="required">*</span></label>
+              <textarea v-model="consultancyForm.description" rows="5" required placeholder="Descreva os objectivos, metodologias aplicadas, ferramentas desenvolvidas e resultados alcançados..."></textarea>
+            </div>
+
+            <div class="form-group span-2">
+              <label>Tags / Ferramentas / Metodologias</label>
+              <div class="tags-input-cluster">
+                <input type="text" v-model="newConsultancyTag" @keydown.enter.prevent="addConsultancyTag" placeholder="Digite uma tag (ex: KoboToolbox) e clique Adicionar" />
+                <button type="button" @click="addConsultancyTag" class="btn-tag-add">Adicionar</button>
+              </div>
+              <div class="tags-preview-list" v-if="consultancyForm.tags && consultancyForm.tags.length">
+                <span v-for="(tg, tIdx) in consultancyForm.tags" :key="tIdx" class="tag-pill-edit">
+                  {{ tg }}
+                  <i @click="removeConsultancyTag(tIdx)" class="fas fa-times"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer-custom">
+            <button type="button" @click="isConsultancyModalOpen = false" class="btn-cancel">Cancelar</button>
             <button type="submit" class="btn-save">
               <i class="fas fa-save"></i> Salvar no MongoDB
             </button>
@@ -3705,6 +3888,78 @@ const logout = () => {
   font-size: 0.9rem;
   color: #475569;
   line-height: 1.5;
+}
+.consultancies-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+.consultancy-admin-card {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  border-left: 4px solid #FF7B1A;
+}
+.consultancy-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.consultancy-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.consultancy-badge-type {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #fff7ed;
+  color: #c2410c;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+.consultancy-badge-period {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.consultancy-badge-loc {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.consultancy-admin-title {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+.consultancy-admin-client {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.consultancy-admin-desc {
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.55;
+  margin-bottom: 14px;
+  flex-grow: 1;
+  white-space: pre-line;
 }
 .issuer-tag {
   color: #64748b;

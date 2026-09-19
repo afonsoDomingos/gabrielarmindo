@@ -46,6 +46,17 @@ const partnerSchema = new mongoose.Schema({
   order: { type: Number, default: 0 }
 });
 
+const consultancySchema = new mongoose.Schema({
+  title: { type: String, required: true, trim: true },
+  client: { type: String, required: true, trim: true },
+  period: { type: String, required: true, trim: true },
+  location: { type: String, default: 'Moçambique', trim: true },
+  type: { type: String, default: 'Consultoria M&E', trim: true },
+  description: { type: String, required: true },
+  tags: [{ type: String, trim: true }],
+  order: { type: Number, default: 0 }
+});
+
 const resumeSchema = new mongoose.Schema({
   skillsIntro: {
     title: { type: String, default: 'Especialista em M&E,\nKoboToolbox e Análise de Dados' },
@@ -59,7 +70,8 @@ const resumeSchema = new mongoose.Schema({
   skillCards: [skillCardSchema],
   experiences: [experienceSchema],
   studies: [studySchema],
-  partners: [partnerSchema]
+  partners: [partnerSchema],
+  consultancies: [consultancySchema]
 }, {
   timestamps: true
 });

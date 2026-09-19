@@ -222,6 +222,28 @@ function getDefaultResumeData() {
         icon: 'fas fa-brain',
         order: 2
       }
+    ],
+    consultancies: [
+      {
+        title: 'Consultoria de Monitoria, Avaliação e Pesquisa',
+        client: 'Consulting And Coaching Agency',
+        period: '09/2025 - Presente',
+        location: 'Moçambique',
+        type: 'Consultoria M&E',
+        description: 'Desenvolvimento de cursos práticos e capacitação institucional em Monitoria & Avaliação, Excel Avançado e KoboToolbox. Desenho de formulários em XLSForm/ODK e integração com dashboards analíticos em Power BI.',
+        tags: ['M&E', 'KoboToolbox', 'Power BI', 'Capacitação'],
+        order: 1
+      },
+      {
+        title: 'Consultoria de Pesquisa e Avaliações Técnicas',
+        client: 'Prátiq Consultoria',
+        period: '2021 - 2023',
+        location: 'Moçambique',
+        type: 'Pesquisa Aplicada',
+        description: 'Desenvolvimento de propostas técnicas e financeiras, elaboração de protocolos de pesquisa de campo, supervisão de colecta e garantia da integridade e qualidade de dados analíticos.',
+        tags: ['Pesquisa', 'Protocolos', 'DQA', 'Análise'],
+        order: 2
+      }
     ]
   };
 }
@@ -922,6 +944,7 @@ app.put('/api/resume', authenticate, async (req, res) => {
       if (req.body.experiences) resume.experiences = req.body.experiences;
       if (req.body.studies) resume.studies = req.body.studies;
       if (req.body.partners) resume.partners = req.body.partners;
+      if (req.body.consultancies) resume.consultancies = req.body.consultancies;
     }
     const saved = await resume.save();
     res.json({ message: 'Currículo e trajetória atualizados com sucesso no MongoDB!', data: saved });
