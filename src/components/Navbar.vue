@@ -1,10 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useLanguage } from '../store/language';
-import { useTheme } from '../store/theme';
 
 const { lang, toggleLanguage, t } = useLanguage();
-const { isDark, toggleTheme } = useTheme();
 const isScrolled = ref(false);
 const isMenuActive = ref(false);
 
@@ -54,12 +52,6 @@ onUnmounted(() => {
             <button @click="toggleLanguage" class="lang-btn" title="Alterar Idioma / Change Language">
               <span v-if="lang === 'pt'">PT / <b>EN</b></span>
               <span v-else><b>PT</b> / EN</span>
-            </button>
-          </li>
-          <li class="nav-item theme-switcher">
-            <button @click="toggleTheme" class="theme-btn" :title="isDark ? t('Mudar para Modo Claro', 'Switch to Light Mode') : t('Mudar para Modo Escuro', 'Switch to Dark Mode')" :aria-label="isDark ? 'Modo Claro' : 'Modo Escuro'">
-              <i class="fas fa-sun theme-icon-sun" v-if="isDark"></i>
-              <i class="fas fa-moon theme-icon-moon" v-else></i>
             </button>
           </li>
         </ul>
@@ -287,49 +279,8 @@ onUnmounted(() => {
   margin-left: 2px;
 }
 
-/* Theme Switcher Styles */
-.theme-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.theme-btn:hover {
-  background: var(--primary-color);
-  border-color: var(--primary-color);
-  color: #ffffff;
-  transform: rotate(20deg) scale(1.08);
-  box-shadow: 0 4px 14px rgba(255, 123, 26, 0.4);
-}
-
-.theme-icon-sun {
-  color: #FDBA74;
-}
-
-.theme-btn:hover .theme-icon-sun {
-  color: #ffffff;
-}
-
-.theme-icon-moon {
-  color: #6366f1;
-}
-
-.theme-btn:hover .theme-icon-moon {
-  color: #ffffff;
-}
-
 @media (max-width: 768px) {
-  .lang-switcher,
-  .theme-switcher {
+  .lang-switcher {
     margin-top: 0.5rem;
     justify-content: center;
   }
