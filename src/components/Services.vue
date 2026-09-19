@@ -249,7 +249,7 @@ const getDisplayPrice = (plan) => {
   border: 2px solid var(--primary-color);
   transform: scale(1.05);
   z-index: 2;
-  box-shadow: 0 20px 40px rgba(44, 82, 130, 0.15);
+  box-shadow: 0 20px 40px rgba(255, 123, 26, 0.18);
 }
 
 .popular-badge {
@@ -265,7 +265,7 @@ const getDisplayPrice = (plan) => {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 10px 20px rgba(44, 82, 130, 0.3);
+  box-shadow: 0 10px 20px rgba(255, 123, 26, 0.35);
 }
 
 .card-head {

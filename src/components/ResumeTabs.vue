@@ -682,8 +682,8 @@ onMounted(fetchResume);
 .skill-detail-card {
   position: relative;
   padding: 1.5rem 2rem;
-  background: #f8fbff;
-  border: 1px solid rgba(43, 108, 176, 0.1);
+  background: #fffaf5;
+  border: 1px solid rgba(255, 123, 26, 0.15);
   border-radius: var(--radius-md);
   box-shadow: 0 4px 6px rgba(0,0,0,0.02);
   display: flex;
@@ -864,7 +864,7 @@ onMounted(fetchResume);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(43, 108, 176, 0.05);
+  background: rgba(255, 123, 26, 0.08);
   border-radius: 50%;
   color: var(--primary-dark);
   font-size: 1.5rem;
@@ -923,7 +923,7 @@ onMounted(fetchResume);
 .partner-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(43, 108, 176, 0.2);
+  border-color: rgba(255, 123, 26, 0.25);
 }
 
 .partner-icon {
@@ -932,7 +932,7 @@ onMounted(fetchResume);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(43, 108, 176, 0.05);
+  background: rgba(255, 123, 26, 0.08);
   border-radius: 50%;
   color: var(--primary-dark);
   font-size: 1.5rem;

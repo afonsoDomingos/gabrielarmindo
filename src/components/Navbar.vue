@@ -103,14 +103,14 @@ onUnmounted(() => {
     object-fit: cover;
     object-position: top center;
     border: 2px solid var(--primary-color);
-    box-shadow: 0 4px 12px rgba(44, 82, 130, 0.2);
+    box-shadow: 0 4px 12px rgba(255, 123, 26, 0.25);
     transition: all var(--transition-normal);
 }
 
 .nav-logo:hover .logo-photo {
     transform: scale(1.08);
     border-color: var(--secondary-color);
-    box-shadow: 0 6px 16px rgba(44, 82, 130, 0.35);
+    box-shadow: 0 6px 16px rgba(255, 123, 26, 0.4);
 }
 
 .logo-text-group {

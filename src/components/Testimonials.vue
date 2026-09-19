@@ -102,8 +102,8 @@ const prev = () => {
 .testimonial-content {
   text-align: center;
   padding: 3rem;
-  background: #f8fbff;
-  border: 1px solid rgba(43, 108, 176, 0.1);
+  background: #fffaf5;
+  border: 1px solid rgba(255, 123, 26, 0.15);
   border-radius: var(--radius-lg);
   flex: 1;
 }

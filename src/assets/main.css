@@ -2,29 +2,29 @@
    CSS Variables & Root Styles
    ======================================== */
 :root {
-    /* Colors - Premium Blue Palette */
-    --primary-hue: 215;
-    --primary-sat: 90%;
-    --primary-light: 50%;
+    /* Colors - Vibrant Orange & Dark Slate Palette (Paleta oficial do Painel de Controlo) */
+    --primary-hue: 25;
+    --primary-sat: 100%;
+    --primary-light: 55%;
 
-    --primary-color: hsl(var(--primary-hue), var(--primary-sat), var(--primary-light));
-    --primary-dark: hsl(var(--primary-hue), var(--primary-sat), 40%);
-    --primary-light-color: hsl(var(--primary-hue), var(--primary-sat), 65%);
+    --primary-color: #FF7B1A;
+    --primary-dark: #EA580C;
+    --primary-light-color: #FFA454;
 
-    --secondary-color: hsl(200, 85%, 55%);
-    --accent-color: hsl(185, 80%, 45%);
+    --secondary-color: #F97316;
+    --accent-color: #0F172A;
 
-    --text-primary: hsl(220, 25%, 15%);
-    --text-secondary: hsl(220, 15%, 35%);
-    --text-muted: hsl(220, 10%, 55%);
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
 
     --bg-primary: #ffffff;
-    --bg-secondary: #f4f7fa;
-    --bg-tertiary: #edf2f7;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
 
-    --gradient-1: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    --gradient-2: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-    --gradient-3: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    --gradient-1: linear-gradient(135deg, #FF7B1A 0%, #EA580C 100%);
+    --gradient-2: linear-gradient(135deg, #FF7B1A 0%, #FB923C 100%);
+    --gradient-3: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
 
     /* Spacing - Responsive */
     --spacing-xs: 0.5rem;
@@ -222,12 +222,12 @@ ul {
 .btn-primary {
     background: var(--gradient-1);
     color: white;
-    box-shadow: 0 0 70px rgba(44, 82, 130, 0.6);
+    box-shadow: 0 4px 16px rgba(255, 123, 26, 0.35);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(44, 82, 130, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 123, 26, 0.5);
 }
 
 /* Animations */
@@ -458,7 +458,7 @@ ul {
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: rgba(37, 99, 235, 0.08);
+    background: rgba(255, 123, 26, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -471,7 +471,7 @@ ul {
     background: var(--primary-color);
     color: #ffffff;
     transform: scale(1.08) translateY(1px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 4px 12px rgba(255, 123, 26, 0.4);
 }
 
 @media (max-width: 480px) {

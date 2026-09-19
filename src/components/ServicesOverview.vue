@@ -174,7 +174,7 @@ const { t } = useLanguage();
 .overview-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-lg);
-  border-color: rgba(43, 108, 176, 0.2);
+  border-color: rgba(255, 123, 26, 0.25);
 }
 
 .overview-icon-container {
@@ -194,7 +194,7 @@ const { t } = useLanguage();
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  box-shadow: 0 8px 16px rgba(43, 108, 176, 0.2);
+  box-shadow: 0 8px 16px rgba(255, 123, 26, 0.25);
 }
 
 .overview-card h3 {

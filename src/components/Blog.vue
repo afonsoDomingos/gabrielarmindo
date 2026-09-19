@@ -349,7 +349,7 @@ onMounted(fetchPosts);
     border-radius: 50%;
     object-fit: cover;
     object-position: top center;
-    border: 1.5px solid var(--primary-color, #2563eb);
+    border: 1.5px solid var(--primary-color, #FF7B1A);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
 }
@@ -366,7 +366,7 @@ onMounted(fetchPosts);
     border-radius: 50%;
     object-fit: cover;
     object-position: top center;
-    border: 1.5px solid var(--primary-color, #2563eb);
+    border: 1.5px solid var(--primary-color, #FF7B1A);
     flex-shrink: 0;
 }
 
