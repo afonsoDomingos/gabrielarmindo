@@ -19,8 +19,12 @@ require('dotenv').config();
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'public', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (e) {
+  // Ignore filesystem errors in serverless environments (e.g. Vercel read-only disk)
 }
 
 // Models
@@ -57,17 +61,21 @@ if (hasCloudinary) {
 }
 
 if (!upload) {
-  const localStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, uploadsDir);
-    },
-    filename: function (req, file, cb) {
-      const ext = path.extname(file.originalname);
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, 'img-' + uniqueSuffix + ext);
-    }
-  });
-  upload = multer({ storage: localStorage });
+  if (process.env.VERCEL) {
+    upload = multer({ storage: multer.memoryStorage() });
+  } else {
+    const localStorage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, uploadsDir);
+      },
+      filename: function (req, file, cb) {
+        const ext = path.extname(file.originalname);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'img-' + uniqueSuffix + ext);
+      }
+    });
+    upload = multer({ storage: localStorage });
+  }
 }
 
 const app = express();
@@ -220,9 +228,9 @@ const connectDB = async () => {
 };
 
 // Initial connection for persistent node processes
-if (process.env.MONGODB_URI) {
+if (process.env.MONGODB_URI && !process.env.VERCEL) {
   connectDB().catch(e => console.warn('Conexão assíncrona inicial:', e.message));
-} else {
+} else if (!process.env.MONGODB_URI) {
   console.warn('⚠️ MONGODB_URI não encontrada nas variáveis de ambiente.');
 }
 
@@ -694,7 +702,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`🚀 Servidor backend activo em http://localhost:${PORT}`);
   });
