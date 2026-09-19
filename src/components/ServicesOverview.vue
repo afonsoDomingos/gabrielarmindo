@@ -231,7 +231,7 @@ const { t } = useLanguage();
   align-items: flex-start;
   gap: 0.6rem;
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   line-height: 1.45;
 }
 

@@ -307,7 +307,7 @@ const getDisplayPrice = (plan) => {
 }
 
 .frequency {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -325,7 +325,7 @@ const getDisplayPrice = (plan) => {
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   font-size: 0.95rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .service-features li i {
