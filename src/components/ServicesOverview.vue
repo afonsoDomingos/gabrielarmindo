@@ -200,7 +200,7 @@ const { t } = useLanguage();
 .overview-card h3 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 1rem;
   width: 100%;
   text-align: center;
