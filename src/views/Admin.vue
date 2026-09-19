@@ -66,7 +66,12 @@ const isPackageModalOpen = ref(false);
 const editingPackage = ref(null);
 const packageForm = ref({
   title: '',
+  priceMin: null,
+  priceMax: null,
   price: '',
+  frequency: '',
+  cta: 'Solicitar Orçamento',
+  popular: false,
   description: '',
   features: [],
   icon: 'fas fa-chart-line'
@@ -351,7 +356,12 @@ const openPackageModal = (pkg = null) => {
     editingPackage.value = pkg;
     packageForm.value = {
       title: pkg.title,
+      priceMin: pkg.priceMin ?? null,
+      priceMax: pkg.priceMax ?? null,
       price: pkg.price || '',
+      frequency: pkg.frequency || '',
+      cta: pkg.cta || 'Solicitar Orçamento',
+      popular: pkg.popular || false,
       description: pkg.description || '',
       features: [...(pkg.features || [])],
       icon: pkg.icon || 'fas fa-chart-line'
@@ -360,7 +370,12 @@ const openPackageModal = (pkg = null) => {
     editingPackage.value = null;
     packageForm.value = {
       title: '',
-      price: 'Sob Consulta',
+      priceMin: null,
+      priceMax: null,
+      price: '',
+      frequency: '',
+      cta: 'Solicitar Orçamento',
+      popular: false,
       description: '',
       features: [],
       icon: 'fas fa-chart-line'
@@ -1089,13 +1104,24 @@ const logout = () => {
 
             <div class="packages-grid">
               <div v-for="pkg in packages" :key="pkg._id || pkg.id" class="card package-admin-card">
+                <div v-if="pkg.popular" class="pkg-popular-ribbon">
+                  <i class="fas fa-star"></i> Mais Popular
+                </div>
                 <div class="pkg-top">
                   <div class="pkg-icon-wrap">
                     <i :class="pkg.icon || 'fas fa-chart-line'"></i>
                   </div>
                   <div class="pkg-header-info">
                     <h3>{{ pkg.title }}</h3>
-                    <span class="pkg-price-badge">{{ pkg.price || 'Sob Consulta' }}</span>
+                    <div class="pkg-price-display">
+                      <span class="pkg-price-badge">
+                        <template v-if="pkg.priceMin != null">
+                          ${{ pkg.priceMin }}{{ pkg.priceMax ? '-' + pkg.priceMax : '' }}
+                        </template>
+                        <template v-else>{{ pkg.price || 'Sob Consulta' }}</template>
+                      </span>
+                      <span v-if="pkg.frequency" class="pkg-frequency-text">{{ pkg.frequency }}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -1115,7 +1141,7 @@ const logout = () => {
 
                 <div class="pkg-card-actions">
                   <button @click="openPackageModal(pkg)" class="pkg-btn edit">
-                    <i class="fas fa-edit"></i> Editar
+                    <i class="fas fa-edit"></i> Editar Preço
                   </button>
                   <button @click="deletePackage(pkg)" class="pkg-btn del">
                     <i class="fas fa-trash"></i> Excluir
@@ -1123,6 +1149,7 @@ const logout = () => {
                 </div>
               </div>
             </div>
+
           </div>
 
           <!-- TAB 4: MESSAGES (INBOX) -->
@@ -1669,17 +1696,58 @@ const logout = () => {
           <div class="form-grid-2">
             <div class="form-group span-2">
               <label>Nome do Serviço / Pacote <span class="required">*</span></label>
-              <input type="text" v-model="packageForm.title" required placeholder="Ex: Consultoria MEAL Completa" />
+              <input type="text" v-model="packageForm.title" required placeholder="Ex: Consultoria M&E Completa" />
+            </div>
+
+            <!-- Preços numéricos -->
+            <div class="form-group">
+              <label>Preço Mínimo (USD) <span class="required">*</span></label>
+              <input 
+                type="number" 
+                v-model.number="packageForm.priceMin" 
+                min="0" 
+                step="0.01"
+                placeholder="Ex: 94"
+              />
+              <small class="field-hint">Valor base em USD — é convertido automaticamente para MZN e EUR no site</small>
             </div>
 
             <div class="form-group">
-              <label>Preço Sugerido</label>
-              <input type="text" v-model="packageForm.price" placeholder="Ex: Sob Consulta ou A partir de $250" />
+              <label>Preço Máximo (USD)</label>
+              <input 
+                type="number" 
+                v-model.number="packageForm.priceMax" 
+                min="0"
+                step="0.01"
+                placeholder="Deixar vazio se não houver range"
+              />
+              <small class="field-hint">Preencha apenas se o preço for um intervalo (ex: $200-300)</small>
+            </div>
+
+            <div class="form-group">
+              <label>Frequência / Período</label>
+              <input type="text" v-model="packageForm.frequency" placeholder="Ex: Por projeto / 2-3 meses" />
+            </div>
+
+            <div class="form-group">
+              <label>Texto do Botão (CTA)</label>
+              <input type="text" v-model="packageForm.cta" placeholder="Ex: Solicitar Orçamento" />
             </div>
 
             <div class="form-group">
               <label>Ícone (FontAwesome)</label>
               <input type="text" v-model="packageForm.icon" placeholder="fas fa-chart-line" />
+            </div>
+
+            <div class="form-group">
+              <label>Destaque como "Mais Popular"</label>
+              <div class="toggle-switch-row">
+                <label class="toggle-switch">
+                  <input type="checkbox" v-model="packageForm.popular" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label">{{ packageForm.popular ? 'Sim — destacar com badge' : 'Não' }}</span>
+              </div>
             </div>
 
             <div class="form-group span-2">
@@ -1708,6 +1776,16 @@ const logout = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Preview de preço -->
+          <div v-if="packageForm.priceMin" class="price-preview-box">
+            <i class="fas fa-eye"></i>
+            <strong>Pré-visualização no site:</strong>
+            <span class="price-preview-tag">
+              ${{ packageForm.priceMin }}{{ packageForm.priceMax ? '-' + packageForm.priceMax : '' }}
+              <em>{{ packageForm.frequency }}</em>
+            </span>
           </div>
 
           <div class="modal-footer-custom">
@@ -2908,9 +2986,38 @@ const logout = () => {
   margin: 0 0 4px;
 }
 .pkg-price-badge {
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 800;
   color: #FF7B1A;
+}
+.pkg-price-display {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pkg-frequency-text {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+.pkg-popular-ribbon {
+  position: absolute;
+  top: -1px;
+  right: 16px;
+  background: linear-gradient(135deg, #FF7B1A, #f59e0b);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 10px rgba(255, 123, 26, 0.3);
+}
+.package-admin-card {
+  position: relative;
 }
 
 .pkg-description {
@@ -3660,5 +3767,100 @@ const logout = () => {
 
 @media (max-width: 1024px) {
   .charts-row, .quick-overview-row, .skills-admin-dual-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Toggle Switch ---- */
+.toggle-switch-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #cbd5e1;
+  border-radius: 24px;
+  transition: 0.3s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider {
+  background: #FF7B1A;
+}
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+}
+.toggle-label {
+  font-size: 0.88rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* ---- Field Hint ---- */
+.field-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* ---- Price Preview Box ---- */
+.price-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  color: #7c2d12;
+}
+.price-preview-box i {
+  color: #FF7B1A;
+  font-size: 1rem;
+}
+.price-preview-tag {
+  margin-left: 4px;
+  background: white;
+  border: 1px solid #fed7aa;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #c2410c;
+}
+.price-preview-tag em {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: #9a3412;
+  margin-left: 6px;
 }
 </style>

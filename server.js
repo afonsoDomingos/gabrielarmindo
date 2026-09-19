@@ -275,32 +275,87 @@ const seedInitialData = async () => {
       console.log('Populando pacotes de serviços iniciais no MongoDB...');
       await Package.insertMany([
         {
-          title: 'Consultoria MEAL Completa',
-          price: 'Sob Consulta',
-          description: 'Desenvolvimento integral de sistemas de Monitoria, Avaliação, Prestação de Contas e Aprendizagem.',
-          features: ['Design de Quadro Lógico', 'Planos de Monitoria & Indicadores', 'Sistemas de Feedback e Mecanismos de Reclamação'],
+          title: 'Consultoria M&E',
+          priceMin: 200,
+          priceMax: 300,
+          price: '$200-300',
+          frequency: 'Por dia / Consultoria',
+          cta: 'Solicitar Orçamento',
+          popular: false,
+          description: 'Consultoria especializada em Monitoria e Avaliação para projectos humanitários e de desenvolvimento.',
+          features: ['Desenho e condução de avaliações', 'Propostas técnicas e financeiras', 'Treinamento de inquiridores', 'Análise de dados', 'Produção de relatórios'],
           icon: 'fas fa-chart-line',
           order: 1
         },
         {
-          title: 'Análise de Dados e BI',
-          price: 'A partir de $250',
-          description: 'Transformação de dados brutos em dashboards interativos para tomada de decisão ágil.',
-          features: ['Dashboards Interativos no Power BI', 'Limpeza e Tratamento Avançado de Dados', 'Relatórios Executivos para Doadores'],
-          icon: 'fas fa-database',
+          title: 'Sistema M&E Completo',
+          priceMin: 94,
+          priceMax: null,
+          price: 'A partir de $94',
+          frequency: 'Por projeto / 2-3 meses',
+          cta: 'Começar Projeto',
+          popular: true,
+          description: 'Desenvolvimento e implementação completa de sistemas integrados de MEAL para organizações.',
+          features: ['Sistema M&E personalizado', 'Formulários KoboToolbox', 'Dashboard Power BI/Excel', 'Treinamento da equipe', 'Suporte por 3 meses'],
+          icon: 'fas fa-cogs',
           order: 2
         },
         {
-          title: 'Treinamento e Capacitação',
-          price: 'Personalizado',
-          description: 'Capacitação prática de equipas em recolha digital e análise estatística.',
-          features: ['Treinamento Prático em KoboToolbox', 'Mentoria em Análise Estatística (SPSS/Excel)', 'Workshops Hands-on de MEAL'],
-          icon: 'fas fa-users-cog',
+          title: 'M&E Mentorship',
+          priceMin: 31,
+          priceMax: null,
+          price: 'A partir de $31',
+          frequency: 'Por mês / Mínimo 4 sessões',
+          cta: 'Começar Mentoria',
+          popular: false,
+          description: 'Mentoria técnica especializada para profissionais e organizações em Monitoria, Avaliação e Aprendizagem.',
+          features: ['4+ sessões mensais', 'Desenvolvimento de capacidades', 'Suporte via WhatsApp', 'Templates M&E e ferramentas', 'Revisão de documentos'],
+          icon: 'fas fa-user-friends',
           order: 3
+        },
+        {
+          title: 'Esclarecimentos M&E',
+          priceMin: 8,
+          priceMax: null,
+          price: 'A partir de $8',
+          frequency: 'Por hora / Sessão',
+          cta: 'Agendar Sessão',
+          popular: false,
+          description: 'Sessões de esclarecimento técnico sobre metodologias e práticas de M&E.',
+          features: ['Dúvidas sobre metodologias M&E', 'Orientação em projetos', 'Suporte técnico pontual', 'Consulta via chamada/video'],
+          icon: 'fas fa-comments',
+          order: 4
+        },
+        {
+          title: 'Revisão de CVs',
+          priceMin: 8,
+          priceMax: null,
+          price: 'A partir de $8',
+          frequency: 'Por CV / Entrega em 72h',
+          cta: 'Enviar CV',
+          popular: false,
+          description: 'Revisão completa e otimização do CV para a área M&E com entrega em 72 horas.',
+          features: ['Revisão completa do CV', 'Otimização para área M&E', 'Sugestões de melhorias', 'Formatação profissional'],
+          icon: 'fas fa-file-alt',
+          order: 5
+        },
+        {
+          title: 'Criação de Dashboards com efeito UAU',
+          priceMin: 100,
+          priceMax: 1000,
+          price: '$100-1000',
+          frequency: 'Por projeto / escopo sob medida',
+          cta: 'Começar Projeto',
+          popular: false,
+          description: 'Dashboards profissionais em Power BI e Excel com design premium e integração de dados.',
+          features: ['Design profissional em Power BI e Excel', 'Integração de fontes de dados', 'KPIs claros e interatividade', 'Suporte opcional de ajustes'],
+          icon: 'fas fa-chart-bar',
+          order: 6
         }
       ]);
       console.log('✅ Pacotes de serviços iniciais inseridos com sucesso!');
     }
+
 
     const testimonialCount = await Testimonial.countDocuments();
     if (testimonialCount === 0) {

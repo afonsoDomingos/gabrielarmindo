@@ -6,10 +6,35 @@ const packageSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  // Preço numérico mínimo em USD (base de conversão)
+  priceMin: {
+    type: Number,
+    default: null
+  },
+  // Preço numérico máximo em USD (null se não houver range)
+  priceMax: {
+    type: Number,
+    default: null
+  },
+  // Campo legado de texto (manter compatibilidade)
   price: {
     type: String,
     default: 'Sob Consulta',
     trim: true
+  },
+  frequency: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  cta: {
+    type: String,
+    default: 'Solicitar Orçamento',
+    trim: true
+  },
+  popular: {
+    type: Boolean,
+    default: false
   },
   description: {
     type: String,
@@ -35,3 +60,4 @@ const packageSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Package', packageSchema);
+

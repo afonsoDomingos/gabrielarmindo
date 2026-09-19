@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useLanguage } from '../store/language';
+import axios from 'axios';
 
 const { t } = useLanguage();
 
@@ -18,7 +19,12 @@ const SYMBOLS = {
   EUR: '€'
 };
 
-const investmentPlans = computed(() => [
+// Planos carregados da API (MongoDB)
+const apiPlans = ref([]);
+const isLoadingPrices = ref(false);
+
+// Fallback local caso a API falhe
+const fallbackPlans = [
   {
     title: t('Consultoria M&E', 'M&E Consultancy'),
     priceMin: 200,
@@ -106,10 +112,43 @@ const investmentPlans = computed(() => [
     cta: t('Começar Projeto', 'Start Project'),
     popular: false
   }
-]);
+];
+
+// Busca planos da API
+const fetchPlans = async () => {
+  isLoadingPrices.value = true;
+  try {
+    const res = await axios.get('/api/packages');
+    if (res.data && res.data.length > 0) {
+      apiPlans.value = res.data;
+    }
+  } catch (err) {
+    console.warn('Não foi possível carregar preços da API, usando dados locais.', err.message);
+  } finally {
+    isLoadingPrices.value = false;
+  }
+};
+
+onMounted(fetchPlans);
+
+// Usa dados da API se disponíveis, caso contrário usa fallback
+const investmentPlans = computed(() => {
+  if (apiPlans.value.length > 0) {
+    return apiPlans.value.map(pkg => ({
+      title: pkg.title,
+      priceMin: pkg.priceMin,
+      priceMax: pkg.priceMax ?? null,
+      frequency: pkg.frequency || '',
+      features: pkg.features || [],
+      cta: pkg.cta || t('Solicitar Orçamento', 'Request Quote'),
+      popular: pkg.popular || false
+    }));
+  }
+  return fallbackPlans;
+});
 
 const formatValue = (val) => {
-  if (!val) return '';
+  if (!val && val !== 0) return '';
   const converted = val * RATES[selectedCurrency.value];
   
   const locale = selectedCurrency.value === 'MZN' ? 'pt-MZ' : 
@@ -122,11 +161,13 @@ const formatValue = (val) => {
 };
 
 const getDisplayPrice = (plan) => {
+  if (plan.priceMin == null) return t('Sob Consulta', 'On Request');
   const min = formatValue(plan.priceMin);
   const max = plan.priceMax ? formatValue(plan.priceMax) : null;
   return max ? `${min}-${max}` : min;
 };
 </script>
+
 
 <template>
   <section class="services section" id="services">
