@@ -425,8 +425,6 @@ const resetForm = () => {
   box-shadow: none;
   overflow: hidden;
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 }
 
 .close-btn {
@@ -578,7 +576,7 @@ const resetForm = () => {
 /* Main Content */
 .checkout-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 50% 50%;
   gap: 0;
   height: 100%;
   width: 100%;
@@ -592,6 +590,7 @@ const resetForm = () => {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  border-right: 1px solid #e2e8f0;
 }
 
 .product-header {
