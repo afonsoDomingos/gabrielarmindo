@@ -282,7 +282,7 @@ const handlePaymentCancel = () => {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 2rem 1.75rem;
+  padding: 1.5rem 1.25rem;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   background: var(--card-bg);
   border: var(--card-border);
@@ -316,15 +316,15 @@ const handlePaymentCancel = () => {
 
 .card-head {
   text-align: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .service-title {
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   color: var(--text-primary);
 }
 
@@ -333,30 +333,30 @@ const handlePaymentCancel = () => {
   align-items: flex-start;
   justify-content: center;
   color: var(--primary-dark);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .currency {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   margin-right: 0.2rem;
 }
 
 .price-value {
-  font-size: 3rem;
+  font-size: 2.25rem;
   font-weight: 800;
   line-height: 1;
 }
 
 .frequency {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 
 .service-features {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   flex: 1;
   list-style: none;
   padding: 0;
@@ -365,23 +365,24 @@ const handlePaymentCancel = () => {
 .service-features li {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.95rem;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
   color: var(--text-primary);
 }
 
 .service-features li i {
   color: var(--primary-color);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 }
 
 .btn {
   width: 100%;
   justify-content: center;
-  padding: 1.25rem;
+  padding: 0.85rem;
   font-weight: 700;
   border-radius: var(--radius-md);
+  font-size: 0.9rem;
 }
 
 .btn-outline {
