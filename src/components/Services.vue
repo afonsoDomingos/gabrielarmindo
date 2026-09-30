@@ -252,6 +252,7 @@ const handlePaymentCancel = () => {
           :package-name="selectedPackage.title"
           :price="selectedPackage.priceMin"
           :currency="selectedCurrency"
+          :purchase-count="0"
           @payment-complete="handlePaymentComplete"
           @payment-cancelled="handlePaymentCancel"
         />
