@@ -1,141 +1,221 @@
 <script setup>
-import { useLanguage } from '../store/language';
-const { t } = useLanguage();
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+
+// Services loaded from API (MongoDB)
+const apiServices = ref([]);
+const isLoading = ref(false);
+
+// Fallback local data in case API fails
+const fallbackServices = [
+  {
+    title: 'Design de Formulários para KoboToolbox',
+    titleEn: 'Form Design for KoboToolbox',
+    icon: 'fas fa-clipboard-list',
+    description: 'Especialista no desenho de formulários avançados em KoboToolbox/XLSForm para recolha de dados de alta qualidade em contextos de pesquisa, monitoria e avaliação.',
+    descriptionEn: 'Expert in designing advanced forms in KoboToolbox/XLSForm for high-quality data collection in research, monitoring, and evaluation contexts.',
+    features: [
+      'Criação de formulários inteligentes com XLSForm',
+      'Desenvolvimento de lógica condicional e validações automatizadas',
+      'Estruturação de instrumentos complexos para estudos, avaliações e projectos humanitários',
+      'Integração de sistemas de recolha de dados com sistemas de MEAL',
+      'Formação e supervisão de enumeradores em recolha digital, ética e controlo de qualidade'
+    ],
+    featuresEn: [
+      'Smart form creation with XLSForm',
+      'Development of conditional logic and automated validations',
+      'Structuring complex instruments for studies, evaluations, and humanitarian projects',
+      'Integration of data collection systems with MEAL systems',
+      'Training and supervision of enumerators in digital collection, ethics, and quality control'
+    ]
+  },
+  {
+    title: 'Sistemas de Monitoria & Avaliação (M&E)',
+    titleEn: 'Monitoring & Evaluation Systems (M&E)',
+    icon: 'fas fa-chart-line',
+    description: 'Desenvolvimento e implementação de sistemas integrados de MEAL para monitorar desempenho, gerar evidências e apoiar decisões estratégicas.',
+    descriptionEn: 'Development and implementation of integrated MEAL systems to monitor performance, generate evidence, and support strategic decisions.',
+    features: [
+      'Desenvolvimento de KPIs e frameworks de desempenho',
+      'Sistemas digitais de recolha, gestão e validação de dados',
+      'Automatização de dashboards e relatórios analíticos',
+      'Configuração de mecanismos de alerta e acompanhamento em tempo real'
+    ],
+    featuresEn: [
+      'Development of KPIs and performance frameworks',
+      'Digital systems for data collection, management, and validation',
+      'Automation of dashboards and analytical reports',
+      'Configuration of alert mechanisms and real-time monitoring'
+    ]
+  },
+  {
+    title: 'Data Analysis & Business Intelligence',
+    titleEn: 'Data Analysis & Business Intelligence',
+    icon: 'fas fa-laptop-code',
+    description: 'Análise avançada de dados e criação de dashboards interactivos para geração de insights estratégicos.',
+    descriptionEn: 'Advanced data analysis and creation of interactive dashboards to generate strategic insights.',
+    features: [
+      'Dashboards avançados em Excel',
+      'Relatórios interactivos em Power BI',
+      'Análise estatística',
+      'Visualização estratégica de dados'
+    ],
+    featuresEn: [
+      'Advanced Excel Dashboards',
+      'Interactive Power BI Reports',
+      'Statistical analysis',
+      'Strategic data visualization'
+    ]
+  },
+  {
+    title: 'Mentoria em MEAL',
+    titleEn: 'MEAL Mentorship',
+    icon: 'fas fa-user-friends',
+    description: 'Mentoria técnica especializada para profissionais e organizações que procuram fortalecer competências em Monitoria, Avaliação, Accountability e Aprendizagem.',
+    descriptionEn: 'Specialized technical mentorship for professionals and organizations seeking to strengthen skills in Monitoring, Evaluation, Accountability, and Learning.',
+    features: [
+      'Mentoria individual',
+      'Capacitação prática de equipas',
+      'Apoio no desenho e fortalecimento de sistemas de MEAL',
+      'Acompanhamento técnico contínuo'
+    ],
+    featuresEn: [
+      'Individual mentorship',
+      'Practical team training',
+      'Support in the design and strengthening of MEAL systems',
+      'Continuous technical guidance'
+    ]
+  },
+  {
+    title: 'Consultorias Especializadas',
+    titleEn: 'Specialized Consultancies',
+    icon: 'fas fa-briefcase',
+    description: 'Serviços completos de consultoria em Monitoria & Avaliação, investigação aplicada e resposta humanitária.',
+    descriptionEn: 'Full consulting services in Monitoring & Evaluation, applied research, and humanitarian response.',
+    features: [
+      'Desenho e condução de avaliações',
+      'Desenvolvimento de ferramentas de recolha de dados',
+      'Formação de inquiridores',
+      'Análise de dados e elaboração de relatórios técnicos',
+      'Apoio a projectos de assistência humanitária'
+    ],
+    featuresEn: [
+      'Assessment design and conduct',
+      'Development of data collection tools',
+      'Enumerator training',
+      'Data analysis and preparation of technical reports',
+      'Support for humanitarian assistance projects'
+    ]
+  },
+  {
+    title: 'Gestão de Programas e Projectos',
+    titleEn: 'Program & Project Management',
+    icon: 'fas fa-tasks',
+    description: 'Coordenação estratégica e operacional de programas e projectos com foco em impacto, eficiência e sustentabilidade.',
+    descriptionEn: 'Strategic and operational coordination of programs and projects with a focus on impact, efficiency, and sustainability.',
+    features: [
+      'Liderança de equipas multidisciplinares',
+      'Planeamento estratégico e operacional',
+      'Coordenação e acompanhamento de resultados',
+      'Gestão de parcerias e articulação institucional',
+      'Produção de relatórios institucionais e suporte à tomada de decisão estratégica'
+    ],
+    featuresEn: [
+      'Leadership of multidisciplinary teams',
+      'Strategic and operational planning',
+      'Coordination and monitoring of results',
+      'Partnership management and institutional coordination',
+      'Production of institutional reports and strategic decision-making support'
+    ]
+  }
+];
+
+// Fetch services from API
+const fetchServices = async () => {
+  isLoading.value = true;
+  try {
+    const res = await axios.get('/api/services');
+    if (res.data && res.data.length > 0) {
+      apiServices.value = res.data;
+    }
+  } catch (err) {
+    console.warn('Não foi possível carregar serviços da API, usando dados locais.', err.message);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(fetchServices);
+
+// Use API data if available, otherwise use fallback
+const services = computed(() => {
+  if (apiServices.value.length > 0) {
+    return apiServices.value;
+  }
+  return fallbackServices;
+});
+
+// Helper to get the right text based on language
+const getServiceText = (service, field) => {
+  const currentLang = localStorage.getItem('language') || 'pt';
+  if (currentLang === 'en' && service[field + 'En']) {
+    return service[field + 'En'];
+  }
+  return service[field];
+};
+
+const getServiceFeatures = (service) => {
+  const currentLang = localStorage.getItem('language') || 'pt';
+  if (currentLang === 'en' && service.featuresEn && service.featuresEn.length > 0) {
+    return service.featuresEn;
+  }
+  return service.features || [];
+};
 </script>
+
 
 <template>
   <section class="services-overview section" id="services-overview">
     <div class="container">
       <div class="section-header text-center reveal">
-        <span class="section-tag">{{ t('O que ofereço', 'What I offer') }}</span>
-        <h2 class="section-title">{{ t('Conheça os Meus Serviços', 'Meet My Services') }}</h2>
+        <span class="section-tag">O que ofereço</span>
+        <h2 class="section-title">Conheça os Meus Serviços</h2>
         <p class="section-subtitle">
-          {{ t('Soluções estratégicas em monitoria, avaliação e análise de dados para transformar o impacto da sua organização.', 'Strategic solutions in monitoring, evaluation and data analysis to transform your organization\'s impact.') }}
+          Soluções estratégicas em monitoria, avaliação e análise de dados para transformar o impacto da sua organização.
         </p>
       </div>
 
       <div class="services-overview-grid reveal-container">
-        <!-- Service 1: KoboToolbox -->
-        <div class="overview-card glass-card reveal-item">
-          <div class="overview-icon-container">
-            <div class="overview-icon">
-              <i class="fas fa-clipboard-list"></i>
-            </div>
-          </div>
-          <h3>{{ t('Design de Formulários para KoboToolbox', 'Form Design for KoboToolbox') }}</h3>
-          <p class="service-desc">
-            {{ t('Especialista no desenho de formulários avançados em KoboToolbox/XLSForm para recolha de dados de alta qualidade em contextos de pesquisa, monitoria e avaliação.', 'Expert in designing advanced forms in KoboToolbox/XLSForm for high-quality data collection in research, monitoring, and evaluation contexts.') }}
-          </p>
-          <ul class="service-bullets">
-            <li><i class="fas fa-check-circle"></i> {{ t('Criação de formulários inteligentes com XLSForm', 'Smart form creation with XLSForm') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Desenvolvimento de lógica condicional e validações automatizadas', 'Development of conditional logic and automated validations') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Estruturação de instrumentos complexos para estudos, avaliações e projectos humanitários', 'Structuring complex instruments for studies, evaluations, and humanitarian projects') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Integração de sistemas de recolha de dados com sistemas de MEAL', 'Integration of data collection systems with MEAL systems') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Formação e supervisão de enumeradores em recolha digital, ética e controlo de qualidade', 'Training and supervision of enumerators in digital collection, ethics, and quality control') }}</li>
-          </ul>
+        <div v-if="isLoading" class="loading-state">
+          <div class="spinner"></div>
+          <p>A carregar serviços...</p>
         </div>
 
-        <!-- Service 2: M&E Systems -->
-        <div class="overview-card glass-card reveal-item">
+        <div
+          v-for="(service, index) in services"
+          :key="index"
+          class="overview-card glass-card reveal-item"
+        >
           <div class="overview-icon-container">
             <div class="overview-icon">
-              <i class="fas fa-chart-line"></i>
+              <i :class="service.icon || 'fas fa-chart-line'"></i>
             </div>
           </div>
-          <h3>{{ t('Sistemas de Monitoria & Avaliação (M&E)', 'Monitoring & Evaluation Systems (M&E)') }}</h3>
+          <h3>{{ getServiceText(service, 'title') }}</h3>
           <p class="service-desc">
-            {{ t('Desenvolvimento e implementação de sistemas integrados de MEAL para monitorar desempenho, gerar evidências e apoiar decisões estratégicas.', 'Development and implementation of integrated MEAL systems to monitor performance, generate evidence, and support strategic decisions.') }}
+            {{ getServiceText(service, 'description') }}
           </p>
           <ul class="service-bullets">
-            <li><i class="fas fa-check-circle"></i> {{ t('Desenvolvimento de KPIs e frameworks de desempenho', 'Development of KPIs and performance frameworks') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Sistemas digitais de recolha, gestão e validação de dados', 'Digital systems for data collection, management, and validation') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Automatização de dashboards e relatórios analíticos', 'Automation of dashboards and analytical reports') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Configuração de mecanismos de alerta e acompanhamento em tempo real', 'Configuration of alert mechanisms and real-time monitoring') }}</li>
-          </ul>
-        </div>
-
-        <!-- Service 3: Data Analysis & BI -->
-        <div class="overview-card glass-card reveal-item">
-          <div class="overview-icon-container">
-            <div class="overview-icon">
-              <i class="fas fa-laptop-code"></i>
-            </div>
-          </div>
-          <h3>Data Analysis & Business Intelligence</h3>
-          <p class="service-desc">
-            {{ t('Análise avançada de dados e criação de dashboards interactivos para geração de insights estratégicos.', 'Advanced data analysis and creation of interactive dashboards to generate strategic insights.') }}
-          </p>
-          <ul class="service-bullets">
-            <li><i class="fas fa-check-circle"></i> {{ t('Dashboards avançados em Excel', 'Advanced Excel Dashboards') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Relatórios interactivos em Power BI', 'Interactive Power BI Reports') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Análise estatística', 'Statistical analysis') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Visualização estratégica de dados', 'Strategic data visualization') }}</li>
-          </ul>
-        </div>
-
-        <!-- Service 4: Mentorship -->
-        <div class="overview-card glass-card reveal-item">
-          <div class="overview-icon-container">
-            <div class="overview-icon">
-              <i class="fas fa-user-friends"></i>
-            </div>
-          </div>
-          <h3>{{ t('Mentoria em MEAL', 'MEAL Mentorship') }}</h3>
-          <p class="service-desc">
-            {{ t('Mentoria técnica especializada para profissionais e organizações que procuram fortalecer competências em Monitoria, Avaliação, Accountability e Aprendizagem.', 'Specialized technical mentorship for professionals and organizations seeking to strengthen skills in Monitoring, Evaluation, Accountability, and Learning.') }}
-          </p>
-          <ul class="service-bullets">
-            <li><i class="fas fa-check-circle"></i> {{ t('Mentoria individual', 'Individual mentorship') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Capacitação prática de equipas', 'Practical team training') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Apoio no desenho e fortalecimento de sistemas de MEAL', 'Support in the design and strengthening of MEAL systems') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Acompanhamento técnico contínuo', 'Continuous technical guidance') }}</li>
-          </ul>
-        </div>
-
-        <!-- Service 5: Specialized Consultancies -->
-        <div class="overview-card glass-card reveal-item">
-          <div class="overview-icon-container">
-            <div class="overview-icon">
-              <i class="fas fa-briefcase"></i>
-            </div>
-          </div>
-          <h3>{{ t('Consultorias Especializadas', 'Specialized Consultancies') }}</h3>
-          <p class="service-desc">
-            {{ t('Serviços completos de consultoria em Monitoria & Avaliação, investigação aplicada e resposta humanitária.', 'Full consulting services in Monitoring & Evaluation, applied research, and humanitarian response.') }}
-          </p>
-          <ul class="service-bullets">
-            <li><i class="fas fa-check-circle"></i> {{ t('Desenho e condução de avaliações', 'Assessment design and conduct') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Desenvolvimento de ferramentas de recolha de dados', 'Development of data collection tools') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Formação de inquiridores', 'Enumerator training') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Análise de dados e elaboração de relatórios técnicos', 'Data analysis and preparation of technical reports') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Apoio a projectos de assistência humanitária', 'Support for humanitarian assistance projects') }}</li>
-          </ul>
-        </div>
-
-        <!-- Service 6: Project Management -->
-        <div class="overview-card glass-card reveal-item">
-          <div class="overview-icon-container">
-            <div class="overview-icon">
-              <i class="fas fa-tasks"></i>
-            </div>
-          </div>
-          <h3>{{ t('Gestão de Programas e Projectos', 'Program & Project Management') }}</h3>
-          <p class="service-desc">
-            {{ t('Coordenação estratégica e operacional de programas e projectos com foco em impacto, eficiência e sustentabilidade.', 'Strategic and operational coordination of programs and projects with a focus on impact, efficiency, and sustainability.') }}
-          </p>
-          <ul class="service-bullets">
-            <li><i class="fas fa-check-circle"></i> {{ t('Liderança de equipas multidisciplinares', 'Leadership of multidisciplinary teams') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Planeamento estratégico e operacional', 'Strategic and operational planning') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Coordenação e acompanhamento de resultados', 'Coordination and monitoring of results') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Gestão de parcerias e articulação institucional', 'Partnership management and institutional coordination') }}</li>
-            <li><i class="fas fa-check-circle"></i> {{ t('Produção de relatórios institucionais e suporte à tomada de decisão estratégica', 'Production of institutional reports and strategic decision-making support') }}</li>
+            <li v-for="(feature, idx) in getServiceFeatures(service)" :key="idx">
+              <i class="fas fa-check-circle"></i> {{ feature }}
+            </li>
           </ul>
         </div>
       </div>
 
       <div class="services-action text-center reveal">
         <a href="#services" class="btn btn-primary">
-          <span>{{ t('Ver Planos e Preços', 'View Plans and Pricing') }}</span>
+          <span>Ver Planos e Preços</span>
           <i class="fas fa-arrow-right"></i>
         </a>
       </div>
@@ -252,5 +332,29 @@ const { t } = useLanguage();
     max-width: 450px;
     margin: 0 auto var(--spacing-lg);
   }
+}
+
+.loading-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-subtle);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>

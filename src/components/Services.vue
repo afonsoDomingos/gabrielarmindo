@@ -2,8 +2,13 @@
 import { ref, computed, onMounted } from 'vue';
 import { useLanguage } from '../store/language';
 import axios from 'axios';
+import PaymentCheckout from './PaymentCheckout.vue';
 
 const { t } = useLanguage();
+
+// Payment checkout state
+const showCheckout = ref(false);
+const selectedPackage = ref(null);
 
 const selectedCurrency = ref('USD'); // 'USD', 'MZN', 'EUR'
 
@@ -166,6 +171,26 @@ const getDisplayPrice = (plan) => {
   const max = plan.priceMax ? formatValue(plan.priceMax) : null;
   return max ? `${min}-${max}` : min;
 };
+
+// Open checkout for a package
+const openCheckout = (plan) => {
+  selectedPackage.value = plan;
+  showCheckout.value = true;
+};
+
+// Handle payment completion
+const handlePaymentComplete = (transaction) => {
+  showCheckout.value = false;
+  selectedPackage.value = null;
+  // You can add success notification here
+  alert('Pagamento concluído com sucesso! ' + JSON.stringify(transaction));
+};
+
+// Handle payment cancellation
+const handlePaymentCancel = () => {
+  showCheckout.value = false;
+  selectedPackage.value = null;
+};
 </script>
 
 
@@ -208,10 +233,25 @@ const getDisplayPrice = (plan) => {
             </li>
           </ul>
           
-          <a href="#contacto" class="btn" :class="plan.popular ? 'btn-primary' : 'btn-outline'">
+          <button @click="openCheckout(plan)" class="btn" :class="plan.popular ? 'btn-primary' : 'btn-outline'">
             {{ plan.cta }}
-          </a>
+          </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Payment Checkout Modal -->
+    <div v-if="showCheckout && selectedPackage" class="checkout-modal-overlay">
+      <div class="checkout-modal">
+        <button @click="handlePaymentCancel" class="modal-close-btn">&times;</button>
+        <PaymentCheckout
+          :package-id="selectedPackage._id || selectedPackage.id"
+          :package-name="selectedPackage.title"
+          :price="selectedPackage.priceMin"
+          :currency="selectedCurrency"
+          @payment-complete="handlePaymentComplete"
+          @payment-cancelled="handlePaymentCancel"
+        />
       </div>
     </div>
   </section>
@@ -398,5 +438,42 @@ const getDisplayPrice = (plan) => {
 
 .price-value.range {
   font-size: 2.2rem;
+}
+
+/* Checkout Modal */
+.checkout-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.checkout-modal {
+  position: relative;
+  max-width: 100%;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.modal-close-btn:hover {
+  opacity: 0.7;
 }
 </style>

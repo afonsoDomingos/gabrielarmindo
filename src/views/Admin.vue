@@ -17,19 +17,23 @@ import {
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement);
 
 const router = useRouter();
-const activeTab = ref('overview'); // 'overview', 'blog', 'packages', 'messages', 'testimonials'
+const activeTab = ref('overview'); // 'overview', 'blog', 'packages', 'servicesOverview', 'payments', 'messages', 'testimonials'
 
 // Data collections
 const posts = ref([]);
 const packages = ref([]);
 const messages = ref([]);
 const testimonials = ref([]);
+const services = ref([]);
+const transactions = ref([]);
 const stats = ref({
   totalPosts: 0,
   totalPackages: 0,
   totalMessages: 0,
   unreadMessages: 0,
+  totalServices: 0,
   totalViews: 0,
+  totalPayments: 0,
   categoryStats: {}
 });
 
@@ -90,6 +94,22 @@ const testimonialForm = ref({
   rating: 5,
   active: true
 });
+
+const isServiceModalOpen = ref(false);
+const editingService = ref(null);
+const serviceForm = ref({
+  title: '',
+  titleEn: '',
+  icon: 'fas fa-chart-line',
+  description: '',
+  descriptionEn: '',
+  features: [],
+  featuresEn: [],
+  order: 0,
+  active: true
+});
+const newServiceFeature = ref('');
+const newServiceFeatureEn = ref('');
 
 // Resume / Trajectory State
 const resume = ref({
@@ -157,19 +177,23 @@ const getAuthHeaders = () => {
 const fetchData = async () => {
   isLoading.value = true;
   try {
-    const [postsRes, packagesRes, messagesRes, statsRes, testRes, resumeRes] = await Promise.all([
+    const [postsRes, packagesRes, messagesRes, statsRes, testRes, resumeRes, servicesRes, transactionsRes] = await Promise.all([
       axios.get('/api/blog'),
       axios.get('/api/packages'),
       axios.get('/api/messages', getAuthHeaders()).catch(() => ({ data: [] })),
       axios.get('/api/admin/stats', getAuthHeaders()).catch(() => ({ data: null })),
       axios.get('/api/testimonials').catch(() => ({ data: [] })),
-      axios.get('/api/resume').catch(() => ({ data: null }))
+      axios.get('/api/resume').catch(() => ({ data: null })),
+      axios.get('/api/services/all', getAuthHeaders()).catch(() => ({ data: [] })),
+      axios.get('/api/payments', getAuthHeaders()).catch(() => ({ data: [] }))
     ]);
 
     posts.value = postsRes.data || [];
     packages.value = packagesRes.data || [];
     messages.value = messagesRes.data || [];
     testimonials.value = testRes.data || [];
+    services.value = servicesRes.data || [];
+    transactions.value = transactionsRes.data || [];
 
     if (resumeRes?.data) {
       resume.value = resumeRes.data;
@@ -184,6 +208,8 @@ const fetchData = async () => {
         totalPackages: packages.value.length,
         totalMessages: messages.value.length,
         unreadMessages: messages.value.filter(m => !m.read).length,
+        totalServices: services.value.filter(s => s.active).length,
+        totalPayments: transactions.value.length,
         totalViews: posts.value.reduce((acc, p) => acc + (p.views || 0), 0),
         categoryStats: posts.value.reduce((acc, p) => {
           acc[p.category || 'Geral'] = (acc[p.category || 'Geral'] || 0) + 1;
@@ -535,6 +561,108 @@ const deleteTestimonial = async (item) => {
   }
 };
 
+// --- SERVICE OVERVIEW ACTIONS ---
+const openServiceModal = (service = null) => {
+  if (service) {
+    editingService.value = service;
+    serviceForm.value = {
+      title: service.title || '',
+      titleEn: service.titleEn || '',
+      icon: service.icon || 'fas fa-chart-line',
+      description: service.description || '',
+      descriptionEn: service.descriptionEn || '',
+      features: [...(service.features || [])],
+      featuresEn: [...(service.featuresEn || [])],
+      order: service.order || 0,
+      active: service.active !== undefined ? service.active : true
+    };
+  } else {
+    editingService.value = null;
+    serviceForm.value = {
+      title: '',
+      titleEn: '',
+      icon: 'fas fa-chart-line',
+      description: '',
+      descriptionEn: '',
+      features: [],
+      featuresEn: [],
+      order: services.value.length,
+      active: true
+    };
+  }
+  newServiceFeature.value = '';
+  newServiceFeatureEn.value = '';
+  isServiceModalOpen.value = true;
+};
+
+const addServiceFeature = () => {
+  if (newServiceFeature.value.trim()) {
+    serviceForm.value.features.push(newServiceFeature.value.trim());
+    newServiceFeature.value = '';
+  }
+};
+
+const removeServiceFeature = (idx) => {
+  serviceForm.value.features.splice(idx, 1);
+};
+
+const addServiceFeatureEn = () => {
+  if (newServiceFeatureEn.value.trim()) {
+    serviceForm.value.featuresEn.push(newServiceFeatureEn.value.trim());
+    newServiceFeatureEn.value = '';
+  }
+};
+
+const removeServiceFeatureEn = (idx) => {
+  serviceForm.value.featuresEn.splice(idx, 1);
+};
+
+const saveService = async () => {
+  if (!serviceForm.value.title || !serviceForm.value.description) {
+    showToast('Título e descrição são obrigatórios!', 'error');
+    return;
+  }
+
+  try {
+    const targetId = editingService.value?._id || editingService.value?.id;
+    if (editingService.value && targetId) {
+      await axios.put(`/api/services/${targetId}`, serviceForm.value, getAuthHeaders());
+      showToast('Serviço atualizado com sucesso!');
+    } else {
+      await axios.post('/api/services', serviceForm.value, getAuthHeaders());
+      showToast('Novo serviço adicionado com sucesso!');
+    }
+    isServiceModalOpen.value = false;
+    await fetchData();
+  } catch (err) {
+    showToast('Erro ao salvar serviço: ' + (err.response?.data?.message || err.message), 'error');
+  }
+};
+
+const deleteService = async (service) => {
+  const targetId = service._id || service.id;
+  if (!confirm(`Excluir o serviço "${service.title}"?`)) return;
+
+  try {
+    await axios.delete(`/api/services/${targetId}`, getAuthHeaders());
+    showToast('Serviço excluído!');
+    await fetchData();
+  } catch (err) {
+    showToast('Erro ao excluir serviço', 'error');
+  }
+};
+
+const toggleServiceActive = async (service) => {
+  const targetId = service._id || service.id;
+  try {
+    await axios.put(`/api/services/${targetId}`, { active: !service.active }, getAuthHeaders());
+    service.active = !service.active;
+    showToast(service.active ? 'Serviço ativado!' : 'Serviço desativado!');
+  } catch (err) {
+    showToast('Erro ao alterar status do serviço', 'error');
+  }
+};
+
 // --- RESUME & TRAJECTORY ACTIONS ---
 const saveResumeToDb = async (message = 'Currículo atualizado com sucesso!') => {
   try {
@@ -859,6 +987,18 @@ const logout = () => {
           <span class="badge-count">{{ packages.length }}</span>
         </button>
 
+        <button :class="{ active: activeTab === 'servicesOverview' }" @click="activeTab = 'servicesOverview'">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Serviços Detalhados</span>
+          <span class="badge-count">{{ services.filter(s => s.active).length }}</span>
+        </button>
+
+        <button :class="{ active: activeTab === 'payments' }" @click="activeTab = 'payments'">
+          <i class="fas fa-credit-card"></i>
+          <span>Pagamentos Kivora</span>
+          <span class="badge-count">{{ transactions.length }}</span>
+        </button>
+
         <button :class="{ active: activeTab === 'messages' }" @click="activeTab = 'messages'">
           <i class="fas fa-envelope"></i>
           <span>Mensagens (Inbox)</span>
@@ -893,11 +1033,13 @@ const logout = () => {
       <header class="topbar">
         <div class="topbar-left">
           <h1>
-            {{ 
-              activeTab === 'overview' ? 'Painel de Controlo' : 
-              activeTab === 'blog' ? 'Gestão de Artigos & Publicações' : 
-              activeTab === 'packages' ? 'Catálogo de Serviços & Consultoria' : 
-              activeTab === 'messages' ? 'Mensagens Recebidas do Formulário' : 
+            {{
+              activeTab === 'overview' ? 'Painel de Controlo' :
+              activeTab === 'blog' ? 'Gestão de Artigos & Publicações' :
+              activeTab === 'packages' ? 'Catálogo de Serviços & Consultoria' :
+              activeTab === 'servicesOverview' ? 'Serviços Detalhados (ServicesOverview)' :
+              activeTab === 'payments' ? 'Gestão de Pagamentos (Kivora)' :
+              activeTab === 'messages' ? 'Mensagens Recebidas do Formulário' :
               activeTab === 'testimonials' ? 'Gestão de Testemunhos & Avaliações' :
               'Gestão de Currículo & Trajetória'
             }}
@@ -911,6 +1053,9 @@ const logout = () => {
           </button>
           <button v-if="activeTab === 'packages'" @click="openPackageModal()" class="btn-action-top">
             <i class="fas fa-plus"></i> Novo Pacote
+          </button>
+          <button v-if="activeTab === 'servicesOverview'" @click="openServiceModal()" class="btn-action-top">
+            <i class="fas fa-plus"></i> Novo Serviço
           </button>
           <button v-if="activeTab === 'testimonials'" @click="openTestimonialModal()" class="btn-action-top">
             <i class="fas fa-plus"></i> Novo Depoimento
@@ -992,6 +1137,17 @@ const logout = () => {
                   <span class="metric-val">{{ stats.totalMessages }}</span>
                   <span class="metric-hint" :class="{ 'has-unread': stats.unreadMessages > 0 }">
                     <i class="fas fa-envelope-open-text"></i> {{ stats.unreadMessages }} novas não lidas
+                  </span>
+                </div>
+              </div>
+
+              <div class="metric-card orange-light" @click="activeTab = 'payments'" style="cursor: pointer;">
+                <div class="metric-icon"><i class="fas fa-credit-card"></i></div>
+                <div class="metric-details">
+                  <span class="metric-label">Pagamentos Kivora</span>
+                  <span class="metric-val">{{ stats.totalPayments || 0 }}</span>
+                  <span class="metric-hint">
+                    <i class="fas fa-check-circle"></i> Transacções processadas
                   </span>
                 </div>
               </div>
@@ -1229,7 +1385,128 @@ const logout = () => {
 
           </div>
 
-          <!-- TAB 4: MESSAGES (INBOX) -->
+          <!-- TAB 4: SERVICES OVERVIEW -->
+          <div v-if="activeTab === 'servicesOverview'" class="tab-pane fade-in">
+            <div class="section-intro-bar">
+              <div>
+                <h2>Serviços Detalhados (ServicesOverview)</h2>
+                <p>Gerencie os serviços exibidos na seção "O que ofereço" do site.</p>
+              </div>
+              <button @click="openServiceModal()" class="btn-primary-add">
+                <i class="fas fa-plus"></i> Novo Serviço
+              </button>
+            </div>
+
+            <div class="services-admin-grid">
+              <div v-for="service in services" :key="service._id || service.id" class="card service-admin-card" :class="{ inactive: !service.active }">
+                <div class="service-admin-header">
+                  <div class="service-icon-display">
+                    <i :class="service.icon || 'fas fa-chart-line'"></i>
+                  </div>
+                  <div class="service-header-info">
+                    <h3>{{ service.title }}</h3>
+                    <span v-if="service.titleEn" class="service-subtitle">{{ service.titleEn }}</span>
+                  </div>
+                  <div class="service-status-toggle">
+                    <button @click="toggleServiceActive(service)" :class="['status-toggle-btn', { active: service.active }]" :title="service.active ? 'Desativar' : 'Ativar'">
+                      <i :class="service.active ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <p class="service-admin-desc">{{ service.description }}</p>
+                <p v-if="service.descriptionEn" class="service-admin-desc-en">{{ service.descriptionEn }}</p>
+
+                <div class="service-features-section">
+                  <span class="features-label"><i class="fas fa-list-check"></i> Características (PT):</span>
+                  <ul class="service-features-list">
+                    <li v-for="(feat, idx) in service.features" :key="idx">
+                      <i class="fas fa-check"></i> {{ feat }}
+                    </li>
+                    <li v-if="!service.features || service.features.length === 0" class="no-features">
+                      Nenhuma característica adicionada
+                    </li>
+                  </ul>
+                </div>
+
+                <div v-if="service.featuresEn && service.featuresEn.length > 0" class="service-features-section">
+                  <span class="features-label"><i class="fas fa-list-check"></i> Features (EN):</span>
+                  <ul class="service-features-list">
+                    <li v-for="(feat, idx) in service.featuresEn" :key="idx">
+                      <i class="fas fa-check"></i> {{ feat }}
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="service-admin-footer">
+                  <div class="order-badge">
+                    <i class="fas fa-sort-numeric-down"></i> Ordem: {{ service.order }}
+                  </div>
+                  <div class="service-actions">
+                    <button @click="openServiceModal(service)" class="action-btn edit" title="Editar">
+                      <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button @click="deleteService(service)" class="action-btn delete" title="Excluir">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: PAYMENTS (KIVORA) -->
+          <div v-if="activeTab === 'payments'" class="tab-pane fade-in">
+            <div class="section-intro-bar">
+              <div>
+                <h2>Pagamentos via Kivora</h2>
+                <p>Gerencie as transacções processadas através do gateway Kivora Payments.</p>
+              </div>
+            </div>
+
+            <div class="card table-container-card">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID Transacção</th>
+                    <th>ID Kivora</th>
+                    <th>Cliente</th>
+                    <th>Telemóvel</th>
+                    <th>Valor</th>
+                    <th>Pacote</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="txn in transactions" :key="txn._id">
+                    <td class="font-mono text-sm">{{ txn._id.toString().slice(-8) }}</td>
+                    <td class="font-mono text-sm">{{ txn.kivoraPaymentId }}</td>
+                    <td>{{ txn.customer?.name || '-' }}</td>
+                    <td>{{ txn.customer?.phone }}</td>
+                    <td>
+                      <span class="amount-display">{{ txn.currency }} {{ txn.amount }}</span>
+                    </td>
+                    <td>{{ txn.packageName || '-' }}</td>
+                    <td>
+                      <span :class="['status-pill', txn.status]">
+                        {{ txn.status }}
+                      </span>
+                    </td>
+                    <td>{{ new Date(txn.createdAt).toLocaleDateString() }}</td>
+                  </tr>
+                  <tr v-if="transactions.length === 0">
+                    <td colspan="8" class="text-center empty-cell">
+                      <i class="fas fa-credit-card"></i>
+                      <p>Nenhuma transacção ainda.</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 8: MESSAGES (INBOX) -->
           <div v-if="activeTab === 'messages'" class="tab-pane fade-in">
             <div class="action-bar-glass">
               <div class="filter-tabs-pills">
@@ -1314,7 +1591,7 @@ const logout = () => {
             </div>
           </div>
 
-          <!-- TAB 5: TESTIMONIALS -->
+          <!-- TAB 7: TESTIMONIALS -->
           <div v-if="activeTab === 'testimonials'" class="tab-pane fade-in">
             <div class="section-intro-bar">
               <div>
@@ -1350,7 +1627,7 @@ const logout = () => {
             </div>
           </div>
 
-          <!-- TAB 6: RESUME & TRAJECTORY -->
+          <!-- TAB 9: RESUME & TRAJECTORY -->
           <div v-if="activeTab === 'resume'" class="tab-pane fade-in">
             <!-- Sub-navigation Pills -->
             <div class="action-bar-glass resume-subnav-bar">
@@ -1998,6 +2275,115 @@ const logout = () => {
             <button type="button" @click="isTestimonialModalOpen = false" class="btn-cancel">Cancelar</button>
             <button type="submit" class="btn-save">
               <i class="fas fa-save"></i> Salvar Depoimento
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- SERVICE MODAL -->
+    <div v-if="isServiceModalOpen" class="modal-overlay-custom">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-header-custom">
+          <div>
+            <h3>{{ editingService ? 'Editar Serviço' : 'Novo Serviço' }}</h3>
+            <span class="modal-subtitle">Exibido na seção "O que ofereço" (ServicesOverview)</span>
+          </div>
+          <button @click="isServiceModalOpen = false" class="btn-close-modal">&times;</button>
+        </div>
+
+        <form @submit.prevent="saveService" class="modal-form">
+          <div class="form-grid-2">
+            <div class="form-group span-2">
+              <label>Título (Português) <span class="required">*</span></label>
+              <input type="text" v-model="serviceForm.title" required placeholder="Ex: Design de Formulários para KoboToolbox" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Título (Inglês)</label>
+              <input type="text" v-model="serviceForm.titleEn" placeholder="Ex: Form Design for KoboToolbox" />
+            </div>
+
+            <div class="form-group">
+              <label>Ícone (FontAwesome)</label>
+              <input type="text" v-model="serviceForm.icon" placeholder="fas fa-clipboard-list" />
+            </div>
+
+            <div class="form-group">
+              <label>Ordem de Exibição</label>
+              <input type="number" v-model="serviceForm.order" min="0" placeholder="0, 1, 2, ..." />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Descrição (Português) <span class="required">*</span></label>
+              <textarea v-model="serviceForm.description" rows="3" required placeholder="Descrição detalhada do serviço..."></textarea>
+            </div>
+
+            <div class="form-group span-2">
+              <label>Descrição (Inglês)</label>
+              <textarea v-model="serviceForm.descriptionEn" rows="3" placeholder="Detailed service description..."></textarea>
+            </div>
+
+            <div class="form-group span-2">
+              <label>Características (Português)</label>
+              <div class="feature-input-row">
+                <input
+                  type="text"
+                  v-model="newServiceFeature"
+                  @keyup.enter.prevent="addServiceFeature"
+                  placeholder="Ex: Criação de formulários inteligentes..."
+                />
+                <button type="button" @click="addServiceFeature" class="btn-add-item">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+
+              <div class="features-pill-list">
+                <div v-for="(feat, idx) in serviceForm.features" :key="idx" class="feature-chip">
+                  <span>{{ feat }}</span>
+                  <button type="button" @click="removeServiceFeature(idx)">&times;</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group span-2">
+              <label>Features (Inglês)</label>
+              <div class="feature-input-row">
+                <input
+                  type="text"
+                  v-model="newServiceFeatureEn"
+                  @keyup.enter.prevent="addServiceFeatureEn"
+                  placeholder="Ex: Smart form creation..."
+                />
+                <button type="button" @click="addServiceFeatureEn" class="btn-add-item">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+
+              <div class="features-pill-list">
+                <div v-for="(feat, idx) in serviceForm.featuresEn" :key="idx" class="feature-chip">
+                  <span>{{ feat }}</span>
+                  <button type="button" @click="removeServiceFeatureEn(idx)">&times;</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group span-2">
+              <label>Status</label>
+              <div class="toggle-switch-row">
+                <label class="toggle-switch">
+                  <input type="checkbox" v-model="serviceForm.active" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label">{{ serviceForm.active ? 'Ativo — visível no site' : 'Inativo — oculto' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer-custom">
+            <button type="button" @click="isServiceModalOpen = false" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i> Salvar Serviço
             </button>
           </div>
         </form>
@@ -2696,6 +3082,7 @@ const logout = () => {
 .metric-card.blue .metric-icon { background: rgba(59,130,246,0.12); color: #3b82f6; }
 .metric-card.green .metric-icon { background: rgba(16,185,129,0.12); color: #10b981; }
 .metric-card.purple .metric-icon { background: rgba(139,92,246,0.12); color: #8b5cf6; }
+.metric-card.orange-light .metric-icon { background: rgba(251,146,60,0.12); color: #fb923c; }
 
 .metric-details {
   display: flex;
@@ -3051,6 +3438,19 @@ const logout = () => {
 .status-pill.published { background: #d1fae5; color: #065f46; }
 .status-pill.draft { background: #f1f5f9; color: #64748b; }
 
+/* Payment status styles */
+.status-pill.pending { background: #fef3c7; color: #92400e; }
+.status-pill.processing { background: #dbeafe; color: #1e40af; }
+.status-pill.paid { background: #d1fae5; color: #065f46; }
+.status-pill.completed { background: #d1fae5; color: #065f46; }
+.status-pill.failed { background: #fef2f2; color: #991b1b; }
+.status-pill.cancelled { background: #f1f5f9; color: #64748b; }
+
+.amount-display {
+  font-weight: 700;
+  color: #0f172a;
+}
+
 .btn-actions-cluster {
   display: flex;
   justify-content: flex-end;
@@ -3184,6 +3584,159 @@ const logout = () => {
   color: #94a3b8;
   font-weight: 500;
 }
+/* ==================== SERVICES OVERVIEW TAB ==================== */
+.services-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.5rem;
+}
+
+.service-admin-card {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.service-admin-card.inactive {
+  opacity: 0.6;
+  background: #f8fafc;
+}
+
+.service-admin-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+.service-admin-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.service-icon-display {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #FF7B1A, #ff9442);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  box-shadow: 0 4px 12px rgba(255,123,26,0.25);
+}
+
+.service-header-info {
+  flex: 1;
+}
+
+.service-header-info h3 {
+  font-size: 1.1rem;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.service-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.service-status-toggle {
+  margin-left: auto;
+}
+
+.status-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #cbd5e1;
+  transition: color 0.2s;
+}
+
+.status-toggle-btn.active {
+  color: #10b981;
+}
+
+.service-admin-desc {
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.service-admin-desc-en {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.service-features-section {
+  margin-bottom: 1rem;
+}
+
+.features-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.service-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.service-features-list li {
+  font-size: 0.85rem;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.service-features-list li i {
+  color: #10b981;
+  font-size: 0.75rem;
+}
+
+.no-features {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.service-admin-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.order-badge {
+  font-size: 0.75rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.service-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .pkg-popular-ribbon {
   position: absolute;
   top: -1px;
@@ -3349,6 +3902,10 @@ const logout = () => {
 }
 .modal-dialog.large {
   max-width: 780px;
+}
+
+.modal-dialog.modal-lg {
+  max-width: 800px;
 }
 
 @keyframes modalScale {

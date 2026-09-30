@@ -34,6 +34,8 @@ const Message = require('./models/Message');
 const Testimonial = require('./models/Testimonial');
 const User = require('./models/User');
 const Resume = require('./models/Resume');
+const Service = require('./models/Service');
+const Transaction = require('./models/Transaction');
 
 // Cloudinary Configuration with Local Fallback
 let upload;
@@ -411,6 +413,146 @@ const seedInitialData = async () => {
       await Resume.create(getDefaultResumeData());
       console.log('✅ Dados de currículo iniciais inseridos com sucesso!');
     }
+
+    const serviceCount = await Service.countDocuments();
+    if (serviceCount === 0) {
+      console.log('Populando serviços iniciais no MongoDB...');
+      await Service.insertMany([
+        {
+          title: 'Design de Formulários para KoboToolbox',
+          titleEn: 'Form Design for KoboToolbox',
+          icon: 'fas fa-clipboard-list',
+          description: 'Especialista no desenho de formulários avançados em KoboToolbox/XLSForm para recolha de dados de alta qualidade em contextos de pesquisa, monitoria e avaliação.',
+          descriptionEn: 'Expert in designing advanced forms in KoboToolbox/XLSForm for high-quality data collection in research, monitoring, and evaluation contexts.',
+          features: [
+            'Criação de formulários inteligentes com XLSForm',
+            'Desenvolvimento de lógica condicional e validações automatizadas',
+            'Estruturação de instrumentos complexos para estudos, avaliações e projectos humanitários',
+            'Integração de sistemas de recolha de dados com sistemas de MEAL',
+            'Formação e supervisão de enumeradores em recolha digital, ética e controlo de qualidade'
+          ],
+          featuresEn: [
+            'Smart form creation with XLSForm',
+            'Development of conditional logic and automated validations',
+            'Structuring complex instruments for studies, evaluations, and humanitarian projects',
+            'Integration of data collection systems with MEAL systems',
+            'Training and supervision of enumerators in digital collection, ethics, and quality control'
+          ],
+          order: 1,
+          active: true
+        },
+        {
+          title: 'Sistemas de Monitoria & Avaliação (M&E)',
+          titleEn: 'Monitoring & Evaluation Systems (M&E)',
+          icon: 'fas fa-chart-line',
+          description: 'Desenvolvimento e implementação de sistemas integrados de MEAL para monitorar desempenho, gerar evidências e apoiar decisões estratégicas.',
+          descriptionEn: 'Development and implementation of integrated MEAL systems to monitor performance, generate evidence, and support strategic decisions.',
+          features: [
+            'Desenvolvimento de KPIs e frameworks de desempenho',
+            'Sistemas digitais de recolha, gestão e validação de dados',
+            'Automatização de dashboards e relatórios analíticos',
+            'Configuração de mecanismos de alerta e acompanhamento em tempo real'
+          ],
+          featuresEn: [
+            'Development of KPIs and performance frameworks',
+            'Digital systems for data collection, management, and validation',
+            'Automation of dashboards and analytical reports',
+            'Configuration of alert mechanisms and real-time monitoring'
+          ],
+          order: 2,
+          active: true
+        },
+        {
+          title: 'Data Analysis & Business Intelligence',
+          titleEn: 'Data Analysis & Business Intelligence',
+          icon: 'fas fa-laptop-code',
+          description: 'Análise avançada de dados e criação de dashboards interactivos para geração de insights estratégicos.',
+          descriptionEn: 'Advanced data analysis and creation of interactive dashboards to generate strategic insights.',
+          features: [
+            'Dashboards avançados em Excel',
+            'Relatórios interactivos em Power BI',
+            'Análise estatística',
+            'Visualização estratégica de dados'
+          ],
+          featuresEn: [
+            'Advanced Excel Dashboards',
+            'Interactive Power BI Reports',
+            'Statistical analysis',
+            'Strategic data visualization'
+          ],
+          order: 3,
+          active: true
+        },
+        {
+          title: 'Mentoria em MEAL',
+          titleEn: 'MEAL Mentorship',
+          icon: 'fas fa-user-friends',
+          description: 'Mentoria técnica especializada para profissionais e organizações que procuram fortalecer competências em Monitoria, Avaliação, Accountability e Aprendizagem.',
+          descriptionEn: 'Specialized technical mentorship for professionals and organizations seeking to strengthen skills in Monitoring, Evaluation, Accountability, and Learning.',
+          features: [
+            'Mentoria individual',
+            'Capacitação prática de equipas',
+            'Apoio no desenho e fortalecimento de sistemas de MEAL',
+            'Acompanhamento técnico contínuo'
+          ],
+          featuresEn: [
+            'Individual mentorship',
+            'Practical team training',
+            'Support in the design and strengthening of MEAL systems',
+            'Continuous technical guidance'
+          ],
+          order: 4,
+          active: true
+        },
+        {
+          title: 'Consultorias Especializadas',
+          titleEn: 'Specialized Consultancies',
+          icon: 'fas fa-briefcase',
+          description: 'Serviços completos de consultoria em Monitoria & Avaliação, investigação aplicada e resposta humanitária.',
+          descriptionEn: 'Full consulting services in Monitoring & Evaluation, applied research, and humanitarian response.',
+          features: [
+            'Desenho e condução de avaliações',
+            'Desenvolvimento de ferramentas de recolha de dados',
+            'Formação de inquiridores',
+            'Análise de dados e elaboração de relatórios técnicos',
+            'Apoio a projectos de assistência humanitária'
+          ],
+          featuresEn: [
+            'Assessment design and conduct',
+            'Development of data collection tools',
+            'Enumerator training',
+            'Data analysis and preparation of technical reports',
+            'Support for humanitarian assistance projects'
+          ],
+          order: 5,
+          active: true
+        },
+        {
+          title: 'Gestão de Programas e Projectos',
+          titleEn: 'Program & Project Management',
+          icon: 'fas fa-tasks',
+          description: 'Coordenação estratégica e operacional de programas e projectos com foco em impacto, eficiência e sustentabilidade.',
+          descriptionEn: 'Strategic and operational coordination of programs and projects with a focus on impact, efficiency, and sustainability.',
+          features: [
+            'Liderança de equipas multidisciplinares',
+            'Planeamento estratégico e operacional',
+            'Coordenação e acompanhamento de resultados',
+            'Gestão de parcerias e articulação institucional',
+            'Produção de relatórios institucionais e suporte à tomada de decisão estratégica'
+          ],
+          featuresEn: [
+            'Leadership of multidisciplinary teams',
+            'Strategic and operational planning',
+            'Coordination and monitoring of results',
+            'Partnership management and institutional coordination',
+            'Production of institutional reports and strategic decision-making support'
+          ],
+          order: 6,
+          active: true
+        }
+      ]);
+      console.log('✅ Serviços iniciais inseridos com sucesso!');
+    }
   } catch (err) {
     console.error('Erro ao popular dados iniciais:', err.message);
   }
@@ -537,12 +679,14 @@ app.get('/api/admin/stats', authenticate, async (req, res) => {
     const totalPackages = await Package.countDocuments();
     const totalMessages = await Message.countDocuments();
     const unreadMessages = await Message.countDocuments({ read: false });
-    
+    const totalServices = await Service.countDocuments({ active: true });
+    const totalPayments = await Transaction.countDocuments();
+
     // Aggregation for category distribution
     const categoryStats = await Post.aggregate([
       { $group: { _id: '$category', count: { $sum: 1 } } }
     ]);
-    
+
     // Total views calculation
     const viewsAgg = await Post.aggregate([
       { $group: { _id: null, totalViews: { $sum: '$views' } } }
@@ -554,6 +698,8 @@ app.get('/api/admin/stats', authenticate, async (req, res) => {
       totalPackages,
       totalMessages,
       unreadMessages,
+      totalServices,
+      totalPayments,
       totalViews,
       categoryStats: categoryStats.reduce((acc, curr) => {
         acc[curr._id || 'Geral'] = curr.count;
@@ -951,6 +1097,213 @@ app.put('/api/resume', authenticate, async (req, res) => {
   } catch (err) {
     console.error('Erro ao salvar currículo no MongoDB:', err.message);
     res.status(500).json({ message: 'Erro ao salvar dados do currículo', error: err.message });
+  }
+});
+
+// --- SERVICES OVERVIEW ROUTES (MongoDB) ---
+app.get('/api/services', async (req, res) => {
+  try {
+    const services = await Service.find({ active: true }).sort({ order: 1 });
+    res.json(services);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao buscar serviços', error: err.message });
+  }
+});
+
+app.get('/api/services/all', authenticate, async (req, res) => {
+  try {
+    const services = await Service.find().sort({ order: 1 });
+    res.json(services);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao buscar serviços', error: err.message });
+  }
+});
+
+app.post('/api/services', authenticate, async (req, res) => {
+  try {
+    const newService = new Service(req.body);
+    const saved = await newService.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao criar serviço', error: err.message });
+  }
+});
+
+app.put('/api/services/:id', authenticate, async (req, res) => {
+  try {
+    const updated = await Service.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updated) {
+      return res.status(404).json({ message: 'Serviço não encontrado.' });
+    }
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao atualizar serviço', error: err.message });
+  }
+});
+
+app.delete('/api/services/:id', authenticate, async (req, res) => {
+  try {
+    await Service.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Serviço excluído com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao excluir serviço', error: err.message });
+  }
+});
+
+// --- KIVORA PAYMENTS INTEGRATION ---
+const kivoraService = require('./services/kivoraService');
+
+// Create C2B payment
+app.post('/api/payments/c2b', async (req, res) => {
+  try {
+    const { phone, amount, currency, reference, description, packageId, packageName, customerName, customerEmail } = req.body;
+
+    if (!phone || !amount) {
+      return res.status(400).json({ message: 'Phone e amount são obrigatórios!' });
+    }
+
+    // Create payment with Kivora
+    const kivoraResponse = await kivoraService.createC2BPayment({
+      phone,
+      amount,
+      currency: currency || 'MZN',
+      reference: reference || `PKG-${packageId}-${Date.now()}`,
+      description: description || `Pagamento: ${packageName || 'Serviço'}`
+    });
+
+    if (!kivoraResponse.success) {
+      return res.status(500).json({
+        message: 'Erro ao criar pagamento com Kivora',
+        error: kivoraResponse.error
+      });
+    }
+
+    // Save transaction to MongoDB
+    const transaction = await Transaction.create({
+      kivoraPaymentId: kivoraResponse.data.id,
+      paymentType: 'C2B',
+      status: kivoraResponse.data.status,
+      customer: {
+        name: customerName,
+        email: customerEmail,
+        phone
+      },
+      amount,
+      currency: currency || 'MZN',
+      reference: reference || kivoraResponse.data.reference,
+      description: description || `Pagamento: ${packageName || 'Serviço'}`,
+      packageId,
+      packageName
+    });
+
+    res.status(201).json({
+      success: true,
+      payment: kivoraResponse.data,
+      transaction: {
+        id: transaction._id,
+        kivoraPaymentId: transaction.kivoraPaymentId,
+        status: transaction.status
+      }
+    });
+  } catch (err) {
+    console.error('Erro ao processar pagamento C2B:', err);
+    res.status(500).json({ message: 'Erro ao processar pagamento', error: err.message });
+  }
+});
+
+// Get payment status
+app.get('/api/payments/:transactionId', async (req, res) => {
+  try {
+    const transaction = await Transaction.findOne({ _id: req.params.transactionId });
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transacção não encontrada' });
+    }
+
+    // Get latest status from Kivora
+    const kivoraResponse = await kivoraService.getC2BPayment(transaction.kivoraPaymentId);
+
+    if (kivoraResponse.success) {
+      // Update transaction status
+      transaction.status = kivoraResponse.data.status;
+      if (kivoraResponse.data.status === 'paid') {
+        transaction.completedAt = new Date();
+      } else if (kivoraResponse.data.status === 'failed') {
+        transaction.failedAt = new Date();
+      }
+      await transaction.save();
+    }
+
+    res.json({
+      transaction: {
+        id: transaction._id,
+        kivoraPaymentId: transaction.kivoraPaymentId,
+        status: transaction.status,
+        amount: transaction.amount,
+        currency: transaction.currency,
+        packageName: transaction.packageName,
+        createdAt: transaction.createdAt,
+        completedAt: transaction.completedAt
+      },
+      kivoraStatus: kivoraResponse.success ? kivoraResponse.data : null
+    });
+  } catch (err) {
+    console.error('Erro ao consultar pagamento:', err);
+    res.status(500).json({ message: 'Erro ao consultar pagamento', error: err.message });
+  }
+});
+
+// Webhook endpoint for Kivora events
+app.post('/api/webhooks/kivora', async (req, res) => {
+  try {
+    const webhookData = req.body;
+
+    // Validate webhook signature if configured
+    const signature = req.headers['x-kivora-signature'];
+    if (signature && !kivoraService.validateWebhookSignature(signature, JSON.stringify(req.body))) {
+      return res.status(401).json({ message: 'Assinatura do webhook inválida' });
+    }
+
+    // Process webhook event
+    const event = kivoraService.processWebhookEvent(webhookData);
+
+    // Find and update transaction
+    const transaction = await Transaction.findOne({ kivoraPaymentId: event.data.id });
+    if (transaction) {
+      transaction.status = event.data.status;
+      transaction.webhookReceived = true;
+      transaction.webhookData = event;
+
+      if (event.data.status === 'paid' || event.data.status === 'completed') {
+        transaction.completedAt = new Date();
+      } else if (event.data.status === 'failed') {
+        transaction.failedAt = new Date();
+      }
+
+      await transaction.save();
+      console.log(`✅ Webhook processado: ${event.eventType} para transacção ${transaction._id}`);
+    } else {
+      console.warn(`⚠️ Transacção não encontrada para payment ID: ${event.data.id}`);
+    }
+
+    // Always return 200 to acknowledge webhook
+    res.status(200).json({ received: true });
+  } catch (err) {
+    console.error('Erro ao processar webhook:', err);
+    // Still return 200 to avoid webhook retries
+    res.status(200).json({ received: true, error: err.message });
+  }
+});
+
+// Get all transactions (admin only)
+app.get('/api/payments', authenticate, async (req, res) => {
+  try {
+    const transactions = await Transaction.find()
+      .sort({ createdAt: -1 })
+      .populate('packageId', 'title price');
+
+    res.json(transactions);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao listar transacções', error: err.message });
   }
 });
 
