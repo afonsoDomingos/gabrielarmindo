@@ -222,7 +222,8 @@ const resetForm = () => {
 <template>
   <div class="payment-checkout">
     <div class="checkout-container">
-
+      <!-- Close button -->
+      <button @click="cancelPayment" class="close-btn">&times;</button>
 
       <!-- Loading State -->
       <div v-if="isProcessing && paymentStatus === 'processing'" class="processing-overlay">
@@ -411,7 +412,7 @@ const resetForm = () => {
   align-items: center;
   min-height: 100vh;
   padding: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ffffff;
   margin: 0;
 }
 
@@ -432,20 +433,19 @@ const resetForm = () => {
   position: absolute;
   top: 20px;
   right: 20px;
-  background: rgba(255, 255, 255, 0.2);
+  background: #f1f5f9;
   border: none;
   font-size: 1.5rem;
-  color: white;
+  color: #64748b;
   cursor: pointer;
   z-index: 10;
   padding: 0.75rem 1rem;
   border-radius: 50%;
   transition: all 0.2s;
-  backdrop-filter: blur(10px);
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #e2e8f0;
   transform: scale(1.1);
 }
 
@@ -586,9 +586,9 @@ const resetForm = () => {
 
 /* Left Column - Product Details */
 .product-details {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f8fafc;
   padding: 4rem 3rem;
-  color: white;
+  color: #1e293b;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -602,17 +602,19 @@ const resetForm = () => {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  color: #1e293b;
 }
 
 .purchase-count {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.2);
+  background: #667eea;
   padding: 0.75rem 1rem;
   border-radius: 50px;
   font-size: 0.9rem;
   width: fit-content;
+  color: white;
 }
 
 .purchase-count i {
@@ -620,8 +622,8 @@ const resetForm = () => {
 }
 
 .price-summary {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: white;
+  border: 1px solid #e2e8f0;
   border-radius: 15px;
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -646,8 +648,8 @@ const resetForm = () => {
 }
 
 .product-features {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: white;
+  border: 1px solid #e2e8f0;
   border-radius: 15px;
   padding: 1.5rem;
 }
@@ -656,6 +658,7 @@ const resetForm = () => {
   font-size: 1.1rem;
   margin-bottom: 1rem;
   font-weight: 600;
+  color: #1e293b;
 }
 
 .product-features ul {
@@ -670,10 +673,11 @@ const resetForm = () => {
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   font-size: 0.95rem;
+  color: #475569;
 }
 
 .product-features li i {
-  color: #fef3c7;
+  color: #10b981;
 }
 
 /* Right Column - Payment Form */
