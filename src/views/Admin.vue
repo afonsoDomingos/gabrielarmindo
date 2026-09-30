@@ -995,7 +995,7 @@ const logout = () => {
 
         <button :class="{ active: activeTab === 'payments' }" @click="activeTab = 'payments'">
           <i class="fas fa-credit-card"></i>
-          <span>Pagamentos Kivora</span>
+          <span>Pagamentos</span>
           <span class="badge-count">{{ transactions.length }}</span>
         </button>
 

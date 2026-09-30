@@ -594,9 +594,9 @@ const resetForm = () => {
 /* Left Column - Product Details */
 .product-details {
   background: #f8fafc;
-  padding: 4rem 3rem;
+  padding: 2rem 2rem;
   color: #1e293b;
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #e2e8f0;
@@ -607,9 +607,9 @@ const resetForm = () => {
 }
 
 .product-header h3 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   color: #1e293b;
 }
 
@@ -618,9 +618,9 @@ const resetForm = () => {
   align-items: center;
   gap: 0.5rem;
   background: #667eea;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 50px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   width: fit-content;
   color: white;
 }
@@ -633,8 +633,8 @@ const resetForm = () => {
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 15px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 .price-row {
@@ -659,12 +659,12 @@ const resetForm = () => {
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 15px;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .product-features h4 {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
   font-weight: 600;
   color: #1e293b;
 }
@@ -678,34 +678,35 @@ const resetForm = () => {
 .product-features li {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.95rem;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
   color: #475569;
 }
 
 .product-features li i {
   color: #10b981;
+  font-size: 0.8rem;
 }
 
 /* Right Column - Payment Form */
 .payment-form {
-  padding: 4rem 3rem;
+  padding: 2rem 2rem;
   background: white;
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .payment-form h3 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #1e293b;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-weight: 700;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-group label {
