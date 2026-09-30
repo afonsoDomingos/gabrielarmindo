@@ -1038,7 +1038,7 @@ const logout = () => {
               activeTab === 'blog' ? 'Gestão de Artigos & Publicações' :
               activeTab === 'packages' ? 'Catálogo de Serviços & Consultoria' :
               activeTab === 'servicesOverview' ? 'Serviços Detalhados (ServicesOverview)' :
-              activeTab === 'payments' ? 'Gestão de Pagamentos (Kivora)' :
+              activeTab === 'payments' ? 'Gestão de Pagamentos' :
               activeTab === 'messages' ? 'Mensagens Recebidas do Formulário' :
               activeTab === 'testimonials' ? 'Gestão de Testemunhos & Avaliações' :
               'Gestão de Currículo & Trajetória'
@@ -1144,7 +1144,7 @@ const logout = () => {
               <div class="metric-card orange-light" @click="activeTab = 'payments'" style="cursor: pointer;">
                 <div class="metric-icon"><i class="fas fa-credit-card"></i></div>
                 <div class="metric-details">
-                  <span class="metric-label">Pagamentos Kivora</span>
+                  <span class="metric-label">Pagamentos</span>
                   <span class="metric-val">{{ stats.totalPayments || 0 }}</span>
                   <span class="metric-hint">
                     <i class="fas fa-check-circle"></i> Transacções processadas
@@ -1455,12 +1455,12 @@ const logout = () => {
             </div>
           </div>
 
-          <!-- TAB 5: PAYMENTS (KIVORA) -->
+          <!-- TAB 5: PAYMENTS -->
           <div v-if="activeTab === 'payments'" class="tab-pane fade-in">
             <div class="section-intro-bar">
               <div>
-                <h2>Pagamentos via Kivora</h2>
-                <p>Gerencie as transacções processadas através do gateway Kivora Payments.</p>
+                <h2>Pagamentos</h2>
+                <p>Gerencie as transacções processadas através dos gateways e-Mola e M-Pesa.</p>
               </div>
             </div>
 
@@ -1488,7 +1488,7 @@ const logout = () => {
                     </td>
                     <td class="font-mono text-sm">{{ txn._id.toString().slice(-8) }}</td>
                     <td class="font-mono text-sm">
-                      {{ txn.kivoraPaymentId || txn.mpesaTransactionId || txn.emolaTransactionId || '-' }}
+                      {{ txn.mpesaTransactionId || txn.emolaTransactionId || '-' }}
                     </td>
                     <td>{{ txn.customer?.name || '-' }}</td>
                     <td>{{ txn.customer?.phone }}</td>
