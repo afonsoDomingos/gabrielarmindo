@@ -1363,50 +1363,11 @@ app.post('/api/payments/universal', async (req, res) => {
   try {
     const { gateway, ...paymentData } = req.body;
 
-    if (!gateway || !['EMOLA', 'MPESA'].includes(gateway)) {
-      return res.status(400).json({ message: 'Gateway inválido. Use EMOLA ou MPESA' });
+    if (!gateway || !['MPESA'].includes(gateway)) {
+      return res.status(400).json({ message: 'Gateway inválido. Apenas M-Pesa está disponível no momento' });
     }
 
-    if (gateway === 'EMOLA') {
-      // Redirect to e-Mola endpoint
-      const emolaResponse = await emolaService.createC2BPayment(paymentData);
-
-      if (!emolaResponse.success) {
-        return res.status(500).json({
-          message: 'Erro ao criar pagamento com e-Mola',
-          error: emolaResponse.error
-        });
-      }
-
-      const transaction = await Transaction.create({
-        gateway: 'EMOLA',
-        emolaTransactionId: emolaResponse.data.transaction_id || emolaResponse.data.id,
-        paymentType: 'C2B',
-        status: 'pending',
-        customer: {
-          name: paymentData.customerName,
-          email: paymentData.customerEmail,
-          phone: paymentData.phone
-        },
-        amount: paymentData.amount,
-        currency: paymentData.currency || 'MZN',
-        reference: paymentData.reference || emolaResponse.data.reference,
-        description: paymentData.description,
-        packageId: paymentData.packageId,
-        packageName: paymentData.packageName
-      });
-
-      res.status(201).json({
-        success: true,
-        gateway: 'EMOLA',
-        payment: emolaResponse.data,
-        transaction: {
-          id: transaction._id,
-          emolaTransactionId: transaction.emolaTransactionId,
-          status: transaction.status
-        }
-      });
-    } else if (gateway === 'MPESA') {
+    if (gateway === 'MPESA') {
       // Redirect to M-Pesa endpoint
       const mpesaResponse = await mpesaService.createC2BPayment(paymentData);
       
@@ -1461,18 +1422,7 @@ app.get('/api/payments/universal/:transactionId', async (req, res) => {
     }
 
     let gatewayResponse;
-    if (transaction.gateway === 'EMOLA') {
-      gatewayResponse = await emolaService.getC2BPayment(transaction.emolaTransactionId);
-      if (gatewayResponse.success) {
-        const processedEvent = emolaService.processWebhookEvent(gatewayResponse.data);
-        transaction.status = processedEvent.status;
-        if (processedEvent.status === 'paid') {
-          transaction.completedAt = new Date();
-        } else if (processedEvent.status === 'failed') {
-          transaction.failedAt = new Date();
-        }
-      }
-    } else if (transaction.gateway === 'MPESA') {
+    if (transaction.gateway === 'MPESA') {
       gatewayResponse = await mpesaService.getC2BPayment(transaction.mpesaTransactionId);
       if (gatewayResponse.success) {
         const processedEvent = mpesaService.processWebhookEvent(gatewayResponse.data);

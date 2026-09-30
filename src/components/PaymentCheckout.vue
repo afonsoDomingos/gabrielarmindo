@@ -28,10 +28,10 @@ const props = defineProps({
 const emit = defineEmits(['payment-complete', 'payment-cancelled']);
 
 // Gateway selection
-const selectedGateway = ref('EMOLA');
+const selectedGateway = ref('MPESA');
 const availableGateways = [
-  { value: 'EMOLA', name: 'e-Mola', icon: 'fas fa-sim-card' },
-  { value: 'MPESA', name: 'M-Pesa', icon: 'fas fa-mobile-alt' }
+  { value: 'MPESA', name: 'M-Pesa', icon: 'fas fa-mobile-alt', available: true },
+  { value: 'EMOLA', name: 'e-Mola', icon: 'fas fa-sim-card', available: false }
 ];
 
 // Form state
@@ -349,14 +349,18 @@ const resetForm = () => {
               <button
                 v-for="gateway in availableGateways"
                 :key="gateway.value"
-                :class="['gateway-option', { active: selectedGateway === gateway.value }]"
+                :class="['gateway-option', { active: selectedGateway === gateway.value, disabled: !gateway.available }]"
                 :data-gateway="gateway.value"
-                @click="selectedGateway = gateway.value"
+                @click="gateway.available && (selectedGateway = gateway.value)"
               >
                 <i :class="gateway.icon"></i>
                 {{ gateway.name }}
+                <i v-if="!gateway.available" class="fas fa-lock lock-icon"></i>
               </button>
             </div>
+            <small v-if="!availableGateways.find(g => g.value === 'EMOLA').available" class="unavailable-text">
+              <i class="fas fa-info-circle"></i> e-Mola indisponível no momento
+            </small>
           </div>
 
           <div class="form-group">
@@ -767,9 +771,10 @@ const resetForm = () => {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  position: relative;
 }
 
-.gateway-option:hover {
+.gateway-option:hover:not(.disabled) {
   border-color: #94a3b8;
   color: #475569;
 }
@@ -786,8 +791,37 @@ const resetForm = () => {
   color: white;
 }
 
+.gateway-option.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: #f1f5f9;
+}
+
+.gateway-option.disabled:hover {
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+
 .gateway-option i {
   font-size: 1.1rem;
+}
+
+.lock-icon {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.unavailable-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.unavailable-text i {
+  color: #f59e0b;
 }
 
 /* Terms Checkbox */
