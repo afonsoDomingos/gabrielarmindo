@@ -51,10 +51,21 @@ const transactionId = ref(null);
 const gatewayPaymentId = ref(null);
 const errorMessage = ref('');
 
-// Phone validation
+// Phone validation based on gateway
 const isValidPhone = computed(() => {
   const phone = paymentForm.value.phone.replace(/\D/g, '');
-  return phone.length === 9 && (phone.startsWith('8') || phone.startsWith('7') || phone.startsWith('6'));
+
+  if (phone.length !== 9) return false;
+
+  if (selectedGateway.value === 'EMOLA') {
+    // e-Mola: 87 or 86
+    return phone.startsWith('87') || phone.startsWith('86');
+  } else if (selectedGateway.value === 'MPESA') {
+    // M-Pesa: 84 or 85
+    return phone.startsWith('84') || phone.startsWith('85');
+  }
+
+  return false;
 });
 
 // Email validation
@@ -83,10 +94,20 @@ const getGatewayLabel = () => {
 // Phone placeholder helper
 const getPhonePlaceholder = () => {
   const placeholders = {
-    'EMOLA': '841234567',
+    'EMOLA': '871234567',
     'MPESA': '841234567'
   };
   return placeholders[selectedGateway.value] || '841234567';
+};
+
+// Phone validation message helper
+const getPhoneValidationMessage = () => {
+  if (selectedGateway.value === 'EMOLA') {
+    return 'Número inválido (deve começar com 87 ou 86)';
+  } else if (selectedGateway.value === 'MPESA') {
+    return 'Número inválido (deve começar com 84 ou 85)';
+  }
+  return 'Número inválido';
 };
 
 // Format phone number
@@ -348,7 +369,7 @@ const resetForm = () => {
               :class="{ 'error': !isValidPhone && paymentForm.phone.length > 0 }"
             />
             <small v-if="!isValidPhone && paymentForm.phone.length > 0" class="error-text">
-              Número inválido (9 dígitos, começando com 8, 7 ou 6)
+              {{ getPhoneValidationMessage() }}
             </small>
           </div>
 

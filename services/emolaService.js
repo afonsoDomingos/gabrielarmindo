@@ -45,13 +45,27 @@ class EmolaService {
     try {
       const authToken = this.generateAuthToken();
 
-      // Format phone number - ensure it has +258 prefix
+      // Format phone number - ensure it has +258 prefix and valid e-Mola prefix (87 or 86)
       let phone = paymentData.phone;
+      const digits = phone.replace(/\D/g, '');
+
+      // Validate e-Mola prefix (87 or 86)
+      if (!digits.startsWith('87') && !digits.startsWith('86')) {
+        return {
+          success: false,
+          error: {
+            code: 'INVALID_PHONE',
+            message: 'Número de telefone inválido para e-Mola. Deve começar com 87 ou 86'
+          }
+        };
+      }
+
+      // Add +258 prefix if not present
       if (!phone.startsWith('+')) {
-        if (phone.startsWith('258')) {
-          phone = '+' + phone;
+        if (digits.startsWith('258')) {
+          phone = '+' + digits;
         } else {
-          phone = '+258' + phone;
+          phone = '+258' + digits;
         }
       }
 

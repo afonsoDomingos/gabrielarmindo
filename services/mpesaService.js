@@ -55,13 +55,27 @@ class MpesaService {
     try {
       const authToken = this.generateAuthToken();
 
-      // Format phone number - ensure it has +258 prefix
+      // Format phone number - ensure it has +258 prefix and valid M-Pesa prefix (84 or 85)
       let phone = paymentData.phone;
+      const digits = phone.replace(/\D/g, '');
+
+      // Validate M-Pesa prefix (84 or 85)
+      if (!digits.startsWith('84') && !digits.startsWith('85')) {
+        return {
+          success: false,
+          error: {
+            code: 'INVALID_PHONE',
+            message: 'Número de telefone inválido para M-Pesa. Deve começar com 84 ou 85'
+          }
+        };
+      }
+
+      // Add +258 prefix if not present
       if (!phone.startsWith('+')) {
-        if (phone.startsWith('258')) {
-          phone = '+' + phone;
+        if (digits.startsWith('258')) {
+          phone = '+' + digits;
         } else {
-          phone = '+258' + phone;
+          phone = '+258' + digits;
         }
       }
 
