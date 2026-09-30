@@ -406,25 +406,34 @@ const resetForm = () => {
 </template>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .payment-checkout {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   padding: 0;
   background: #ffffff;
   margin: 0;
+  overflow: hidden;
 }
 
 .checkout-container {
   background: white;
   border-radius: 0;
-  max-width: 100%;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   box-shadow: none;
   overflow: hidden;
   position: relative;
+  margin: 0;
+  padding: 0;
 }
 
 .close-btn {
@@ -578,8 +587,8 @@ const resetForm = () => {
   display: grid;
   grid-template-columns: 50% 50%;
   gap: 0;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
 }
 
 /* Left Column - Product Details */

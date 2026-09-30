@@ -246,7 +246,6 @@ const handlePaymentCancel = () => {
     <!-- Payment Checkout Modal -->
     <div v-if="showCheckout && selectedPackage" class="checkout-modal-overlay">
       <div class="checkout-modal">
-        <button @click="handlePaymentCancel" class="modal-close-btn">&times;</button>
         <PaymentCheckout
           :package-id="selectedPackage._id || selectedPackage.id"
           :package-name="selectedPackage.title"
@@ -456,28 +455,15 @@ const handlePaymentCancel = () => {
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  padding: 1rem;
+  padding: 0;
+  margin: 0;
 }
 
 .checkout-modal {
   position: relative;
+  width: 100vw;
+  height: 100vh;
   max-width: 100%;
-}
-
-.modal-close-btn {
-  position: absolute;
-  top: -40px;
-  right: 0;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: opacity 0.2s;
-}
-
-.modal-close-btn:hover {
-  opacity: 0.7;
+  max-height: 100%;
 }
 </style>
