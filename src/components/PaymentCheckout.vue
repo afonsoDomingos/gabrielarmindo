@@ -350,6 +350,7 @@ const resetForm = () => {
                 v-for="gateway in availableGateways"
                 :key="gateway.value"
                 :class="['gateway-option', { active: selectedGateway === gateway.value }]"
+                :data-gateway="gateway.value"
                 @click="selectedGateway = gateway.value"
               >
                 <i :class="gateway.icon"></i>
@@ -748,7 +749,7 @@ const resetForm = () => {
 /* Gateway Selector */
 .gateway-selector {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
 }
 
@@ -769,13 +770,19 @@ const resetForm = () => {
 }
 
 .gateway-option:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #94a3b8;
+  color: #475569;
 }
 
-.gateway-option.active {
-  border-color: #667eea;
-  background: #667eea;
+.gateway-option.active[data-gateway="EMOLA"] {
+  border-color: #ea580c;
+  background: #ea580c;
+  color: white;
+}
+
+.gateway-option.active[data-gateway="MPESA"] {
+  border-color: #dc2626;
+  background: #dc2626;
   color: white;
 }
 

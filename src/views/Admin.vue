@@ -3468,19 +3468,14 @@ const logout = () => {
   text-transform: uppercase;
 }
 
-.gateway-badge.kivora {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
 .gateway-badge.mpesa {
-  background: #dcfce7;
-  color: #166534;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .gateway-badge.emola {
-  background: #fef3c7;
-  color: #92400e;
+  background: #ffedd5;
+  color: #ea580c;
 }
 
 .btn-actions-cluster {
