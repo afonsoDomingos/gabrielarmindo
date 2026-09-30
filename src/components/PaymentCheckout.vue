@@ -222,8 +222,7 @@ const resetForm = () => {
 <template>
   <div class="payment-checkout">
     <div class="checkout-container">
-      <!-- Close button -->
-      <button @click="cancelPayment" class="close-btn">&times;</button>
+
 
       <!-- Loading State -->
       <div v-if="isProcessing && paymentStatus === 'processing'" class="processing-overlay">
@@ -411,36 +410,43 @@ const resetForm = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 0;
 }
 
 .checkout-container {
   background: white;
-  border-radius: 20px;
-  max-width: 1000px;
+  border-radius: 0;
+  max-width: 100%;
   width: 100%;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  height: 100vh;
+  box-shadow: none;
   overflow: hidden;
   position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .close-btn {
   position: absolute;
   top: 20px;
   right: 20px;
-  background: none;
+  background: rgba(255, 255, 255, 0.2);
   border: none;
-  font-size: 2rem;
-  color: #64748b;
+  font-size: 1.5rem;
+  color: white;
   cursor: pointer;
   z-index: 10;
-  padding: 0.5rem;
-  transition: color 0.2s;
+  padding: 0.75rem 1rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
 }
 
 .close-btn:hover {
-  color: #dc2626;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
 /* Processing Overlay */
@@ -460,6 +466,8 @@ const resetForm = () => {
   justify-content: center;
   z-index: 20;
   padding: 3rem;
+  height: 100vh;
+  width: 100%;
 }
 
 .pending-icon,
@@ -572,13 +580,18 @@ const resetForm = () => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
+  height: 100%;
+  width: 100%;
 }
 
 /* Left Column - Product Details */
 .product-details {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 3rem;
+  padding: 4rem 3rem;
   color: white;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-header {
@@ -665,8 +678,11 @@ const resetForm = () => {
 
 /* Right Column - Payment Form */
 .payment-form {
-  padding: 3rem;
+  padding: 4rem 3rem;
   background: white;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .payment-form h3 {
@@ -845,6 +861,12 @@ const resetForm = () => {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .checkout-container {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+
   .checkout-content {
     grid-template-columns: 1fr;
   }
@@ -858,7 +880,7 @@ const resetForm = () => {
   }
 
   .payment-checkout {
-    padding: 1rem;
+    padding: 0;
   }
 
   .product-header h3 {
