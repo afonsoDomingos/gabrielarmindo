@@ -101,7 +101,7 @@ const prev = () => {
 
 .testimonial-content {
   text-align: center;
-  padding: 3rem;
+  padding: 2rem;
   background: var(--card-bg);
   border: var(--card-border);
   border-radius: var(--radius-lg);
@@ -113,23 +113,23 @@ const prev = () => {
 
 .rating {
   color: #f6ad55;
-  margin-bottom: 2rem;
-  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.1rem;
   display: flex;
   justify-content: center;
   gap: 0.25rem;
 }
 
 .testimonial-text {
-  font-size: 1.15rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--text-secondary);
   font-style: italic;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .testimonial-author h4 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
@@ -138,7 +138,7 @@ const prev = () => {
 .testimonial-author p {
   color: var(--primary-color);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .slider-btn {

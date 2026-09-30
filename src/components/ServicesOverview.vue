@@ -246,7 +246,7 @@ const getServiceFeatures = (service) => {
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  padding: 2.5rem 2rem;
+  padding: 1.75rem 1.5rem;
   transition: all 0.4s ease;
   height: 100%;
 }
@@ -261,36 +261,36 @@ const getServiceFeatures = (service) => {
   display: flex;
   width: 100%;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .overview-icon {
-  width: 64px;
-  height: 64px;
+  width: 52px;
+  height: 52px;
   background: var(--gradient-1);
   color: white;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   box-shadow: 0 8px 16px rgba(255, 123, 26, 0.25);
 }
 
 .overview-card h3 {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   width: 100%;
   text-align: center;
 }
 
 .service-desc {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
   text-align: center;
   width: 100%;
 }
@@ -301,7 +301,7 @@ const getServiceFeatures = (service) => {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
   margin-top: auto;
   width: 100%;
 }
@@ -309,16 +309,16 @@ const getServiceFeatures = (service) => {
 .service-bullets li {
   display: flex;
   align-items: flex-start;
-  gap: 0.6rem;
-  font-size: 0.85rem;
+  gap: 0.5rem;
+  font-size: 0.8rem;
   color: var(--text-primary);
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .service-bullets li i {
   color: var(--primary-color);
-  margin-top: 0.2rem;
-  font-size: 0.9rem;
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
   flex-shrink: 0;
 }
 

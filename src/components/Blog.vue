@@ -285,7 +285,7 @@ onMounted(fetchPosts);
 
 .blog-image {
     width: 100%;
-    height: 200px;
+    height: 160px;
     background: var(--bg-tertiary);
     display: flex;
     align-items: center;
@@ -293,7 +293,7 @@ onMounted(fetchPosts);
 }
 
 .blog-content {
-    padding: var(--spacing-md);
+    padding: 1.25rem;
 }
 
 .blog-meta {
