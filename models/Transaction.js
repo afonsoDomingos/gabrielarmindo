@@ -4,15 +4,14 @@ const TransactionSchema = new mongoose.Schema({
   // Payment gateway
   gateway: {
     type: String,
-    enum: ['KIVORA', 'MPESA', 'EMOLA'],
+    enum: ['EMOLA', 'MPESA'],
     required: true,
-    default: 'KIVORA'
+    default: 'EMOLA'
   },
 
   // Gateway-specific payment IDs
-  kivoraPaymentId: String,
-  mpesaTransactionId: String,
   emolaTransactionId: String,
+  mpesaTransactionId: String,
 
   // Payment type (C2B, B2C, SUBSCRIPTION)
   paymentType: {
@@ -83,9 +82,8 @@ const TransactionSchema = new mongoose.Schema({
 
 // Index for faster queries
 TransactionSchema.index({ gateway: 1 });
-TransactionSchema.index({ kivoraPaymentId: 1 });
-TransactionSchema.index({ mpesaTransactionId: 1 });
 TransactionSchema.index({ emolaTransactionId: 1 });
+TransactionSchema.index({ mpesaTransactionId: 1 });
 TransactionSchema.index({ status: 1 });
 TransactionSchema.index({ customer: { phone: 1 } });
 TransactionSchema.index({ createdAt: -1 });

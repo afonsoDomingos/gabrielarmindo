@@ -28,11 +28,10 @@ const props = defineProps({
 const emit = defineEmits(['payment-complete', 'payment-cancelled']);
 
 // Gateway selection
-const selectedGateway = ref('MPESA');
+const selectedGateway = ref('EMOLA');
 const availableGateways = [
-  { value: 'MPESA', name: 'M-Pesa', icon: 'fas fa-mobile-alt' },
   { value: 'EMOLA', name: 'e-Mola', icon: 'fas fa-sim-card' },
-  { value: 'KIVORA', name: 'Kivora', icon: 'fas fa-credit-card' }
+  { value: 'MPESA', name: 'M-Pesa', icon: 'fas fa-mobile-alt' }
 ];
 
 // Form state
@@ -75,9 +74,8 @@ const isFormValid = computed(() => {
 // Gateway label helper
 const getGatewayLabel = () => {
   const labels = {
-    'MPESA': 'Número M-Pesa',
     'EMOLA': 'Número e-Mola',
-    'KIVORA': 'Número de telemóvel'
+    'MPESA': 'Número M-Pesa'
   };
   return labels[selectedGateway.value] || 'Número de telemóvel';
 };
@@ -85,9 +83,8 @@ const getGatewayLabel = () => {
 // Phone placeholder helper
 const getPhonePlaceholder = () => {
   const placeholders = {
-    'MPESA': '841234567',
     'EMOLA': '841234567',
-    'KIVORA': '841234567'
+    'MPESA': '841234567'
   };
   return placeholders[selectedGateway.value] || '841234567';
 };

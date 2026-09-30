@@ -1151,7 +1151,7 @@ app.delete('/api/services/:id', authenticate, async (req, res) => {
 });
 
 // --- KIVORA PAYMENTS INTEGRATION ---
-const kivoraService = require('./services/kivoraService');
+const emolaService = require('./services/emolaService');
 const mpesaService = require('./services/mpesaService');
 
 // Create C2B payment
@@ -1269,43 +1269,43 @@ app.get('/api/payments/:transactionId', async (req, res) => {
   }
 });
 
-// Webhook endpoint for Kivora events
-app.post('/api/webhooks/kivora', async (req, res) => {
+// Webhook endpoint for e-Mola events
+app.post('/api/webhooks/emola', async (req, res) => {
   try {
     const webhookData = req.body;
 
     // Validate webhook signature if configured
-    const signature = req.headers['x-kivora-signature'];
-    if (signature && !kivoraService.validateWebhookSignature(signature, JSON.stringify(req.body))) {
+    const signature = req.headers['x-emola-signature'];
+    if (signature && !emolaService.validateWebhookSignature(signature, JSON.stringify(req.body))) {
       return res.status(401).json({ message: 'Assinatura do webhook inválida' });
     }
 
     // Process webhook event
-    const event = kivoraService.processWebhookEvent(webhookData);
+    const event = emolaService.processWebhookEvent(webhookData);
 
     // Find and update transaction
-    const transaction = await Transaction.findOne({ kivoraPaymentId: event.data.id });
+    const transaction = await Transaction.findOne({ emolaTransactionId: event.transactionId });
     if (transaction) {
-      transaction.status = event.data.status;
+      transaction.status = event.status;
       transaction.webhookReceived = true;
       transaction.webhookData = event;
 
-      if (event.data.status === 'paid' || event.data.status === 'completed') {
+      if (event.status === 'paid') {
         transaction.completedAt = new Date();
-      } else if (event.data.status === 'failed') {
+      } else if (event.status === 'failed') {
         transaction.failedAt = new Date();
       }
 
       await transaction.save();
-      console.log(`✅ Webhook processado: ${event.eventType} para transacção ${transaction._id}`);
+      console.log(`✅ Webhook e-Mola processado para transacção ${transaction._id}`);
     } else {
-      console.warn(`⚠️ Transacção não encontrada para payment ID: ${event.data.id}`);
+      console.warn(`⚠️ Transacção não encontrada para e-Mola transaction ID: ${event.transactionId}`);
     }
 
     // Always return 200 to acknowledge webhook
     res.status(200).json({ received: true });
   } catch (err) {
-    console.error('Erro ao processar webhook:', err);
+    console.error('Erro ao processar webhook e-Mola:', err);
     // Still return 200 to avoid webhook retries
     res.status(200).json({ received: true, error: err.message });
   }
@@ -1478,26 +1478,26 @@ app.post('/api/payments/universal', async (req, res) => {
   try {
     const { gateway, ...paymentData } = req.body;
 
-    if (!gateway || !['KIVORA', 'MPESA'].includes(gateway)) {
-      return res.status(400).json({ message: 'Gateway inválido. Use KIVORA ou MPESA' });
+    if (!gateway || !['EMOLA', 'MPESA'].includes(gateway)) {
+      return res.status(400).json({ message: 'Gateway inválido. Use EMOLA ou MPESA' });
     }
 
-    if (gateway === 'KIVORA') {
-      // Redirect to Kivora endpoint
-      const kivoraResponse = await kivoraService.createC2BPayment(paymentData);
-      
-      if (!kivoraResponse.success) {
+    if (gateway === 'EMOLA') {
+      // Redirect to e-Mola endpoint
+      const emolaResponse = await emolaService.createC2BPayment(paymentData);
+
+      if (!emolaResponse.success) {
         return res.status(500).json({
-          message: 'Erro ao criar pagamento com Kivora',
-          error: kivoraResponse.error
+          message: 'Erro ao criar pagamento com e-Mola',
+          error: emolaResponse.error
         });
       }
 
       const transaction = await Transaction.create({
-        gateway: 'KIVORA',
-        kivoraPaymentId: kivoraResponse.data.id,
+        gateway: 'EMOLA',
+        emolaTransactionId: emolaResponse.data.transaction_id || emolaResponse.data.id,
         paymentType: 'C2B',
-        status: kivoraResponse.data.status,
+        status: 'pending',
         customer: {
           name: paymentData.customerName,
           email: paymentData.customerEmail,
@@ -1505,7 +1505,7 @@ app.post('/api/payments/universal', async (req, res) => {
         },
         amount: paymentData.amount,
         currency: paymentData.currency || 'MZN',
-        reference: paymentData.reference || kivoraResponse.data.reference,
+        reference: paymentData.reference || emolaResponse.data.reference,
         description: paymentData.description,
         packageId: paymentData.packageId,
         packageName: paymentData.packageName
@@ -1513,11 +1513,11 @@ app.post('/api/payments/universal', async (req, res) => {
 
       res.status(201).json({
         success: true,
-        gateway: 'KIVORA',
-        payment: kivoraResponse.data,
+        gateway: 'EMOLA',
+        payment: emolaResponse.data,
         transaction: {
           id: transaction._id,
-          kivoraPaymentId: transaction.kivoraPaymentId,
+          emolaTransactionId: transaction.emolaTransactionId,
           status: transaction.status
         }
       });
@@ -1576,13 +1576,14 @@ app.get('/api/payments/universal/:transactionId', async (req, res) => {
     }
 
     let gatewayResponse;
-    if (transaction.gateway === 'KIVORA') {
-      gatewayResponse = await kivoraService.getC2BPayment(transaction.kivoraPaymentId);
+    if (transaction.gateway === 'EMOLA') {
+      gatewayResponse = await emolaService.getC2BPayment(transaction.emolaTransactionId);
       if (gatewayResponse.success) {
-        transaction.status = gatewayResponse.data.status;
-        if (gatewayResponse.data.status === 'paid') {
+        const processedEvent = emolaService.processWebhookEvent(gatewayResponse.data);
+        transaction.status = processedEvent.status;
+        if (processedEvent.status === 'paid') {
           transaction.completedAt = new Date();
-        } else if (gatewayResponse.data.status === 'failed') {
+        } else if (processedEvent.status === 'failed') {
           transaction.failedAt = new Date();
         }
       }
