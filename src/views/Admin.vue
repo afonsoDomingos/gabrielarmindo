@@ -1468,8 +1468,9 @@ const logout = () => {
               <table class="data-table">
                 <thead>
                   <tr>
+                    <th>Gateway</th>
                     <th>ID Transacção</th>
-                    <th>ID Kivora</th>
+                    <th>ID Gateway</th>
                     <th>Cliente</th>
                     <th>Telemóvel</th>
                     <th>Valor</th>
@@ -1480,8 +1481,15 @@ const logout = () => {
                 </thead>
                 <tbody>
                   <tr v-for="txn in transactions" :key="txn._id">
+                    <td>
+                      <span :class="['gateway-badge', txn.gateway.toLowerCase()]">
+                        {{ txn.gateway }}
+                      </span>
+                    </td>
                     <td class="font-mono text-sm">{{ txn._id.toString().slice(-8) }}</td>
-                    <td class="font-mono text-sm">{{ txn.kivoraPaymentId }}</td>
+                    <td class="font-mono text-sm">
+                      {{ txn.kivoraPaymentId || txn.mpesaTransactionId || txn.emolaTransactionId || '-' }}
+                    </td>
                     <td>{{ txn.customer?.name || '-' }}</td>
                     <td>{{ txn.customer?.phone }}</td>
                     <td>
@@ -1496,7 +1504,7 @@ const logout = () => {
                     <td>{{ new Date(txn.createdAt).toLocaleDateString() }}</td>
                   </tr>
                   <tr v-if="transactions.length === 0">
-                    <td colspan="8" class="text-center empty-cell">
+                    <td colspan="9" class="text-center empty-cell">
                       <i class="fas fa-credit-card"></i>
                       <p>Nenhuma transacção ainda.</p>
                     </td>
@@ -3449,6 +3457,30 @@ const logout = () => {
 .amount-display {
   font-weight: 700;
   color: #0f172a;
+}
+
+/* Gateway badge styles */
+.gateway-badge {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 99px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.gateway-badge.kivora {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.gateway-badge.mpesa {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.gateway-badge.emola {
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .btn-actions-cluster {

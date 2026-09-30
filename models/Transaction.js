@@ -1,11 +1,18 @@
 const mongoose = require('mongoose');
 
 const TransactionSchema = new mongoose.Schema({
-  // Kivora payment ID
-  kivoraPaymentId: {
+  // Payment gateway
+  gateway: {
     type: String,
-    required: true
+    enum: ['KIVORA', 'MPESA', 'EMOLA'],
+    required: true,
+    default: 'KIVORA'
   },
+
+  // Gateway-specific payment IDs
+  kivoraPaymentId: String,
+  mpesaTransactionId: String,
+  emolaTransactionId: String,
 
   // Payment type (C2B, B2C, SUBSCRIPTION)
   paymentType: {
@@ -14,7 +21,7 @@ const TransactionSchema = new mongoose.Schema({
     default: 'C2B'
   },
 
-  // Status from Kivora
+  // Status from gateway
   status: {
     type: String,
     enum: ['pending', 'processing', 'paid', 'failed', 'completed', 'cancelled'],
@@ -75,7 +82,10 @@ const TransactionSchema = new mongoose.Schema({
 });
 
 // Index for faster queries
+TransactionSchema.index({ gateway: 1 });
 TransactionSchema.index({ kivoraPaymentId: 1 });
+TransactionSchema.index({ mpesaTransactionId: 1 });
+TransactionSchema.index({ emolaTransactionId: 1 });
 TransactionSchema.index({ status: 1 });
 TransactionSchema.index({ customer: { phone: 1 } });
 TransactionSchema.index({ createdAt: -1 });

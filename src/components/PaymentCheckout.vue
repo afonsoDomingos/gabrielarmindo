@@ -23,6 +23,13 @@ const props = defineProps({
 
 const emit = defineEmits(['payment-complete', 'payment-cancelled']);
 
+// Gateway selection
+const selectedGateway = ref('KIVORA');
+const availableGateways = [
+  { value: 'KIVORA', name: 'Kivora Payments', icon: 'fas fa-credit-card' },
+  { value: 'MPESA', name: 'M-Pesa', icon: 'fas fa-mobile-alt' }
+];
+
 // Form state
 const paymentForm = ref({
   phone: '',
@@ -34,13 +41,13 @@ const paymentForm = ref({
 const isProcessing = ref(false);
 const paymentStatus = ref(null); // 'pending', 'processing', 'paid', 'failed'
 const transactionId = ref(null);
-const kivoraPaymentId = ref(null);
+const gatewayPaymentId = ref(null);
 const errorMessage = ref('');
 
 // Phone validation
 const isValidPhone = computed(() => {
   const phone = paymentForm.value.phone.replace(/\D/g, '');
-  return phone.length === 9 && phone.startsWith('8') || phone.startsWith('7') || phone.startsWith('6');
+  return phone.length === 9 && (phone.startsWith('8') || phone.startsWith('7') || phone.startsWith('6'));
 });
 
 // Format phone number
@@ -65,7 +72,8 @@ const initiatePayment = async () => {
   paymentStatus.value = 'processing';
 
   try {
-    const response = await axios.post('/api/payments/c2b', {
+    const response = await axios.post('/api/payments/universal', {
+      gateway: selectedGateway.value,
       phone: paymentForm.value.phone,
       amount: props.price,
       currency: props.currency,
@@ -78,7 +86,7 @@ const initiatePayment = async () => {
     });
 
     if (response.data.success) {
-      kivoraPaymentId.value = response.data.payment.id;
+      gatewayPaymentId.value = response.data.payment.id || response.data.payment.TransactionID;
       transactionId.value = response.data.transaction.id;
       paymentStatus.value = 'pending';
 
@@ -143,7 +151,7 @@ const resetForm = () => {
   };
   paymentStatus.value = null;
   transactionId.value = null;
-  kivoraPaymentId.value = null;
+  gatewayPaymentId.value = null;
   errorMessage.value = '';
   isProcessing.value = false;
 };
@@ -154,10 +162,26 @@ const resetForm = () => {
     <div class="checkout-container">
       <!-- Header -->
       <div class="checkout-header">
-        <h3>Pagamento via Kivora</h3>
+        <h3>Pagamento</h3>
         <p class="package-info">
           {{ packageName }} - {{ currency }} {{ price }}
         </p>
+      </div>
+
+      <!-- Gateway Selection -->
+      <div v-if="!paymentStatus || paymentStatus === 'failed'" class="gateway-selector">
+        <label>Escolha o Gateway:</label>
+        <div class="gateway-options">
+          <button
+            v-for="gateway in availableGateways"
+            :key="gateway.value"
+            :class="['gateway-option', { active: selectedGateway === gateway.value }]"
+            @click="selectedGateway = gateway.value"
+          >
+            <i :class="gateway.icon"></i>
+            {{ gateway.name }}
+          </button>
+        </div>
       </div>
 
       <!-- Payment Form -->
@@ -226,7 +250,8 @@ const resetForm = () => {
         </p>
         <p class="payment-details">
           <strong>Valor:</strong> {{ currency }} {{ price }}<br>
-          <strong>Transacção:</strong> {{ kivoraPaymentId }}
+          <strong>Gateway:</strong> {{ selectedGateway }}<br>
+          <strong>Transacção:</strong> {{ gatewayPaymentId }}
         </p>
         <div class="spinner"></div>
         <p class="status-text">A verificar o status...</p>
@@ -294,6 +319,56 @@ const resetForm = () => {
 .package-info {
   color: var(--text-secondary);
   font-size: 0.95rem;
+}
+
+/* Gateway Selector */
+.gateway-selector {
+  margin-bottom: 2rem;
+}
+
+.gateway-selector label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.gateway-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.gateway-option {
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.gateway-option:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.gateway-option.active {
+  border-color: var(--primary-color);
+  background: rgba(255, 123, 26, 0.1);
+  color: var(--primary-color);
+}
+
+.gateway-option i {
+  font-size: 1rem;
 }
 
 .form-group {

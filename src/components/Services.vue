@@ -174,7 +174,10 @@ const getDisplayPrice = (plan) => {
 
 // Open checkout for a package
 const openCheckout = (plan) => {
-  selectedPackage.value = plan;
+  selectedPackage.value = {
+    ...plan,
+    _id: plan._id || plan.id // Ensure we have the ID
+  };
   showCheckout.value = true;
 };
 

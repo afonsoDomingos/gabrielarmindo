@@ -1152,6 +1152,7 @@ app.delete('/api/services/:id', authenticate, async (req, res) => {
 
 // --- KIVORA PAYMENTS INTEGRATION ---
 const kivoraService = require('./services/kivoraService');
+const mpesaService = require('./services/mpesaService');
 
 // Create C2B payment
 app.post('/api/payments/c2b', async (req, res) => {
@@ -1219,24 +1220,40 @@ app.get('/api/payments/:transactionId', async (req, res) => {
       return res.status(404).json({ message: 'Transacção não encontrada' });
     }
 
-    // Get latest status from Kivora
-    const kivoraResponse = await kivoraService.getC2BPayment(transaction.kivoraPaymentId);
-
-    if (kivoraResponse.success) {
-      // Update transaction status
-      transaction.status = kivoraResponse.data.status;
-      if (kivoraResponse.data.status === 'paid') {
-        transaction.completedAt = new Date();
-      } else if (kivoraResponse.data.status === 'failed') {
-        transaction.failedAt = new Date();
+    let gatewayResponse;
+    if (transaction.gateway === 'KIVORA') {
+      // Get latest status from Kivora
+      gatewayResponse = await kivoraService.getC2BPayment(transaction.kivoraPaymentId);
+      if (gatewayResponse.success) {
+        transaction.status = gatewayResponse.data.status;
+        if (gatewayResponse.data.status === 'paid') {
+          transaction.completedAt = new Date();
+        } else if (gatewayResponse.data.status === 'failed') {
+          transaction.failedAt = new Date();
+        }
       }
-      await transaction.save();
+    } else if (transaction.gateway === 'MPESA') {
+      // Get latest status from M-Pesa
+      gatewayResponse = await mpesaService.getC2BPayment(transaction.mpesaTransactionId);
+      if (gatewayResponse.success) {
+        const processedEvent = mpesaService.processWebhookEvent(gatewayResponse.data);
+        transaction.status = processedEvent.status;
+        if (processedEvent.status === 'paid') {
+          transaction.completedAt = new Date();
+        } else if (processedEvent.status === 'failed') {
+          transaction.failedAt = new Date();
+        }
+      }
     }
+
+    await transaction.save();
 
     res.json({
       transaction: {
         id: transaction._id,
+        gateway: transaction.gateway,
         kivoraPaymentId: transaction.kivoraPaymentId,
+        mpesaTransactionId: transaction.mpesaTransactionId,
         status: transaction.status,
         amount: transaction.amount,
         currency: transaction.currency,
@@ -1244,7 +1261,7 @@ app.get('/api/payments/:transactionId', async (req, res) => {
         createdAt: transaction.createdAt,
         completedAt: transaction.completedAt
       },
-      kivoraStatus: kivoraResponse.success ? kivoraResponse.data : null
+      gatewayStatus: gatewayResponse?.success ? gatewayResponse.data : null
     });
   } catch (err) {
     console.error('Erro ao consultar pagamento:', err);
@@ -1296,6 +1313,312 @@ app.post('/api/webhooks/kivora', async (req, res) => {
 
 // Get all transactions (admin only)
 app.get('/api/payments', authenticate, async (req, res) => {
+  try {
+    const transactions = await Transaction.find()
+      .sort({ createdAt: -1 })
+      .populate('packageId', 'title price');
+
+    res.json(transactions);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao listar transacções', error: err.message });
+  }
+});
+
+// --- MPESA PAYMENTS INTEGRATION ---
+
+// Create C2B payment via M-Pesa
+app.post('/api/payments/mpesa/c2b', async (req, res) => {
+  try {
+    const { phone, amount, currency, reference, description, packageId, packageName, customerName, customerEmail } = req.body;
+
+    if (!phone || !amount) {
+      return res.status(400).json({ message: 'Phone e amount são obrigatórios!' });
+    }
+
+    // Create payment with M-Pesa
+    const mpesaResponse = await mpesaService.createC2BPayment({
+      phone,
+      amount,
+      currency: currency || 'MZN',
+      reference: reference || `PKG-${packageId}-${Date.now()}`,
+      description: description || `Pagamento: ${packageName || 'Serviço'}`
+    });
+
+    if (!mpesaResponse.success) {
+      return res.status(500).json({
+        message: 'Erro ao criar pagamento com M-Pesa',
+        error: mpesaResponse.error
+      });
+    }
+
+    // Save transaction to MongoDB
+    const transaction = await Transaction.create({
+      gateway: 'MPESA',
+      mpesaTransactionId: mpesaResponse.data.TransactionID || mpesaResponse.data.input_TransactionID,
+      paymentType: 'C2B',
+      status: 'pending',
+      customer: {
+        name: customerName,
+        email: customerEmail,
+        phone
+      },
+      amount,
+      currency: currency || 'MZN',
+      reference: reference || mpesaResponse.data.input_TransactionReference,
+      description: description || `Pagamento: ${packageName || 'Serviço'}`,
+      packageId,
+      packageName
+    });
+
+    res.status(201).json({
+      success: true,
+      payment: mpesaResponse.data,
+      transaction: {
+        id: transaction._id,
+        mpesaTransactionId: transaction.mpesaTransactionId,
+        status: transaction.status
+      }
+    });
+  } catch (err) {
+    console.error('Erro ao processar pagamento M-Pesa C2B:', err);
+    res.status(500).json({ message: 'Erro ao processar pagamento', error: err.message });
+  }
+});
+
+// Get M-Pesa payment status
+app.get('/api/payments/mpesa/:transactionId', async (req, res) => {
+  try {
+    const transaction = await Transaction.findOne({ _id: req.params.transactionId, gateway: 'MPESA' });
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transacção não encontrada' });
+    }
+
+    // Get latest status from M-Pesa
+    const mpesaResponse = await mpesaService.getC2BPayment(transaction.mpesaTransactionId);
+
+    if (mpesaResponse.success) {
+      // Update transaction status
+      const processedEvent = mpesaService.processWebhookEvent(mpesaResponse.data);
+      transaction.status = processedEvent.status;
+      if (processedEvent.status === 'paid') {
+        transaction.completedAt = new Date();
+      } else if (processedEvent.status === 'failed') {
+        transaction.failedAt = new Date();
+      }
+      await transaction.save();
+    }
+
+    res.json({
+      transaction: {
+        id: transaction._id,
+        mpesaTransactionId: transaction.mpesaTransactionId,
+        status: transaction.status,
+        amount: transaction.amount,
+        currency: transaction.currency,
+        packageName: transaction.packageName,
+        createdAt: transaction.createdAt,
+        completedAt: transaction.completedAt
+      },
+      mpesaStatus: mpesaResponse.success ? mpesaResponse.data : null
+    });
+  } catch (err) {
+    console.error('Erro ao consultar pagamento M-Pesa:', err);
+    res.status(500).json({ message: 'Erro ao consultar pagamento', error: err.message });
+  }
+});
+
+// Webhook endpoint for M-Pesa events
+app.post('/api/webhooks/mpesa', async (req, res) => {
+  try {
+    const webhookData = req.body;
+
+    // Validate webhook signature if configured
+    const signature = req.headers['x-mpesa-signature'];
+    if (signature && !mpesaService.validateWebhookSignature(signature, JSON.stringify(req.body))) {
+      return res.status(401).json({ message: 'Assinatura do webhook inválida' });
+    }
+
+    // Process webhook event
+    const event = mpesaService.processWebhookEvent(webhookData);
+
+    // Find and update transaction
+    const transaction = await Transaction.findOne({ 
+      mpesaTransactionId: event.transactionId,
+      gateway: 'MPESA'
+    });
+    
+    if (transaction) {
+      transaction.status = event.status;
+      transaction.webhookReceived = true;
+      transaction.webhookData = event;
+
+      if (event.status === 'paid') {
+        transaction.completedAt = new Date();
+      } else if (event.status === 'failed') {
+        transaction.failedAt = new Date();
+      }
+
+      await transaction.save();
+      console.log(`✅ Webhook M-Pesa processado para transacção ${transaction._id}`);
+    } else {
+      console.warn(`⚠️ Transacção não encontrada para M-Pesa transaction ID: ${event.transactionId}`);
+    }
+
+    // Always return 200 to acknowledge webhook
+    res.status(200).json({ received: true });
+  } catch (err) {
+    console.error('Erro ao processar webhook M-Pesa:', err);
+    // Still return 200 to avoid webhook retries
+    res.status(200).json({ received: true, error: err.message });
+  }
+});
+
+// Universal payment endpoint (with gateway selection)
+app.post('/api/payments/universal', async (req, res) => {
+  try {
+    const { gateway, ...paymentData } = req.body;
+
+    if (!gateway || !['KIVORA', 'MPESA'].includes(gateway)) {
+      return res.status(400).json({ message: 'Gateway inválido. Use KIVORA ou MPESA' });
+    }
+
+    if (gateway === 'KIVORA') {
+      // Redirect to Kivora endpoint
+      const kivoraResponse = await kivoraService.createC2BPayment(paymentData);
+      
+      if (!kivoraResponse.success) {
+        return res.status(500).json({
+          message: 'Erro ao criar pagamento com Kivora',
+          error: kivoraResponse.error
+        });
+      }
+
+      const transaction = await Transaction.create({
+        gateway: 'KIVORA',
+        kivoraPaymentId: kivoraResponse.data.id,
+        paymentType: 'C2B',
+        status: kivoraResponse.data.status,
+        customer: {
+          name: paymentData.customerName,
+          email: paymentData.customerEmail,
+          phone: paymentData.phone
+        },
+        amount: paymentData.amount,
+        currency: paymentData.currency || 'MZN',
+        reference: paymentData.reference || kivoraResponse.data.reference,
+        description: paymentData.description,
+        packageId: paymentData.packageId,
+        packageName: paymentData.packageName
+      });
+
+      res.status(201).json({
+        success: true,
+        gateway: 'KIVORA',
+        payment: kivoraResponse.data,
+        transaction: {
+          id: transaction._id,
+          kivoraPaymentId: transaction.kivoraPaymentId,
+          status: transaction.status
+        }
+      });
+    } else if (gateway === 'MPESA') {
+      // Redirect to M-Pesa endpoint
+      const mpesaResponse = await mpesaService.createC2BPayment(paymentData);
+      
+      if (!mpesaResponse.success) {
+        return res.status(500).json({
+          message: 'Erro ao criar pagamento com M-Pesa',
+          error: mpesaResponse.error
+        });
+      }
+
+      const transaction = await Transaction.create({
+        gateway: 'MPESA',
+        mpesaTransactionId: mpesaResponse.data.TransactionID || mpesaResponse.data.input_TransactionID,
+        paymentType: 'C2B',
+        status: 'pending',
+        customer: {
+          name: paymentData.customerName,
+          email: paymentData.customerEmail,
+          phone: paymentData.phone
+        },
+        amount: paymentData.amount,
+        currency: paymentData.currency || 'MZN',
+        reference: paymentData.reference || mpesaResponse.data.input_TransactionReference,
+        description: paymentData.description,
+        packageId: paymentData.packageId,
+        packageName: paymentData.packageName
+      });
+
+      res.status(201).json({
+        success: true,
+        gateway: 'MPESA',
+        payment: mpesaResponse.data,
+        transaction: {
+          id: transaction._id,
+          mpesaTransactionId: transaction.mpesaTransactionId,
+          status: transaction.status
+        }
+      });
+    }
+  } catch (err) {
+    console.error('Erro ao processar pagamento universal:', err);
+    res.status(500).json({ message: 'Erro ao processar pagamento', error: err.message });
+  }
+});
+
+// Universal payment status check
+app.get('/api/payments/universal/:transactionId', async (req, res) => {
+  try {
+    const transaction = await Transaction.findOne({ _id: req.params.transactionId });
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transacção não encontrada' });
+    }
+
+    let gatewayResponse;
+    if (transaction.gateway === 'KIVORA') {
+      gatewayResponse = await kivoraService.getC2BPayment(transaction.kivoraPaymentId);
+      if (gatewayResponse.success) {
+        transaction.status = gatewayResponse.data.status;
+        if (gatewayResponse.data.status === 'paid') {
+          transaction.completedAt = new Date();
+        } else if (gatewayResponse.data.status === 'failed') {
+          transaction.failedAt = new Date();
+        }
+      }
+    } else if (transaction.gateway === 'MPESA') {
+      gatewayResponse = await mpesaService.getC2BPayment(transaction.mpesaTransactionId);
+      if (gatewayResponse.success) {
+        const processedEvent = mpesaService.processWebhookEvent(gatewayResponse.data);
+        transaction.status = processedEvent.status;
+        if (processedEvent.status === 'paid') {
+          transaction.completedAt = new Date();
+        } else if (processedEvent.status === 'failed') {
+          transaction.failedAt = new Date();
+        }
+      }
+    }
+
+    await transaction.save();
+
+    res.json({
+      transaction: {
+        id: transaction._id,
+        gateway: transaction.gateway,
+        status: transaction.status,
+        amount: transaction.amount,
+        currency: transaction.currency,
+        packageName: transaction.packageName,
+        createdAt: transaction.createdAt,
+        completedAt: transaction.completedAt
+      },
+      gatewayStatus: gatewayResponse?.success ? gatewayResponse.data : null
+    });
+  } catch (err) {
+    console.error('Erro ao consultar pagamento universal:', err);
+    res.status(500).json({ message: 'Erro ao consultar pagamento', error: err.message });
+  }
+});
   try {
     const transactions = await Transaction.find()
       .sort({ createdAt: -1 })
