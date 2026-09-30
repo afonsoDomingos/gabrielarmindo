@@ -1619,16 +1619,6 @@ app.get('/api/payments/universal/:transactionId', async (req, res) => {
     res.status(500).json({ message: 'Erro ao consultar pagamento', error: err.message });
   }
 });
-  try {
-    const transactions = await Transaction.find()
-      .sort({ createdAt: -1 })
-      .populate('packageId', 'title price');
-
-    res.json(transactions);
-  } catch (err) {
-    res.status(500).json({ message: 'Erro ao listar transacções', error: err.message });
-  }
-});
 
 // Serve index.html for all frontend SPA routes
 app.get('*', (req, res) => {

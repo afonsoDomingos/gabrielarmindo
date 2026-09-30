@@ -151,7 +151,7 @@ const initiatePayment = async () => {
 const pollPaymentStatus = async (transId) => {
   const pollInterval = setInterval(async () => {
     try {
-      const response = await axios.get(`/api/payments/${transId}`);
+      const response = await axios.get(`/api/payments/universal/${transId}`);
       const status = response.data.transaction.status;
 
       if (status === 'paid' || status === 'completed') {
